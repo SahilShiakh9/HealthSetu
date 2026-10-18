@@ -1,0 +1,52 @@
+{
+  "evaluation": "English-Hindi diagnostic",
+  "model": "TF-IDF + LinearSVC grouped-evaluation model",
+  "cases": [
+    {
+      "language": "English",
+      "input": "I have a fever and a headache.",
+      "prediction": "Chicken pox"
+    },
+    {
+      "language": "Hindi",
+      "input": "मुझे बुखार और सिरदर्द है।",
+      "prediction": "drug reaction"
+    },
+    {
+      "language": "English",
+      "input": "I have chest pain.",
+      "prediction": "Hypertension"
+    },
+    {
+      "language": "Hindi",
+      "input": "मुझे सीने में दर्द है।",
+      "prediction": "drug reaction"
+    },
+    {
+      "language": "English",
+      "input": "I do not have chest pain.",
+      "prediction": "Hypertension"
+    },
+    {
+      "language": "Hindi",
+      "input": "मुझे सीने में दर्द नहीं है।",
+      "prediction": "drug reaction"
+    },
+    {
+      "language": "English",
+      "input": "I have a skin rash with itching.",
+      "prediction": "Chicken pox"
+    },
+    {
+      "language": "Hindi",
+      "input": "मेरी त्वचा पर खुजली और दाने हैं।",
+      "prediction": "drug reaction"
+    }
+  ],
+  "findings": [
+    "Hindi performance is not validated.",
+    "Positive and negated symptom inputs are not reliably distinguished.",
+    "Predicted labels must not be used for diagnosis or emergency triage."
+  ],
+  "clinical_validation": false
+}

@@ -1,0 +1,25 @@
+{
+  "project": "SWASTHYASETU AI",
+  "updated_utc": "2026-10-14T12:11:46.737059+00:00",
+  "current_baseline": {
+    "model": "TF-IDF bigrams + LinearSVC",
+    "dataset": "Deduplicated Symptom2Disease",
+    "dataset_rows": 1153,
+    "labels": 24,
+    "train_examples": 923,
+    "test_examples": 230,
+    "similarity_threshold": 0.85,
+    "similarity_groups": 1118,
+    "accuracy": 0.987,
+    "macro_f1": 0.9867
+  },
+  "known_limitations": [
+    "The dataset labels have not been clinically validated.",
+    "Hindi symptom classification is not reliable.",
+    "Positive and negated symptom inputs are not reliably distinguished.",
+    "The grouped evaluation is exploratory and dataset-specific.",
+    "The classifier must not be used for diagnosis or emergency triage."
+  ],
+  "muril_status": "Encoder saved; disease-classification fine-tuning incomplete.",
+  "clinical_validation": false
+}

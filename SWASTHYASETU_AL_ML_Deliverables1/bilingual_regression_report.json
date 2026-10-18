@@ -1,0 +1,41 @@
+{
+  "model": "disease_classifier_clean_grouped.joblib",
+  "test_case_count": 12,
+  "software_prediction_errors": 0,
+  "hindi_unique_predicted_labels": [
+    "drug reaction"
+  ],
+  "hindi_label_collapse_warning": true,
+  "pair_checks": [
+    {
+      "language": "English",
+      "symptom": "chest pain",
+      "positive_prediction": "Hypertension",
+      "negative_prediction": "Hypertension",
+      "check_status": "FAIL_SAME_LABEL"
+    },
+    {
+      "language": "English",
+      "symptom": "breathing difficulty",
+      "positive_prediction": "Typhoid",
+      "negative_prediction": "Typhoid",
+      "check_status": "FAIL_SAME_LABEL"
+    },
+    {
+      "language": "Hindi",
+      "symptom": "chest pain",
+      "positive_prediction": "drug reaction",
+      "negative_prediction": "drug reaction",
+      "check_status": "FAIL_SAME_LABEL"
+    },
+    {
+      "language": "Hindi",
+      "symptom": "breathing difficulty",
+      "positive_prediction": "drug reaction",
+      "negative_prediction": "drug reaction",
+      "check_status": "FAIL_SAME_LABEL"
+    }
+  ],
+  "clinical_validation": false,
+  "note": "These are behavioral regression checks, not diagnostic accuracy tests. Different labels do not prove correct understanding; identical labels are warning signals requiring review."
+}

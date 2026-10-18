@@ -1,0 +1,28 @@
+{
+  "project": "SWASTHYASETU AI",
+  "created_utc": "2026-10-14T10:27:25.559134Z",
+  "disease_classifier": {
+    "type": "TF-IDF + LinearSVC",
+    "reported_test_accuracy": 0.9711,
+    "reported_test_macro_f1": 0.9731,
+    "test_examples": 173,
+    "labels": 24,
+    "interpretation": "Experimental dataset performance only; not evidence of clinical validity."
+  },
+  "muril": {
+    "encoder_saved": true,
+    "24_class_head_fine_tuned": false,
+    "cross_language_embedding_checks": "Exploratory only",
+    "negation_safety": "Not established"
+  },
+  "urgency_detector": {
+    "type": "Keyword and phrase rules",
+    "prototype_tests_passed": 13,
+    "clinical_validation": false,
+    "limitation": "A missing warning phrase must never be interpreted as evidence that the person is safe."
+  },
+  "synthetic_risk_dataset": {
+    "synthetic": true,
+    "clinical_validity_established": false
+  }
+}

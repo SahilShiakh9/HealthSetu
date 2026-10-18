@@ -1,0 +1,209 @@
+{
+  "version": "1.0.0",
+  "reviewStatus": "draft",
+  "needsClinicalReview": true,
+  "diseases": [
+    "Acute Bronchitis",
+    "Angina",
+    "Common Cold",
+    "Dengue Mild",
+    "Gastroenteritis"
+  ],
+  "priors": {
+    "Acute Bronchitis": 0.1964,
+    "Angina": 0.2054,
+    "Common Cold": 0.1964,
+    "Dengue Mild": 0.1964,
+    "Gastroenteritis": 0.2054
+  },
+  "likelihoods": {
+    "Acute Bronchitis": {
+      "fever": 0.7917,
+      "cough": 0.6667,
+      "sore_throat": 0.125,
+      "runny_nose": 0.0833,
+      "breathing_difficulty": 0.875,
+      "chest_pain": 0.0833,
+      "headache": 0.125,
+      "body_pain": 0.6667,
+      "fatigue": 0.75,
+      "vomiting": 0.0417,
+      "diarrhea": 0.0417,
+      "rash": 0.0417
+    },
+    "Angina": {
+      "fever": 0.12,
+      "cough": 0.08,
+      "sore_throat": 0.04,
+      "runny_nose": 0.04,
+      "breathing_difficulty": 0.6,
+      "chest_pain": 0.72,
+      "headache": 0.08,
+      "body_pain": 0.16,
+      "fatigue": 0.84,
+      "vomiting": 0.08,
+      "diarrhea": 0.04,
+      "rash": 0.12
+    },
+    "Common Cold": {
+      "fever": 0.0833,
+      "cough": 0.6667,
+      "sore_throat": 0.7917,
+      "runny_nose": 0.5833,
+      "breathing_difficulty": 0.0417,
+      "chest_pain": 0.0417,
+      "headache": 0.7917,
+      "body_pain": 0.0833,
+      "fatigue": 0.6667,
+      "vomiting": 0.0833,
+      "diarrhea": 0.0417,
+      "rash": 0.1667
+    },
+    "Dengue Mild": {
+      "fever": 0.75,
+      "cough": 0.125,
+      "sore_throat": 0.0417,
+      "runny_nose": 0.125,
+      "breathing_difficulty": 0.0833,
+      "chest_pain": 0.0833,
+      "headache": 0.6667,
+      "body_pain": 0.625,
+      "fatigue": 0.75,
+      "vomiting": 0.0833,
+      "diarrhea": 0.125,
+      "rash": 0.7083
+    },
+    "Gastroenteritis": {
+      "fever": 0.68,
+      "cough": 0.08,
+      "sore_throat": 0.12,
+      "runny_nose": 0.12,
+      "breathing_difficulty": 0.08,
+      "chest_pain": 0.12,
+      "headache": 0.52,
+      "body_pain": 0.24,
+      "fatigue": 0.84,
+      "vomiting": 0.56,
+      "diarrhea": 0.72,
+      "rash": 0.12
+    }
+  },
+  "diseaseMeta": {
+    "Common Cold": {
+      "syndrome": "respiratory",
+      "specialty": "General Physician",
+      "base_risk": "LOW"
+    },
+    "Acute Bronchitis": {
+      "syndrome": "respiratory",
+      "specialty": "Pulmonology",
+      "base_risk": "MEDIUM"
+    },
+    "Gastroenteritis": {
+      "syndrome": "gastrointestinal",
+      "specialty": "General Physician",
+      "base_risk": "MEDIUM"
+    },
+    "Dengue Mild": {
+      "syndrome": "febrile_illness",
+      "specialty": "General Physician",
+      "base_risk": "HIGH"
+    },
+    "Angina": {
+      "syndrome": "cardiovascular",
+      "specialty": "Cardiology",
+      "base_risk": "HIGH"
+    }
+  },
+  "questions": {
+    "fever": {
+      "text": {
+        "en": "Do you have a fever or feel unusually warm?",
+        "hi": "\u0915\u094d\u092f\u093e \u0906\u092a\u0915\u094b \u092c\u0941\u0916\u093e\u0930 \u0939\u0948 \u092f\u093e \u0936\u0930\u0940\u0930 \u0917\u0930\u094d\u092e \u0932\u0917 \u0930\u0939\u093e \u0939\u0948?",
+        "mr": "\u0924\u0941\u092e\u094d\u0939\u093e\u0932\u093e \u0924\u093e\u092a \u0906\u0932\u093e \u0906\u0939\u0947 \u0915\u093e \u0915\u093f\u0902\u0935\u093e \u0905\u0902\u0917 \u0917\u0930\u092e \u0935\u093e\u091f\u0924\u0947 \u0915\u093e?"
+      }
+    },
+    "cough": {
+      "text": {
+        "en": "Do you have a continuous cough?",
+        "hi": "\u0915\u094d\u092f\u093e \u0906\u092a\u0915\u094b \u0932\u0917\u093e\u0924\u093e\u0930 \u0916\u093e\u0902\u0938\u0940 \u0906 \u0930\u0939\u0940 \u0939\u0948?",
+        "mr": "\u0924\u0941\u092e\u094d\u0939\u093e\u0932\u093e \u0938\u0924\u0924 \u0916\u094b\u0915\u0932\u093e \u092f\u0947\u0924 \u0906\u0939\u0947 \u0915\u093e?"
+      }
+    },
+    "sore_throat": {
+      "text": {
+        "en": "Do you have pain or irritation in your throat?",
+        "hi": "\u0915\u094d\u092f\u093e \u0906\u092a\u0915\u0947 \u0917\u0932\u0947 \u092e\u0947\u0902 \u0916\u0930\u093e\u0936 \u092f\u093e \u0926\u0930\u094d\u0926 \u0939\u0948?",
+        "mr": "\u0924\u0941\u092e\u091a\u093e \u0918\u0938\u093e \u0916\u0935\u0916\u0935\u0924\u094b \u0915\u093f\u0902\u0935\u093e \u0926\u0941\u0916\u0924\u094b \u0915\u093e?"
+      }
+    },
+    "runny_nose": {
+      "text": {
+        "en": "Do you have a runny or congested nose?",
+        "hi": "\u0915\u094d\u092f\u093e \u0906\u092a\u0915\u0940 \u0928\u093e\u0915 \u092c\u0939 \u0930\u0939\u0940 \u0939\u0948 \u092f\u093e \u091c\u0941\u0915\u093e\u092e \u0939\u0948?",
+        "mr": "\u0924\u0941\u092e\u091a\u0947 \u0928\u093e\u0915 \u0935\u093e\u0939\u0924 \u0906\u0939\u0947 \u0915\u093f\u0902\u0935\u093e \u0938\u0930\u094d\u0926\u0940 \u091d\u093e\u0932\u0940 \u0906\u0939\u0947 \u0915\u093e?"
+      }
+    },
+    "breathing_difficulty": {
+      "text": {
+        "en": "Are you having difficulty catching your breath?",
+        "hi": "\u0915\u094d\u092f\u093e \u0906\u092a\u0915\u094b \u0938\u093e\u0902\u0938 \u0932\u0947\u0928\u0947 \u092e\u0947\u0902 \u0924\u0915\u0932\u0940\u092b \u0939\u094b \u0930\u0939\u0940 \u0939\u0948?",
+        "mr": "\u0924\u0941\u092e\u094d\u0939\u093e\u0932\u093e \u0936\u094d\u0935\u093e\u0938 \u0918\u0947\u0923\u094d\u092f\u093e\u0938 \u0924\u094d\u0930\u093e\u0938 \u0939\u094b\u0924 \u0906\u0939\u0947 \u0915\u093e?"
+      }
+    },
+    "chest_pain": {
+      "text": {
+        "en": "Are you experiencing chest pain or tightness?",
+        "hi": "\u0915\u094d\u092f\u093e \u0906\u092a\u0915\u0947 \u0938\u0940\u0928\u0947 \u092e\u0947\u0902 \u0926\u0930\u094d\u0926 \u092f\u093e \u092d\u093e\u0930\u0940\u092a\u0928 \u092e\u0939\u0938\u0942\u0938 \u0939\u094b \u0930\u0939\u093e \u0939\u0948?",
+        "mr": "\u0924\u0941\u092e\u091a\u094d\u092f\u093e \u091b\u093e\u0924\u0940\u0924 \u0926\u0941\u0916\u0924 \u0906\u0939\u0947 \u0915\u093f\u0902\u0935\u093e \u0926\u0921\u092a\u0923 \u091c\u093e\u0923\u0935\u0924 \u0906\u0939\u0947 \u0915\u093e?"
+      }
+    },
+    "headache": {
+      "text": {
+        "en": "Do you have a headache?",
+        "hi": "\u0915\u094d\u092f\u093e \u0906\u092a\u0915\u0947 \u0938\u093f\u0930 \u092e\u0947\u0902 \u0926\u0930\u094d\u0926 \u0939\u094b \u0930\u0939\u093e \u0939\u0948?",
+        "mr": "\u0924\u0941\u092e\u091a\u0947 \u0921\u094b\u0915\u0947 \u0926\u0941\u0916\u0924 \u0906\u0939\u0947 \u0915\u093e?"
+      }
+    },
+    "body_pain": {
+      "text": {
+        "en": "Are you experiencing aches or body pain?",
+        "hi": "\u0915\u094d\u092f\u093e \u092a\u0942\u0930\u0947 \u092c\u0926\u0928 \u092f\u093e \u092e\u093e\u0902\u0938\u092a\u0947\u0936\u093f\u092f\u094b\u0902 \u092e\u0947\u0902 \u0926\u0930\u094d\u0926 \u0939\u0948?",
+        "mr": "\u0924\u0941\u092e\u091a\u0947 \u0905\u0902\u0917 \u0915\u093f\u0902\u0935\u093e \u0938\u094d\u0928\u093e\u092f\u0942 \u0926\u0941\u0916\u0924 \u0906\u0939\u0947\u0924 \u0915\u093e?"
+      }
+    },
+    "vomiting": {
+      "text": {
+        "en": "Have you vomited or thrown up?",
+        "hi": "\u0915\u094d\u092f\u093e \u0906\u092a\u0915\u094b \u0909\u0932\u094d\u091f\u0940 \u0939\u0941\u0908 \u0939\u0948?",
+        "mr": "\u0924\u0941\u092e\u094d\u0939\u093e\u0932\u093e \u0909\u0932\u091f\u0940 \u091d\u093e\u0932\u0940 \u0906\u0939\u0947 \u0915\u093e?"
+      }
+    },
+    "diarrhea": {
+      "text": {
+        "en": "Are you passing loose or watery motions?",
+        "hi": "\u0915\u094d\u092f\u093e \u0906\u092a\u0915\u094b \u092a\u0924\u0932\u0947 \u0926\u0938\u094d\u0924 \u0939\u094b \u0930\u0939\u0947 \u0939\u0948\u0902?",
+        "mr": "\u0924\u0941\u092e\u094d\u0939\u093e\u0932\u093e \u091c\u0941\u0932\u093e\u092c \u0915\u093f\u0902\u0935\u093e \u092a\u093e\u0924\u0933 \u0936\u094c\u091a\u093e\u0938 \u0939\u094b\u0924 \u0906\u0939\u0947 \u0915\u093e?"
+      }
+    },
+    "abdominal_pain": {
+      "text": {
+        "en": "Do you have severe or cramping stomach pain?",
+        "hi": "\u0915\u094d\u092f\u093e \u0906\u092a\u0915\u0947 \u092a\u0947\u091f \u092e\u0947\u0902 \u0926\u0930\u094d\u0926 \u092f\u093e \u092e\u0930\u094b\u0921\u093c \u0939\u0948?",
+        "mr": "\u0924\u0941\u092e\u091a\u0947 \u092a\u094b\u091f \u0926\u0941\u0916\u0924 \u0906\u0939\u0947 \u0915\u093f\u0902\u0935\u093e \u092a\u094b\u091f\u093e\u0924 \u092e\u0941\u0930\u0921\u093e \u092f\u0947\u0924 \u0906\u0939\u0947 \u0915\u093e?"
+      }
+    },
+    "rash": {
+      "text": {
+        "en": "Have you noticed any red spots or skin rashes?",
+        "hi": "\u0915\u094d\u092f\u093e \u0924\u094d\u0935\u091a\u093e \u092a\u0930 \u0932\u093e\u0932 \u0926\u093e\u0928\u0947 \u092f\u093e \u091a\u0915\u0924\u094d\u0924\u0947 \u0926\u093f\u0916 \u0930\u0939\u0947 \u0939\u0948\u0902?",
+        "mr": "\u0905\u0902\u0917\u093e\u0935\u0930 \u0932\u093e\u0932 \u092a\u0941\u0930\u0933 \u0915\u093f\u0902\u0935\u093e \u091a\u091f\u094d\u091f\u0947 \u0906\u0932\u0947 \u0906\u0939\u0947\u0924 \u0915\u093e?"
+      }
+    }
+  },
+  "config": {
+    "maxQuestions": 8,
+    "stopConfidence": 0.7,
+    "minInfoGain": 0.01
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "purpose": "Document observed model failure cases",
+  "clinical_use_approved": false,
+  "cases": [
+    {
+      "input": "I have a fever and a headache.",
+      "prediction": "Hypertension",
+      "concern": "Potentially inappropriate symptom-to-label mapping"
+    },
+    {
+      "input": "I have a skin rash with itching.",
+      "prediction": "Chicken pox",
+      "concern": "Prediction is not clinically verified"
+    },
+    {
+      "input": "I have a cough and a runny nose.",
+      "prediction": "allergy",
+      "concern": "Prediction is not clinically verified"
+    },
+    {
+      "input": "I have chest pain.",
+      "prediction": "Hypertension",
+      "concern": "Must not be used to assess emergency risk"
+    },
+    {
+      "input": "मुझे बुखार और सिरदर्द है।",
+      "prediction": "drug reaction",
+      "concern": "Hindi classification is not validated"
+    },
+    {
+      "input": "मुझे सीने में दर्द नहीं है।",
+      "prediction": "drug reaction",
+      "concern": "Negation is not reliably handled"
+    }
+  ],
+  "conclusion": "Observed examples demonstrate limitations but do not alone measure overall model performance. Do not use predictions for diagnosis, triage, or treatment."
+}

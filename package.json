@@ -1,0 +1,28 @@
+{
+  "name": "healthsetu-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages1/*",
+    "services1/api1",
+    "app1/*"
+  ],
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:api": "npm run dev --workspace=@healthsetu/api",
+    "dev:web": "npm run dev --workspace=@healthsetu/web",
+    "dev:ml": "node -e \"const { spawn } = require('child_process'); const isWin = process.platform === 'win32'; const py = isWin ? 'services1/ml1/venv/Scripts/python.exe' : 'services1/ml1/venv/bin/python'; const p = spawn(py, ['-m', 'uvicorn', 'app.main:app', '--app-dir', 'services1/ml1', '--port', '8000', '--reload'], { stdio: 'inherit' }); p.on('exit', (c) => process.exit(c ?? 0));\"",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:ml": "node -e \"const { spawnSync } = require('child_process'); const isWin = process.platform === 'win32'; const py = isWin ? 'services1/ml1/venv/Scripts/python.exe' : 'services1/ml1/venv/bin/python'; const res = spawnSync(py, ['-m', 'pytest', '-c', 'services1/ml1/pytest.ini', 'services1/ml1/tests'], { stdio: 'inherit' }); process.exit(res.status ?? 1);\"",
+    "test:all": "npm run test && npm run test:ml",
+    "seed": "npm run seed --workspace=@healthsetu/api"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "prettier": "^3.5.0",
+    "typescript": "^5.7.3"
+  }
+}

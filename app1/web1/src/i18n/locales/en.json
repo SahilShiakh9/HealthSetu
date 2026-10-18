@@ -1,0 +1,95 @@
+{
+  "_review": "approved",
+  "app": {
+    "name": "HealthSetu",
+    "subtitle": "Rural Healthcare Screening & Teleconsultation",
+    "offline_ready": "Offline Ready",
+    "saved_on_phone": "Saved on phone",
+    "syncing": "Syncing...",
+    "synced": "Synced with server",
+    "needs_attention": "Sync needs attention",
+    "sync_now": "Sync now",
+    "offline_mode_banner": "You are currently offline. Local triage, safety rules, and cached facilities remain operational."
+  },
+  "nav": {
+    "home": "Home",
+    "screening": "Health Check",
+    "facilities": "Nearby Care",
+    "consult": "Consult Doctor",
+    "reports": "My Reports",
+    "help": "Help & Guide",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "onboarding": {
+    "choose_language": "Choose your language",
+    "select_language_sub": "You can change this anytime",
+    "consent_title": "Consent for Healthcare & Privacy",
+    "consent_desc": "HealthSetu stores screening results locally on your phone and securely syncs them when connected. Anonymous public health signals help your local Primary Health Centre (PHC) detect disease trends early.",
+    "consent_storage": "I agree to store my health check responses securely.",
+    "consent_analytics": "I agree to contribute anonymised health signals to help my community.",
+    "agree_continue": "I Agree & Continue",
+    "get_started": "Get Started"
+  },
+  "home": {
+    "welcome": "Welcome to HealthSetu",
+    "welcome_sub": "Rural healthcare screening, nearby clinic locator, and doctor consultation.",
+    "action_screening": "Start Health Check",
+    "action_screening_sub": "Answer simple questions by voice, touch or text",
+    "action_facilities": "Nearby Healthcare",
+    "action_facilities_sub": "Find nearest PHC, Sub-centre or Hospital",
+    "action_consult": "Consult Doctor",
+    "action_consult_sub": "Connect with qualified doctors via audio, video, or chat",
+    "action_reports": "My Reports",
+    "action_reports_sub": "View past prescriptions and health assessments",
+    "emergency_call": "Emergency? Call 108"
+  },
+  "auth": {
+    "login_title": "Login / Register",
+    "phone_label": "Mobile Number",
+    "phone_placeholder": "10-digit mobile number",
+    "send_otp": "Send OTP",
+    "enter_otp": "Enter 6-digit OTP",
+    "verify_otp": "Verify & Continue",
+    "otp_sent_to": "OTP sent to {{identifier}}",
+    "dev_otp_hint": "Dev Mode: Check console logs for OTP code",
+    "doctor_login_link": "Doctor or Officer? Login with Email",
+    "patient_register_title": "Patient Registration",
+    "patient_login_title": "Patient Login",
+    "full_name": "Full Name",
+    "age_or_dob": "Age or Date of Birth",
+    "age": "Age (years)",
+    "dob": "Date of Birth",
+    "preferred_language": "Preferred Language",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "register_submit": "Create Patient Account",
+    "login_submit": "Sign In",
+    "have_account": "Already have an account? Sign In",
+    "need_account": "New patient? Register here",
+    "profile_completion_title": "Complete Your Profile",
+    "profile_completion_sub": "Please confirm your basic details to proceed to Patient Home",
+    "save_profile": "Save & Go to Patient Home",
+    "privacy_note": "Your health data is protected under India DPDP Act and ABDM guidelines."
+  },
+  "offline_page": {
+    "title": "You are Offline",
+    "desc": "No internet connection detected. HealthSetu is designed to work offline.",
+    "can_do": "What works right now:",
+    "can_do_1": "Complete symptom screening with deterministic emergency rules",
+    "can_do_2": "Browse cached nearby healthcare facilities with approximate distances",
+    "can_do_3": "View saved offline reports and consultation drafts",
+    "cannot_do": "Live doctor queues and video calls will resume automatically when connected.",
+    "return_home": "Back to Home"
+  },
+  "consult": {
+    "chooseTitle": "Doctor Consultation",
+    "waitingRoom": "Teleconsultation Queue",
+    "ticketHeader": "Your Live Token Status",
+    "estWaitPrefix": "Estimated wait",
+    "enterCall": "Connect to Doctor Now"
+  },
+  "reports": {
+    "title": "Prescriptions & Medical Records"
+  }
+}

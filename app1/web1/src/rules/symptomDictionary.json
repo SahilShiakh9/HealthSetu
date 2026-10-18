@@ -1,0 +1,227 @@
+{
+  "version": "1.0.0",
+  "reviewStatus": "draft",
+  "needsClinicalReview": true,
+  "symptoms": [
+    {
+      "id": "fever",
+      "labels": { "en": "Fever / High temperature", "hi": "बुखार / तेज़ तापमान", "mr": "ताप / अंगात उष्णता" },
+      "synonyms": {
+        "en": ["fever", "high temperature", "chills", "hot", "febrile", "pyrexia"],
+        "hi": ["बुखार", "तापमान", "गर्म", "ठंड लगना", "ज्वर"],
+        "mr": ["ताप", "अंग गरम", "कणकण", "थंडी वाजणे", "ज्वर"]
+      },
+      "iconKey": "thermometer",
+      "askable": true
+    },
+    {
+      "id": "cough",
+      "labels": { "en": "Cough", "hi": "खांसी", "mr": "खोकला" },
+      "synonyms": {
+        "en": ["cough", "coughing", "dry cough", "wet cough", "phlegm"],
+        "hi": ["खांसी", "खोकला", "बलगम", "कफ"],
+        "mr": ["खोकला", "कफ", "खोकणे", "कफ पडणे"]
+      },
+      "iconKey": "cough",
+      "askable": true
+    },
+    {
+      "id": "sore_throat",
+      "labels": { "en": "Sore throat / Throat pain", "hi": "गले में खराश / दर्द", "mr": "घसा खवखवणे / दुखणे" },
+      "synonyms": {
+        "en": ["sore throat", "throat pain", "throat irritation", "difficulty swallowing"],
+        "hi": ["गले में खराश", "गला दर्द", "गले में चुभन"],
+        "mr": ["घसा खवखवणे", "घसा दुखणे", "घशात खवखव"]
+      },
+      "iconKey": "throat",
+      "askable": true
+    },
+    {
+      "id": "runny_nose",
+      "labels": { "en": "Runny nose / Congestion", "hi": "बहती नाक / जुकाम", "mr": "वाहणारे नाक / सर्दी" },
+      "synonyms": {
+        "en": ["runny nose", "cold", "congestion", "blocked nose", "sneezing"],
+        "hi": ["जुकाम", "बहती नाक", "छींक आना", "नाक बंद"],
+        "mr": ["सर्दी", "वाहणारे नाक", "शिंका येणे", "नाक चोंदणे"]
+      },
+      "iconKey": "droplet",
+      "askable": true
+    },
+    {
+      "id": "breathing_difficulty",
+      "labels": { "en": "Shortness of breath / Difficulty breathing", "hi": "सांस लेने में कठिनाई / फूलना", "mr": "श्वास घेण्यास त्रास / धाप लागणे" },
+      "synonyms": {
+        "en": ["breathing difficulty", "short of breath", "breathless", "asthma", "gasping"],
+        "hi": ["सांस फूलना", "दम घुटना", "सांस की तकलीफ"],
+        "mr": ["धाप लागणे", "श्वास अडकणे", "दम लागणे"]
+      },
+      "iconKey": "lungs",
+      "askable": true
+    },
+    {
+      "id": "chest_pain",
+      "labels": { "en": "Chest pain / Pressure", "hi": "सीने में दर्द / दबाव", "mr": "छातीत दुखणे / दडपण" },
+      "synonyms": {
+        "en": ["chest pain", "chest pressure", "tightness in chest", "angina"],
+        "hi": ["सीने में दर्द", "छाती में खिंचाव", "छाती में भारीपन"],
+        "mr": ["छातीत दुखणे", "छातीवर दडपण", "छातीत कळ"]
+      },
+      "iconKey": "heart",
+      "askable": true
+    },
+    {
+      "id": "headache",
+      "labels": { "en": "Headache", "hi": "सिरदर्द", "mr": "डोकेदुखी" },
+      "synonyms": {
+        "en": ["headache", "head pain", "migraine", "heavy head"],
+        "hi": ["सिरदर्द", "सर दर्द", "आधा सीसी"],
+        "mr": ["डोकेदुखी", "माथेदुखी", "डोके जड"]
+      },
+      "iconKey": "brain",
+      "askable": true
+    },
+    {
+      "id": "body_pain",
+      "labels": { "en": "Body ache / Muscle pain", "hi": "शरीर में दर्द / बदन दर्द", "mr": "अंगदुखी / स्नायू दुखणे" },
+      "synonyms": {
+        "en": ["body pain", "body ache", "muscle pain", "myalgia"],
+        "hi": ["बदन दर्द", "शरीर दर्द", "मांसपेशियों में दर्द"],
+        "mr": ["अंगदुखी", "हातापायात गोळे", "शरीर दुखणे"]
+      },
+      "iconKey": "activity",
+      "askable": true
+    },
+    {
+      "id": "fatigue",
+      "labels": { "en": "Extreme tiredness / Fatigue", "hi": "अत्यधिक थकान / कमजोरी", "mr": "जास्त थकवा / अशक्तपणा" },
+      "synonyms": {
+        "en": ["fatigue", "tiredness", "weakness", "exhaustion", "lethargy"],
+        "hi": ["थकान", "कमजोरी", "सुस्ती"],
+        "mr": ["थकवा", "अशक्तपणा", "त्राण नसणे"]
+      },
+      "iconKey": "battery-low",
+      "askable": true
+    },
+    {
+      "id": "vomiting",
+      "labels": { "en": "Vomiting", "hi": "उल्टी", "mr": "उलटी" },
+      "synonyms": {
+        "en": ["vomiting", "throwing up", "emesis"],
+        "hi": ["उल्टी", "कै होना"],
+        "mr": ["उलटी", "ओकारी"]
+      },
+      "iconKey": "alert-circle",
+      "askable": true
+    },
+    {
+      "id": "nausea",
+      "labels": { "en": "Nausea / Feeling sick", "hi": "जी मिचलाना", "mr": "मळमळणे" },
+      "synonyms": {
+        "en": ["nausea", "feeling like vomiting", "queasy"],
+        "hi": ["जी मिचलाना", "उल्टी जैसा लगना"],
+        "mr": ["मळमळ", "उलटी आल्यासारखे"]
+      },
+      "iconKey": "smile",
+      "askable": true
+    },
+    {
+      "id": "diarrhea",
+      "labels": { "en": "Diarrhea / Loose motions", "hi": "दस्त / पेट खराब", "mr": "जुलाब / पातळ शौचास" },
+      "synonyms": {
+        "en": ["diarrhea", "loose motion", "watery stool", "dysentery"],
+        "hi": ["दस्त", "पतले दस्त", "पेट चलना"],
+        "mr": ["जुलाब", "हगवण", "पातळ संडास"]
+      },
+      "iconKey": "waves",
+      "askable": true
+    },
+    {
+      "id": "abdominal_pain",
+      "labels": { "en": "Stomach ache / Abdominal pain", "hi": "पेट दर्द", "mr": "पोटदुखी" },
+      "synonyms": {
+        "en": ["abdominal pain", "stomach pain", "belly ache", "cramps"],
+        "hi": ["पेट दर्द", "मरोड़", "पेट में ऐंठन"],
+        "mr": ["पोटदुखी", "पोटात मुरडा", "पोटात कळ"]
+      },
+      "iconKey": "shield",
+      "askable": true
+    },
+    {
+      "id": "rash",
+      "labels": { "en": "Skin rash / Red spots", "hi": "त्वचा पर दाने / चकत्ते", "mr": "अंगावर पुरळ / लाल डाग" },
+      "synonyms": {
+        "en": ["rash", "skin eruption", "red spots", "hives"],
+        "hi": ["दाने", "चकत्ते", "खुजली वाले दाने"],
+        "mr": ["पुरळ", "अंगावर पित्त", "लाल चट्टे"]
+      },
+      "iconKey": "sun",
+      "askable": true
+    },
+    {
+      "id": "loss_of_consciousness",
+      "labels": { "en": "Loss of consciousness / Fainting", "hi": "बेहोशी / मूर्छा", "mr": "बेशुद्ध पडणे / चक्कर येऊन पडणे" },
+      "synonyms": {
+        "en": ["unconscious", "passed out", "fainted", "blackout", "syncope"],
+        "hi": ["बेहोश", "मूर्छित", "बेसुध"],
+        "mr": ["बेशुद्ध", "शुद्ध हरपणे", "गाढ बेशुद्धी"]
+      },
+      "iconKey": "zap-off",
+      "askable": false
+    },
+    {
+      "id": "seizure",
+      "labels": { "en": "Seizures / Fits", "hi": "दौरे / झटके", "mr": "फेफरे / झटके" },
+      "synonyms": {
+        "en": ["seizure", "convulsion", "fits", "epilepsy"],
+        "hi": ["दौरा", "झटके आना", "मिरगी"],
+        "mr": ["फेफरे", "झटके येणे", "फिट्स"]
+      },
+      "iconKey": "zap",
+      "askable": false
+    },
+    {
+      "id": "severe_bleeding",
+      "labels": { "en": "Severe bleeding", "hi": "गंभीर रक्तस्राव / खून बहना", "mr": "तीव्र रक्तस्राव" },
+      "synonyms": {
+        "en": ["severe bleeding", "heavy blood loss", "hemorrhage"],
+        "hi": ["खून बहना", "ज्यादा खून निकलना"],
+        "mr": ["रक्त वाहणे", "फार रक्तस्राव"]
+      },
+      "iconKey": "droplet",
+      "askable": false
+    },
+    {
+      "id": "face_droop",
+      "labels": { "en": "Face drooping (Stroke sign)", "hi": "चेहरा एक तरफ झुकना (स्ट्रोक संकेत)", "mr": "चेहरा एका बाजूला वाकडा होणे" },
+      "synonyms": {
+        "en": ["face droop", "facial weakness", "crooked smile"],
+        "hi": ["मुंह टेढ़ा होना", "चेहरा लटकना"],
+        "mr": ["तोंड वाकडे होणे", "चेहऱ्यावर लकवा"]
+      },
+      "iconKey": "user-x",
+      "askable": false
+    },
+    {
+      "id": "weakness_one_side",
+      "labels": { "en": "Weakness on one side of body", "hi": "शरीर के एक तरफ कमजोरी / लकवा", "mr": "एका बाजूचे अंग लुळे पडणे" },
+      "synonyms": {
+        "en": ["arm weakness", "paralysis", "hemiparesis", "one side numb"],
+        "hi": ["एक तरफ लकवा", "एक हाथ या पैर सुन्न"],
+        "mr": ["एका बाजूचा पक्षघात", "एक हात किंवा पाय न चालणे"]
+      },
+      "iconKey": "user",
+      "askable": false
+    },
+    {
+      "id": "slurred_speech",
+      "labels": { "en": "Slurred speech / Difficulty speaking", "hi": "बोली लड़खड़ाना / बोलने में असमर्थता", "mr": "जीभ जड होणे / बोलणे अडखळणे" },
+      "synonyms": {
+        "en": ["slurred speech", "cannot speak", "aphasia"],
+        "hi": ["जुबान लड़खड़ाना", "बोल न पाना"],
+        "mr": ["बोलता न येणे", "जीभ अडखळणे"]
+      },
+      "iconKey": "message-square-off",
+      "askable": false
+    }
+  ]
+}

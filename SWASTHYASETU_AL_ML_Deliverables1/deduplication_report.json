@@ -1,0 +1,8 @@
+{
+  "original_rows": 1200,
+  "deduplicated_rows": 1153,
+  "rows_removed": 47,
+  "unique_labels": 24,
+  "conflicting_duplicate_labels": 0,
+  "clinical_validation": false
+}

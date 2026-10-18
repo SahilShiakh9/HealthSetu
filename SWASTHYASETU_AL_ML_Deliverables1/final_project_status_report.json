@@ -1,0 +1,104 @@
+{
+  "project": "SWASTHYASETU AI",
+  "scope": "Offline-first healthcare screening prototype; English symptom-classification scope only",
+  "generated_at": "2026-10-14T12:44:09",
+  "urgency_regression": [
+    {
+      "test": "Breathing typo",
+      "input": "I cant brethe.",
+      "expected": "URGENT",
+      "actual": "URGENT",
+      "passed": true
+    },
+    {
+      "test": "Blue lips",
+      "input": "My lips are turning blue.",
+      "expected": "URGENT",
+      "actual": "URGENT",
+      "passed": true
+    },
+    {
+      "test": "Uncertain breathing",
+      "input": "I might be having trouble breathing.",
+      "expected": "URGENT",
+      "actual": "URGENT",
+      "passed": true
+    },
+    {
+      "test": "Hindi-English chest pain",
+      "input": "Mujhe chest pain ho raha hai.",
+      "expected": "URGENT",
+      "actual": "URGENT",
+      "passed": true
+    },
+    {
+      "test": "Negated chest pain",
+      "input": "I don't have chest pain.",
+      "expected": "NEEDS_ASSESSMENT",
+      "actual": "NEEDS_ASSESSMENT",
+      "passed": true
+    }
+  ],
+  "bilingual_evaluation": {
+    "model": "disease_classifier_clean_grouped.joblib",
+    "test_case_count": 12,
+    "software_prediction_errors": 0,
+    "hindi_unique_predicted_labels": [
+      "drug reaction"
+    ],
+    "hindi_label_collapse_warning": true,
+    "pair_checks": [
+      {
+        "language": "English",
+        "symptom": "chest pain",
+        "positive_prediction": "Hypertension",
+        "negative_prediction": "Hypertension",
+        "check_status": "FAIL_SAME_LABEL"
+      },
+      {
+        "language": "English",
+        "symptom": "breathing difficulty",
+        "positive_prediction": "Typhoid",
+        "negative_prediction": "Typhoid",
+        "check_status": "FAIL_SAME_LABEL"
+      },
+      {
+        "language": "Hindi",
+        "symptom": "chest pain",
+        "positive_prediction": "drug reaction",
+        "negative_prediction": "drug reaction",
+        "check_status": "FAIL_SAME_LABEL"
+      },
+      {
+        "language": "Hindi",
+        "symptom": "breathing difficulty",
+        "positive_prediction": "drug reaction",
+        "negative_prediction": "drug reaction",
+        "check_status": "FAIL_SAME_LABEL"
+      }
+    ],
+    "clinical_validation": false,
+    "note": "These are behavioral regression checks, not diagnostic accuracy tests. Different labels do not prove correct understanding; identical labels are warning signals requiring review."
+  },
+  "limitations": [
+    "Prototype only; not clinically validated.",
+    "Keyword-based urgency detection can miss warning signs.",
+    "Hindi symptom classification has known failures.",
+    "Evaluation scores do not establish real-world clinical accuracy.",
+    "The MuRIL encoder was not fine-tuned as a disease classifier.",
+    "Current symptom-classification scope is English only.",
+    "Simple negation rules may misinterpret context.",
+    "The screening wrapper may produce misleading candidate labels.",
+    "Passing functional regression tests does not establish clinical safety.",
+    "Keyword-based warning detection can miss emergencies."
+  ],
+  "updated_at_utc": "2026-10-14T13:37:17.743012+00:00",
+  "english_screening_regression": {
+    "report_file": "english_screening_regression_report.json",
+    "passed": 5,
+    "total": 5,
+    "all_passed": true,
+    "clinical_validation": false,
+    "note": "Functional regression checks only; not evidence of diagnostic accuracy or clinical safety."
+  }
+}

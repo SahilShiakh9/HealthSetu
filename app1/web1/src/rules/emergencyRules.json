@@ -1,0 +1,63 @@
+{
+  "version": "1.0.0",
+  "reviewStatus": "draft",
+  "needsClinicalReview": true,
+  "rules": [
+    {
+      "id": "unconsciousness",
+      "any": ["loss_of_consciousness"],
+      "message": {
+        "en": "Loss of consciousness or fainting detected. Immediate emergency care required.",
+        "hi": "बेहोशी या मूर्छा का संकेत मिला है। तत्काल आपातकालीन चिकित्सा आवश्यक है।",
+        "mr": "बेशुद्ध पडणे किंवा चक्कर येणे. त्वरित आपत्कालीन वैद्यकीय मदतीची गरज आहे."
+      }
+    },
+    {
+      "id": "stroke_signs",
+      "any": ["face_droop", "weakness_one_side", "slurred_speech"],
+      "message": {
+        "en": "Possible acute stroke symptoms (FAST). Do not delay. Call 108 immediately.",
+        "hi": "तीव्र स्ट्रोक (लकवा) के लक्षण हो सकते हैं। तुरंत 108 पर संपर्क करें।",
+        "mr": "पक्षाघात (स्ट्रोक) ची संभाव्य लक्षणे. अजिबात वेळ न घालवता ताबडतोब 108 वर संपर्क साधा."
+      }
+    },
+    {
+      "id": "severe_chest_pain",
+      "any": ["chest_pain"],
+      "minSeverity": "severe",
+      "message": {
+        "en": "Severe chest pain or pressure. High risk of acute cardiac emergency.",
+        "hi": "सीने में गंभीर दर्द या दबाव। हृदय संबंधी आपातकाल का उच्च जोखिम।",
+        "mr": "छातीत असह्य वेदना किंवा दडपण. हृदयविकाराचा तीव्र धोका."
+      }
+    },
+    {
+      "id": "severe_breathing_difficulty",
+      "any": ["breathing_difficulty"],
+      "minSeverity": "severe",
+      "message": {
+        "en": "Severe difficulty breathing or gasping. Emergency oxygen and care required.",
+        "hi": "सांस लेने में गंभीर कठिनाई। तत्काल ऑक्सीजन और अस्पताल में देखभाल आवश्यक है।",
+        "mr": "श्वास घेण्यास तीव्र अडचण किंवा धाप लागणे. त्वरित ऑक्सिजन व आपत्कालीन मदतीची गरज आहे."
+      }
+    },
+    {
+      "id": "severe_bleeding",
+      "any": ["severe_bleeding"],
+      "message": {
+        "en": "Active severe bleeding. Apply firm pressure and seek emergency trauma care.",
+        "hi": "अत्यधिक खून बहना। घाव पर तुरंत दबाव बनाएं और नजदीकी अस्पताल जाएं।",
+        "mr": "फार रक्तस्राव. जखमेवर घट्ट दाब द्या आणि ताबडतोब रुग्णालयात जा."
+      }
+    },
+    {
+      "id": "seizure",
+      "any": ["seizure"],
+      "message": {
+        "en": "Active or recent seizures/convulsions. Keep patient safe and seek emergency help.",
+        "hi": "दौरे या झटके आना। मरीज को सुरक्षित लिटाएं और तुरंत आपातकालीन सहायता लें।",
+        "mr": "झटके किंवा फेफरे येणे. रुग्णाला सुरक्षित ठेवा आणि त्वरित वैद्यकीय मदत घ्या."
+      }
+    }
+  ]
+}

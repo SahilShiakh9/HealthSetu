@@ -1,0 +1,17 @@
+{
+  "model_name": "HealthSetu Triage Classifier",
+  "version": "1.0.0",
+  "date": "2026-10-10",
+  "architecture": "BernoulliNB(alpha=1.0) with Laplace Smoothing",
+  "intended_use": "Rural healthcare screening assistance (Decision Support, NOT diagnosis)",
+  "metrics": {
+    "held_out_accuracy": 0.8421052631578947,
+    "noise_augmented": true,
+    "dropout_rates": "20% to 40%"
+  },
+  "limitations": [
+    "Triage support only. Does not replace professional in-person medical diagnosis.",
+    "Emergency flags take absolute precedence over model probability."
+  ],
+  "is_mock_fixture": true
+}

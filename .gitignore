@@ -1,0 +1,80 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Testing and coverage
+coverage/
+*.lcov
+.nyc_output/
+test-results/
+playwright-report/
+
+# Build artifacts
+dist/
+build/
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python virtual environment and cache
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.eggs/
+
+# ML models and raw data
+services/ml/data/raw/*
+!services/ml/data/raw/.gitkeep
+services/ml/models/*.joblib
+
+# Uploads and temporary directories
+uploads/
+services/api/uploads/
+scratch/
+# All ZIP archives
+*.zip
+
+# All environment files, including nested services
+.env.*
+!.env.example
+
+# Allow the root example environment file
+!.env.example
+
+# Local model and temporary artifacts
+*.joblib
+scratch_audio.mp3
+
+# Large research model weights
+SWASTHYASETU_AL_ML_Deliverables1/muril_encoder/model.safetensors
+
+# Local research model artifacts
+SWASTHYASETU_AL_ML_Deliverables1/muril_encoder/

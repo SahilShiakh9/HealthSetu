@@ -1,0 +1,45 @@
+{
+  "component": "English combined screening function",
+  "report_type": "functional_regression_tests",
+  "passed": 5,
+  "total": 5,
+  "all_passed": true,
+  "clinical_validation": false,
+  "limitations": [
+    "Keyword detection can miss or misinterpret warning signs.",
+    "Negation handling is simple.",
+    "Predicted categories are not diagnoses."
+  ],
+  "tests": [
+    {
+      "name": "Breathing warning",
+      "expected": "URGENT",
+      "actual": "URGENT",
+      "passed": true
+    },
+    {
+      "name": "Blue lips",
+      "expected": "URGENT",
+      "actual": "URGENT",
+      "passed": true
+    },
+    {
+      "name": "Negated symptom",
+      "expected": "NEEDS_ASSESSMENT",
+      "actual": "NEEDS_ASSESSMENT",
+      "passed": true
+    },
+    {
+      "name": "Vague symptoms",
+      "expected": "NEEDS_ASSESSMENT",
+      "actual": "NEEDS_ASSESSMENT",
+      "passed": true
+    },
+    {
+      "name": "Empty input",
+      "expected": "NEEDS_ASSESSMENT",
+      "actual": "NEEDS_ASSESSMENT",
+      "passed": true
+    }
+  ]
+}

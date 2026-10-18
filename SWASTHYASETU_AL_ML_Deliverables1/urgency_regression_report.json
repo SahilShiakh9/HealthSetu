@@ -1,0 +1,37 @@
+[
+  {
+    "test": "Breathing typo",
+    "input": "I cant brethe.",
+    "expected": "URGENT",
+    "actual": "URGENT",
+    "passed": true
+  },
+  {
+    "test": "Blue lips",
+    "input": "My lips are turning blue.",
+    "expected": "URGENT",
+    "actual": "URGENT",
+    "passed": true
+  },
+  {
+    "test": "Uncertain breathing",
+    "input": "I might be having trouble breathing.",
+    "expected": "URGENT",
+    "actual": "URGENT",
+    "passed": true
+  },
+  {
+    "test": "Hindi-English chest pain",
+    "input": "Mujhe chest pain ho raha hai.",
+    "expected": "URGENT",
+    "actual": "URGENT",
+    "passed": true
+  },
+  {
+    "test": "Negated chest pain",
+    "input": "I don't have chest pain.",
+    "expected": "NEEDS_ASSESSMENT",
+    "actual": "NEEDS_ASSESSMENT",
+    "passed": true
+  }
+]

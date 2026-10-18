@@ -1,0 +1,7 @@
+# MOCK_SYNTHETIC_FIXTURE: TRUE - For test pipeline and initial verification only
+disease,fever,cough,sore_throat,runny_nose,breathing_difficulty,chest_pain,headache,body_pain,fatigue,vomiting,diarrhea,rash,syndrome,base_risk,specialty
+Common Cold,0,1,1,1,0,0,1,0,1,0,0,0,respiratory,LOW,General Physician
+Acute Bronchitis,1,1,0,0,1,0,0,1,1,0,0,0,respiratory,MEDIUM,Pulmonology
+Gastroenteritis,1,0,0,0,0,0,1,0,1,1,1,0,gastrointestinal,MEDIUM,General Physician
+Dengue Mild,1,0,0,0,0,0,1,1,1,0,0,1,febrile_illness,HIGH,General Physician
+Angina,0,0,0,0,1,1,0,0,1,0,0,0,cardiovascular,HIGH,Cardiology
