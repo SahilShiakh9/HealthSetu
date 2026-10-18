@@ -17,7 +17,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import { useAuthStore } from '../auth/useAuthStore.js';
-import { apiClient } from '../../services/apiClient.js';
+import { apiClient, ApiError } from '../../services/apiClient.js';
 import type { DoctorAvailability } from '@healthsetu/contracts';
 
 interface QueuedPatientItem {
@@ -104,16 +104,8 @@ export const DoctorDashboardPage: React.FC = () => {
   const fetchDoctorQueue = async () => {
     setLoading(true);
     try {
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-      if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-
-      const res = await fetch('/api/v1/consultations/doctor/queue', { headers });
-      if (res.ok) {
-        const data = await res.json();
-        setQueue(data.queue || []);
-      } else {
-        setQueue([]);
-      }
+      const data = await apiClient<{ queue?: QueuedPatientItem[] }>('/consultations/doctor/queue');
+      setQueue(data.queue || []);
     } catch {
       setQueue([]);
     } finally {
@@ -124,15 +116,13 @@ export const DoctorDashboardPage: React.FC = () => {
   const fetchAffiliations = async () => {
     if (!accessToken) return;
     try {
-      const res = await fetch('/api/v1/affiliations/doctor', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setAffiliations(data.affiliations || []);
-        if (data.doctorProfile) {
-          setDoctorProfile(data.doctorProfile);
-        }
+      const data = await apiClient<{
+        affiliations?: DoctorAffiliationInfo[];
+        doctorProfile?: DoctorProfileInfo;
+      }>('/affiliations/doctor');
+      setAffiliations(data.affiliations || []);
+      if (data.doctorProfile) {
+        setDoctorProfile(data.doctorProfile);
       }
     } catch {
       // ignore
@@ -149,12 +139,8 @@ export const DoctorDashboardPage: React.FC = () => {
     const heartbeatInterval = setInterval(async () => {
       if (availability === 'AVAILABLE' && accessToken) {
         try {
-          await fetch('/api/v1/consultations/doctor/heartbeat', {
+          await apiClient('/consultations/doctor/heartbeat', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${accessToken}`,
-            },
           });
         } catch {
           // Heartbeat failed silently; next cycle retries
@@ -171,12 +157,8 @@ export const DoctorDashboardPage: React.FC = () => {
   const handleUpdateAvailability = async (nextStatus: DoctorAvailability) => {
     setAvailability(nextStatus);
     try {
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-      if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-
-      await fetch('/api/v1/consultations/doctor/availability', {
+      await apiClient('/consultations/doctor/availability', {
         method: 'PATCH',
-        headers,
         body: JSON.stringify({ availability: nextStatus }),
       });
     } catch {
@@ -195,12 +177,8 @@ export const DoctorDashboardPage: React.FC = () => {
     try {
       setSubmittingRequest(true);
       setErrorMessage(null);
-      const res = await fetch('/api/v1/affiliations/request', {
+      await apiClient('/affiliations/request', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
         body: JSON.stringify({
           facilityId: targetFacilityId,
           roleInFacility: requestRole,
@@ -208,19 +186,17 @@ export const DoctorDashboardPage: React.FC = () => {
         }),
       });
 
-      if (res.ok) {
-        setShowRequestModal(false);
-        setRequestNotes('');
-        setCustomFacilityId('');
-        setUseCustomFacility(false);
-        fetchAffiliations();
-      } else {
-        const errData = await res.json().catch(() => ({}));
-        const message = errData.error?.message || errData.message || 'Failed to submit affiliation request';
-        setErrorMessage(message);
-      }
-    } catch {
-      setErrorMessage('Network error while requesting affiliation');
+      setShowRequestModal(false);
+      setRequestNotes('');
+      setCustomFacilityId('');
+      setUseCustomFacility(false);
+      fetchAffiliations();
+    } catch (error) {
+      setErrorMessage(
+        error instanceof ApiError
+          ? error.message
+          : 'Network error while requesting affiliation',
+      );
     } finally {
       setSubmittingRequest(false);
     }
@@ -249,24 +225,20 @@ export const DoctorDashboardPage: React.FC = () => {
     setAcceptingId(consultationId);
     setErrorMessage(null);
     try {
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-      if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-
-      const res = await fetch(`/api/v1/consultations/${consultationId}/accept`, {
+      const data = await apiClient<{ consultation?: { _id?: string } }>(
+        `/consultations/${consultationId}/accept`,
+        {
         method: 'POST',
-        headers,
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const cid = data.consultation?._id || consultationId;
-        navigate(`/consult/room/${cid}?role=doctor`);
+        },
+      );
+      const cid = data.consultation?._id || consultationId;
+      navigate(`/consult/room/${cid}?role=doctor`);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setErrorMessage(error.message);
       } else {
-        const errData = await res.json().catch(() => ({}));
-        setErrorMessage(errData.message || 'No patients currently available to admit in your specialty pool.');
+        setErrorMessage('Failed to connect to consultation server. Please check your network connection.');
       }
-    } catch {
-      setErrorMessage('Failed to connect to consultation server. Please check your network connection.');
     } finally {
       setAcceptingId(null);
     }
