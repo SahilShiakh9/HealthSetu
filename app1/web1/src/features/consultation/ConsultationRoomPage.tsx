@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../auth/useAuthStore.js';
 import { db } from '../../offline/db.js';
+import { API_BASE_URL } from '../../services/apiClient.js';
 import { io, Socket } from 'socket.io-client';
 import { SOCKET_EVENTS } from '@healthsetu/contracts';
 import {
@@ -103,7 +104,7 @@ export const ConsultationRoomPage: React.FC = () => {
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
 
-        const res = await fetch(`/api/v1/consultations/${consultationId}/join`, {
+        const res = await fetch(`${API_BASE_URL}/consultations/${consultationId}/join`, {
           method: 'POST',
           headers,
         });
@@ -266,7 +267,7 @@ export const ConsultationRoomPage: React.FC = () => {
       try {
         const headers: Record<string, string> = {};
         if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-        const res = await fetch(`/api/v1/consultations/${consultationId}`, { headers });
+        const res = await fetch(`${API_BASE_URL}/consultations/${consultationId}`, { headers });
         if (res.ok) {
           const syncData = await res.json();
           const c = syncData.consultation;
@@ -379,7 +380,7 @@ export const ConsultationRoomPage: React.FC = () => {
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
 
-        await fetch(`/api/v1/consultations/${consultationId}/mode`, {
+        await fetch(`${API_BASE_URL}/consultations/${consultationId}/mode`, {
           method: 'PATCH',
           headers,
           body: JSON.stringify({ mode: nextMode, reason: 'Participant toggled mode' }),
@@ -420,7 +421,7 @@ export const ConsultationRoomPage: React.FC = () => {
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
 
-        await fetch(`/api/v1/consultations/${consultationId}/messages`, {
+        await fetch(`${API_BASE_URL}/consultations/${consultationId}/messages`, {
           method: 'POST',
           headers,
           body: JSON.stringify({
@@ -466,7 +467,7 @@ export const ConsultationRoomPage: React.FC = () => {
       const headers: Record<string, string> = {};
       if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
 
-      await fetch(`/api/v1/consultations/${consultationId}/end`, {
+      await fetch(`${API_BASE_URL}/consultations/${consultationId}/end`, {
         method: 'POST',
         headers,
       });
@@ -511,7 +512,7 @@ export const ConsultationRoomPage: React.FC = () => {
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
 
-        await fetch(`/api/v1/consultations/${consultationId}/complete`, {
+        await fetch(`${API_BASE_URL}/consultations/${consultationId}/complete`, {
           method: 'POST',
           headers,
           body: JSON.stringify(outcomeData),
