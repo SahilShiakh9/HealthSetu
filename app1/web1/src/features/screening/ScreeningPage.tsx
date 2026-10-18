@@ -22,6 +22,7 @@ import {
 import { db } from '../../offline/db.js';
 import { queueOutboxEvent } from '../../offline/outbox.js';
 import { evaluateEmergencyRules } from '../../engine/emergency.js';
+import { API_BASE_URL } from '../../services/apiClient.js';
 import type { Language, RiskTier, CreateScreeningInput } from '@healthsetu/contracts';
 
 type LifecycleState =
@@ -247,6 +248,8 @@ export const ScreeningPage: React.FC = () => {
   const recognitionRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const silenceTimerRef = useRef<any>(null);
+  const voiceStopRequestedRef = useRef(false);
+  const userActivatedAudioRef = useRef(false);
   const transcriptRef = useRef<string>('');
   const stateRef = useRef<LifecycleState>('idle');
 
@@ -308,7 +311,7 @@ export const ScreeningPage: React.FC = () => {
       try {
         handleStopSpeaking();
 
-        const audioUrl = `/api/v1/screenings/tts?text=${encodeURIComponent(textToSpeak)}&language=${selectedLanguage}`;
+        const audioUrl = `${API_BASE_URL}/screenings/tts?text=${encodeURIComponent(textToSpeak)}&language=${selectedLanguage}`;
         const audio = new Audio(audioUrl);
         activeAudioRef.current = audio;
 
@@ -334,6 +337,14 @@ export const ScreeningPage: React.FC = () => {
         if (playPromise !== undefined) {
           playPromise.catch((playErr: any) => {
             console.warn('Audio play prevented or interrupted:', playErr);
+            if (userActivatedAudioRef.current && window.speechSynthesis) {
+              const utterance = new SpeechSynthesisUtterance(textToSpeak);
+              utterance.lang =
+                selectedLanguage === 'mr' ? 'mr-IN' : selectedLanguage === 'hi' ? 'hi-IN' : 'en-IN';
+              utterance.rate = 0.9;
+              window.speechSynthesis.cancel();
+              window.speechSynthesis.speak(utterance);
+            }
             setIsSpeaking(false);
             setSpeakingMessageId(null);
             setState((prev) => (prev === 'speaking' ? 'idle' : prev));
@@ -363,6 +374,7 @@ export const ScreeningPage: React.FC = () => {
   // Replay speech for specific message
   const handleReplayAudio = useCallback(
     (explicitText?: string, msgId?: string) => {
+      userActivatedAudioRef.current = true;
       if (explicitText) {
         speakAssistantText(explicitText, msgId);
         return;
@@ -400,7 +412,8 @@ export const ScreeningPage: React.FC = () => {
       setTextInput(cleaned);
       transcriptRef.current = cleaned;
 
-      // Snappy silence detection: auto-submit statement 800ms after user pauses speaking
+      // Stop capture after a natural pause, but submit from onend only. This
+      // prevents early submission and duplicate requests on mobile browsers.
       if (silenceTimerRef.current) {
         clearTimeout(silenceTimerRef.current);
       }
@@ -410,9 +423,8 @@ export const ScreeningPage: React.FC = () => {
             try {
               recognitionRef.current?.stop();
             } catch {}
-            handleProcessSubmission(cleaned);
           }
-        }, 800);
+        }, 2200);
       }
     };
 
@@ -431,6 +443,10 @@ export const ScreeningPage: React.FC = () => {
 
     rec.onend = () => {
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      if (voiceStopRequestedRef.current) {
+        voiceStopRequestedRef.current = false;
+        return;
+      }
       if (stateRef.current === 'listening') {
         const textToSubmit = transcriptRef.current.trim();
         if (textToSubmit) {
@@ -456,7 +472,9 @@ export const ScreeningPage: React.FC = () => {
     (['mr', 'hi', 'en'] as Language[]).forEach((l) => {
       const g = UI_STRINGS[l]?.greeting;
       if (g) {
-        const audio = new Audio(`/api/v1/screenings/tts?text=${encodeURIComponent(g)}&language=${l}`);
+        const audio = new Audio(
+          `${API_BASE_URL}/screenings/tts?text=${encodeURIComponent(g)}&language=${l}`,
+        );
         audio.preload = 'auto';
       }
     });
@@ -506,6 +524,7 @@ export const ScreeningPage: React.FC = () => {
         clearTimeout(silenceTimerRef.current);
       }
       try {
+        voiceStopRequestedRef.current = true;
         recognitionRef.current?.stop();
       } catch (err) {
         console.warn('Could not stop recognition:', err);
@@ -538,6 +557,7 @@ export const ScreeningPage: React.FC = () => {
     setTranscript('');
     setTextInput('');
     transcriptRef.current = '';
+    voiceStopRequestedRef.current = false;
     setIsEditingTranscript(false);
     setState('listening');
 
@@ -625,7 +645,7 @@ export const ScreeningPage: React.FC = () => {
     const startTime = performance.now();
 
     try {
-      const res = await fetch('/api/v1/screenings/dialogue', {
+      const res = await fetch(`${API_BASE_URL}/screenings/dialogue`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
