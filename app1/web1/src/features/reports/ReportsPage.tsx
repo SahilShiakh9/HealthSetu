@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { db } from '../../offline/db.js';
 import { useAuthStore } from '../auth/useAuthStore.js';
+import { apiClient } from '../../services/apiClient.js';
 
 interface ReportListItem {
   id: string;
@@ -47,44 +48,33 @@ export const ReportsPage: React.FC = () => {
 
       // 2. Fetch from backend API: try /api/v1/reports first, fallback to user history
       try {
-        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-        if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-
-        const reportRes = await fetch('/api/v1/reports', { headers });
-        if (reportRes.ok) {
-          const data = await reportRes.json();
-          if (data.reports && data.reports.length > 0) {
-            const apiList: ReportListItem[] = data.reports.map((r: any) => ({
-              id: r._id,
-              doctorName: r.doctorName || 'Assigned Clinician',
-              diagnosis: r.diagnosis || 'Clinical Assessment',
-              outcomeType: 'PRESCRIPTION',
-              date: new Date(r.issuedAt).toLocaleDateString(),
-              isOfflineCached: false,
-            }));
-            setReports(apiList);
-            setLoading(false);
-            return;
-          }
+        const data = await apiClient<{ reports?: any[] }>('/reports');
+        if (data.reports && data.reports.length > 0) {
+          const apiList: ReportListItem[] = data.reports.map((r: any) => ({
+            id: r._id,
+            doctorName: r.doctorName || 'Assigned Clinician',
+            diagnosis: r.diagnosis || 'Clinical Assessment',
+            outcomeType: 'PRESCRIPTION',
+            date: new Date(r.issuedAt).toLocaleDateString(),
+            isOfflineCached: false,
+          }));
+          setReports(apiList);
+          setLoading(false);
+          return;
         }
 
         // Fallback: check consultation history
-        const consultRes = await fetch('/api/v1/consultations/user/history', { headers });
-        if (consultRes.ok) {
-          const data = await consultRes.json();
-          if (data.consultations && data.consultations.length > 0) {
-            const apiList: ReportListItem[] = data.consultations.map((c: any) => ({
-              id: c._id,
-              doctorName: c.doctorId?.name || 'Assigned Clinician',
-              diagnosis: c.outcome?.diagnosisLabel || 'General Consultation',
-              outcomeType: c.outcome?.outcomeType || 'COMPLETED',
-              date: new Date(c.createdAt).toLocaleDateString(),
-              isOfflineCached: false,
-            }));
-            setReports(apiList);
-          } else if (localList.length === 0) {
-            setReports([]);
-          }
+        const history = await apiClient<{ consultations?: any[] }>('/consultations/user/history');
+        if (history.consultations && history.consultations.length > 0) {
+          const apiList: ReportListItem[] = history.consultations.map((c: any) => ({
+            id: c._id,
+            doctorName: c.doctorId?.name || 'Assigned Clinician',
+            diagnosis: c.outcome?.diagnosisLabel || 'General Consultation',
+            outcomeType: c.outcome?.outcomeType || 'COMPLETED',
+            date: new Date(c.createdAt).toLocaleDateString(),
+            isOfflineCached: false,
+          }));
+          setReports(apiList);
         } else if (localList.length === 0) {
           setReports([]);
         }

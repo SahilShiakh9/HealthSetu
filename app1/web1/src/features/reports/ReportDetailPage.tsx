@@ -14,6 +14,7 @@ import {
 import { db } from '../../offline/db.js';
 import { useAuthStore } from '../auth/useAuthStore.js';
 import { generateMedicalReportPdf } from '../../utils/pdfGenerator.js';
+import { apiClient } from '../../services/apiClient.js';
 import type { PrescriptionMedication } from '../consultation/ConsultationRoomPage.js';
 
 interface EncounterDetail {
@@ -81,36 +82,30 @@ export const ReportDetailPage: React.FC = () => {
         return;
       }
 
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-      if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-
       // 1. Try official Report endpoint first (/api/v1/reports/:id)
       try {
-        const reportRes = await fetch(`/api/v1/reports/${consultationId}`, { headers });
-        if (reportRes.ok) {
-          const data = await reportRes.json();
-          const r = data.report;
-          if (r) {
-            setEncounter({
-              id: r._id || r.reportNumber,
-              doctorName: r.doctorName || 'Assigned Clinician',
-              doctorQualification: r.doctorRegistration || 'MMC Registered Medical Officer',
-              facilityName: r.facilityName || 'Primary Health Telemedicine Network',
-              patientName: r.patientName || (user?.name || (user?.phone ? `Patient (${user.phone})` : 'Patient')),
-              patientPhone: r.patientPhone || user?.phone || '',
-              date: new Date(r.issuedAt).toLocaleDateString(),
-              diagnosis: r.diagnosis || 'Clinical Assessment',
-              assessment: r.assessment || 'Consultation concluded.',
-              outcomeType: 'PRESCRIPTION',
-              medications: r.medications || [],
-              tests: r.tests || [],
-              notes: r.notes || '',
-              followUpDate: r.followUpDate || '',
-              isMock: r.isMock ?? false,
-            });
-            setLoading(false);
-            return;
-          }
+        const data = await apiClient<{ report?: any }>(`/reports/${consultationId}`);
+        const r = data.report;
+        if (r) {
+          setEncounter({
+            id: r._id || r.reportNumber,
+            doctorName: r.doctorName || 'Assigned Clinician',
+            doctorQualification: r.doctorRegistration || 'MMC Registered Medical Officer',
+            facilityName: r.facilityName || 'Primary Health Telemedicine Network',
+            patientName: r.patientName || (user?.name || (user?.phone ? `Patient (${user.phone})` : 'Patient')),
+            patientPhone: r.patientPhone || user?.phone || '',
+            date: new Date(r.issuedAt).toLocaleDateString(),
+            diagnosis: r.diagnosis || 'Clinical Assessment',
+            assessment: r.assessment || 'Consultation concluded.',
+            outcomeType: 'PRESCRIPTION',
+            medications: r.medications || [],
+            tests: r.tests || [],
+            notes: r.notes || '',
+            followUpDate: r.followUpDate || '',
+            isMock: r.isMock ?? false,
+          });
+          setLoading(false);
+          return;
         }
       } catch {
         // Fall through to consultation check
@@ -118,33 +113,29 @@ export const ReportDetailPage: React.FC = () => {
 
       // 2. Try consultation endpoint (/api/v1/consultations/:id)
       try {
-        const res = await fetch(`/api/v1/consultations/${consultationId}`, { headers });
-        if (res.ok) {
-          const data = await res.json();
-          const consult = data.consultation;
-          const outcome = consult?.outcome;
-
-          if (outcome) {
-            setEncounter({
-              id: consult._id,
-              doctorName: consult.doctorId?.name || 'Assigned Clinician',
-              doctorQualification: 'Reg. No: MMC Registered Medical Officer',
-              facilityName: 'Primary Health Telemedicine Network',
-              patientName: consult.patientId?.name || (user?.name || (user?.phone ? `Patient (${user.phone})` : 'Patient')),
-              patientPhone: consult.patientId?.phone || user?.phone || '',
-              date: new Date(consult.createdAt).toLocaleDateString(),
-              diagnosis: outcome.diagnosisLabel || 'Clinical Assessment',
-              assessment: outcome.assessment || 'Consultation completed.',
-              outcomeType: outcome.outcomeType || 'COMPLETED',
-              medications: outcome.medications || [],
-              tests: outcome.tests || [],
-              notes: outcome.notes || '',
-              followUpDate: outcome.followUpDate || '',
-              isMock: consult.doctorId?.isMock ?? false,
-            });
-            setLoading(false);
-            return;
-          }
+        const data = await apiClient<{ consultation?: any }>(`/consultations/${consultationId}`);
+        const consult = data.consultation;
+        const outcome = consult?.outcome;
+        if (outcome) {
+          setEncounter({
+            id: consult._id,
+            doctorName: consult.doctorId?.name || 'Assigned Clinician',
+            doctorQualification: 'Reg. No: MMC Registered Medical Officer',
+            facilityName: 'Primary Health Telemedicine Network',
+            patientName: consult.patientId?.name || (user?.name || (user?.phone ? `Patient (${user.phone})` : 'Patient')),
+            patientPhone: consult.patientId?.phone || user?.phone || '',
+            date: new Date(consult.createdAt).toLocaleDateString(),
+            diagnosis: outcome.diagnosisLabel || 'Clinical Assessment',
+            assessment: outcome.assessment || 'Consultation completed.',
+            outcomeType: outcome.outcomeType || 'COMPLETED',
+            medications: outcome.medications || [],
+            tests: outcome.tests || [],
+            notes: outcome.notes || '',
+            followUpDate: outcome.followUpDate || '',
+            isMock: consult.doctorId?.isMock ?? false,
+          });
+          setLoading(false);
+          return;
         }
       } catch {
         // Fall through to cache
