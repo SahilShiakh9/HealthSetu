@@ -53,13 +53,21 @@ io.on('connection', (socket) => {
   // Join authorized consultation / RTC room
   socket.on('join:room', (data: { roomId: string; userId?: string; role?: string }) => {
     if (!data?.roomId) return;
+    const existingRoom = io.sockets.adapter.rooms.get(data.roomId);
+    const hasExistingPeer = Boolean(existingRoom && existingRoom.size > 0);
     socket.join(data.roomId);
     logger.info({ socketId: socket.id, roomId: data.roomId, userId: data.userId, role: data.role }, 'Socket joined consultation room');
-    socket.to(data.roomId).emit('peer:joined', {
+    const peerJoinedPayload = {
       socketId: socket.id,
       userId: data.userId,
       role: data.role,
-    });
+    };
+    socket.to(data.roomId).emit('peer:joined', peerJoinedPayload);
+    // Also notify a participant who joins second. This removes the join-order
+    // race where the doctor could miss the event and never start negotiation.
+    if (hasExistingPeer) {
+      socket.emit('peer:joined', peerJoinedPayload);
+    }
   });
 
   // Leave consultation room

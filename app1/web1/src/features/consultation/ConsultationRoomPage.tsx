@@ -146,11 +146,7 @@ export const ConsultationRoomPage: React.FC = () => {
           try {
             const socketUrl =
               (import.meta as any).env?.VITE_SOCKET_URL ||
-              (typeof window !== 'undefined' && window.location.hostname === 'localhost'
-                ? 'http://localhost:4000'
-                : typeof window !== 'undefined'
-                  ? window.location.origin
-                  : '');
+              API_BASE_URL.replace(/\/api\/v1\/?$/, '');
             if (socketUrl) {
               const socket = io(socketUrl, { transports: ['websocket', 'polling'] });
               socketRef.current = socket;
@@ -226,6 +222,8 @@ export const ConsultationRoomPage: React.FC = () => {
                 token: data.zego.token,
                 roomId: data.zego.roomId,
                 userId: user?.id || 'anon',
+                role: isDoctor ? 'DOCTOR' : 'PATIENT',
+                signalingSocket: socketRef.current || undefined,
                 isConfigured: true,
               });
 

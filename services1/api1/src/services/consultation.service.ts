@@ -388,11 +388,18 @@ export class ConsultationService {
 
         import('../server.js')
           .then(({ io }) => {
-            io.to(consultation.zegoRoomId).emit(SOCKET_EVENTS.CONSULTATION_ASSIGNED, {
+            const assignment = {
               consultationId: consultation._id.toString(),
               doctorId: user.id,
               status: 'IN_PROGRESS',
-            });
+            };
+            // The waiting room subscribes before it has RTC credentials, so
+            // notify its stable consultation room as well as the RTC room.
+            io.to(consultation.zegoRoomId).emit(SOCKET_EVENTS.CONSULTATION_ASSIGNED, assignment);
+            io.to(`consultation_${consultation._id.toString()}`).emit(
+              SOCKET_EVENTS.CONSULTATION_ASSIGNED,
+              assignment,
+            );
           })
           .catch((err) => logger.warn({ err }, 'Failed to emit consultation:assigned'));
       }

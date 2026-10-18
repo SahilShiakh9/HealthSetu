@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { db } from '../../offline/db.js';
 import { useAuthStore } from '../auth/useAuthStore.js';
+import { API_BASE_URL } from '../../services/apiClient.js';
 import { io } from 'socket.io-client';
 import { SOCKET_EVENTS } from '@healthsetu/contracts';
 
@@ -62,8 +63,7 @@ export const WaitingRoomPage: React.FC = () => {
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
 
-        const origin = typeof window !== 'undefined' && window.location?.origin ? window.location.origin : 'http://localhost:4000';
-        const res = await fetch(`${origin}/api/v1/consultations/queue/${consultationId}`, { headers });
+        const res = await fetch(`${API_BASE_URL}/consultations/queue/${consultationId}`, { headers });
         if (res.ok) {
           const data = await res.json();
           if (isMounted) {
@@ -108,11 +108,7 @@ export const WaitingRoomPage: React.FC = () => {
     try {
       const socketUrl =
         (import.meta as any).env?.VITE_SOCKET_URL ||
-        (typeof window !== 'undefined' && window.location.hostname === 'localhost'
-          ? 'http://localhost:4000'
-          : typeof window !== 'undefined'
-            ? window.location.origin
-            : '');
+        API_BASE_URL.replace(/\/api\/v1\/?$/, '');
       if (socketUrl) {
         socket = io(socketUrl, { transports: ['websocket', 'polling'] });
         socket.emit('join:room', { roomId: `consultation_${consultationId}` });
