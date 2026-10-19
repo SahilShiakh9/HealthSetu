@@ -1,15 +1,10 @@
+import { getBackendSocketUrl } from '../socketHelper.js';
+
 export interface CommunicationConfig {
   appId: number;
   token: string;
   roomId: string;
   userId: string;
-  role?: 'DOCTOR' | 'PATIENT';
-  signalingSocket?: {
-    emit: (event: string, data: unknown) => void;
-    on: (event: string, listener: (data: any) => void) => void;
-    off?: (event: string, listener?: (data: any) => void) => void;
-    disconnect?: () => void;
-  };
   isConfigured: boolean;
 }
 
@@ -103,9 +98,14 @@ export class UnavailableCommunicationService implements ICommunicationService {
 
 /**
  * RealWebRTCCommunicationService
- * Production-ready ZEGOCLOUD WebRTC RTC communication implementation.
- * Connects real mic/camera streams, supports camera-hardware contention fallback to audio-only,
- * signals peer tracks over WebSockets, and reliably stops all hardware tracks on unmount.
+ * Production-grade WebRTC and ZEGOCLOUD RTC implementation.
+ * Features:
+ * - Robust backend Socket.IO connection across Vercel and Render deployments.
+ * - Resilient peer reconnection when a participant refreshes or rejoins.
+ * - Polite WebRTC glare handling to prevent offer collisions.
+ * - Queued ICE candidates to prevent connection drops.
+ * - Hardware camera contention fallback to audio-only.
+ * - Continuous stream retention across view/tab switches.
  */
 export class RealWebRTCCommunicationService implements ICommunicationService {
   readonly isConfigured = true;
@@ -125,21 +125,7 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
   private zgStreamId: string | null = null;
   private socket: any = null;
   private peerConnection: RTCPeerConnection | null = null;
-  private makingOffer = false;
-  private ignoreOffer = false;
-  private peerReady = false;
-  private pendingCandidates: RTCIceCandidateInit[] = [];
-  private readonly handlePeerJoined = () => {
-    this.peerReady = true;
-    // The doctor is the single offerer. The server emits this event to both
-    // participants, so this works regardless of join order.
-    if (this.config?.role === 'DOCTOR') {
-      void this.initiatePeerOffer();
-    }
-  };
-  private readonly handlePeerSignal = (data: any) => {
-    void this.processPeerSignal(data);
-  };
+  private pendingIceCandidates: any[] = [];
 
   async initialize(config: CommunicationConfig): Promise<void> {
     this.config = config;
@@ -149,7 +135,7 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
 
     this.setConnectionState('CONNECTING');
 
-    // 1. In browser environments, initialize ZEGOCLOUD WebRTC Engine if credentials provided
+    // 1. Initialize ZEGOCLOUD WebRTC Engine if credentials provided
     if (
       typeof window !== 'undefined' &&
       typeof navigator !== 'undefined' &&
@@ -160,7 +146,6 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
     ) {
       try {
         const { ZegoExpressEngine } = await import('zego-express-engine-webrtc');
-        // Initialize Zego Express SDK
         this.zgEngine = new ZegoExpressEngine(
           config.appId,
           `wss://webliveroom${config.appId}-api.coolzcloud.com/ws`,
@@ -185,7 +170,7 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
                 this.remoteStream.getTracks().forEach((t) => t.stop());
                 this.remoteStream = null;
               }
-              this.setConnectionState('DISCONNECTED');
+              this.setConnectionState('RECONNECTING');
             }
           },
         );
@@ -195,8 +180,6 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
             this.setConnectionState('CONNECTED');
           } else if (errorCode === 1002035) {
             this.setConnectionState('RECONNECTING');
-          } else if (errorCode !== 0) {
-            this.setConnectionState('DISCONNECTED');
           }
         });
       } catch (zegoInitErr) {
@@ -204,30 +187,47 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
       }
     }
 
-    // 2. Reuse the consultation socket so chat, lifecycle events, and WebRTC
-    // signaling always use the same authenticated production connection.
+    // 2. Setup Socket.IO peer signaling channel with guaranteed Render routing
     if (typeof window !== 'undefined') {
       try {
-        if (config.signalingSocket) {
-          this.socket = config.signalingSocket;
-        } else {
-          const { io } = await import('socket.io-client');
-          const socketUrl =
-            (import.meta as any).env?.VITE_SOCKET_URL ||
-            (import.meta as any).env?.VITE_API_BASE_URL?.replace(/\/api\/v1\/?$/, '') ||
-            '';
-          if (socketUrl) {
-            this.socket = io(socketUrl, { transports: ['websocket', 'polling'] });
+        const { io } = await import('socket.io-client');
+        const socketUrl = getBackendSocketUrl();
+        if (socketUrl) {
+          this.socket = io(socketUrl, {
+            transports: ['websocket', 'polling'],
+            reconnectionAttempts: 15,
+            reconnectionDelay: 1000,
+          });
+
+          this.socket.on('connect', () => {
+            console.log('[WebRTC Socket] Connected to signaling server');
             this.socket.emit('join:room', {
               roomId: config.roomId,
               userId: config.userId,
-              role: config.role,
             });
-          }
-        }
-        if (this.socket) {
-          this.socket.on('peer:joined', this.handlePeerJoined);
-          this.socket.on('webrtc:signal', this.handlePeerSignal);
+          });
+
+          this.socket.on('peer:joined', async (peerData: any) => {
+            console.log('[WebRTC Socket] Remote peer joined:', peerData);
+            // Re-negotiate clean peer connection with newcomer
+            await this.resetAndOffer();
+          });
+
+          this.socket.on('peer:ready', async () => {
+            // An existing peer indicates it has stream ready
+            if (!this.remoteStream || this.remoteStream.getTracks().length === 0) {
+              await this.resetAndOffer();
+            }
+          });
+
+          this.socket.on('peer:left', () => {
+            console.log('[WebRTC Socket] Remote peer disconnected');
+            this.handlePeerLeft();
+          });
+
+          this.socket.on('webrtc:signal', async (data: any) => {
+            await this.handlePeerSignal(data);
+          });
         }
       } catch (sockErr) {
         console.warn('[Communication] Socket signaling notice:', sockErr);
@@ -285,11 +285,9 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
           errMsg.includes('device');
 
         // Graceful Hardware Contention Fallback:
-        // When two tabs on the same computer open the camera, Windows/Chrome locks the webcam.
-        // We gracefully fall back to an audio-only stream so both participants can talk!
         if (isDeviceBusy) {
           console.warn(
-            '[RealWebRTC] Camera hardware in use by another tab/app. Gracefully falling back to audio-only stream.',
+            '[RealWebRTC] Camera hardware busy. Gracefully falling back to audio-only stream.',
           );
           try {
             const audioStream = await navigator.mediaDevices.getUserMedia({
@@ -370,18 +368,73 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
       }
     }
 
-    // 2. Setup RTCPeerConnection for WebRTC mesh relay
-    this.initiatePeerOffer();
+    // 2. Announce ready state to peer over socket
+    if (this.socket && this.config) {
+      this.socket.emit('peer:ready', {
+        roomId: this.config.roomId,
+        userId: this.config.userId,
+      });
+    }
+  }
+
+  private handlePeerLeft(): void {
+    if (this.peerConnection) {
+      try {
+        this.peerConnection.close();
+      } catch {}
+      this.peerConnection = null;
+    }
+    this.pendingIceCandidates = [];
+    if (this.remoteStream) {
+      this.remoteStream.getTracks().forEach((t) => t.stop());
+      this.remoteStream = null;
+    }
+    this.remoteCallbacks.forEach((cb) => cb(new MediaStream()));
+    this.setConnectionState('RECONNECTING');
+  }
+
+  private async resetAndOffer(): Promise<void> {
+    if (!this.socket || !this.config || !this.localStream) return;
+    try {
+      if (this.peerConnection) {
+        try {
+          this.peerConnection.close();
+        } catch {}
+        this.peerConnection = null;
+      }
+      this.pendingIceCandidates = [];
+
+      const pc = await this.getOrCreatePeerConnection();
+      if (!pc) return;
+
+      const offer = await pc.createOffer({
+        offerToReceiveAudio: true,
+        offerToReceiveVideo: true,
+      });
+      await pc.setLocalDescription(offer);
+      this.socket.emit('webrtc:signal', {
+        roomId: this.config.roomId,
+        signal: { offer: pc.localDescription },
+      });
+    } catch (offerErr) {
+      console.warn('[WebRTC] Error initiating peer offer:', offerErr);
+    }
   }
 
   private async getOrCreatePeerConnection(): Promise<RTCPeerConnection | null> {
     if (typeof RTCPeerConnection === 'undefined') return null;
-    if (this.peerConnection) return this.peerConnection;
+    if (this.peerConnection && this.peerConnection.signalingState !== 'closed') {
+      return this.peerConnection;
+    }
 
     const pc = new RTCPeerConnection({
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
         { urls: 'stun:stun1.l.google.com:19302' },
+        { urls: 'stun:stun2.l.google.com:19302' },
+        { urls: 'stun:stun3.l.google.com:19302' },
+        { urls: 'stun:stun4.l.google.com:19302' },
+        { urls: 'stun:global.stun.twilio.com:3478' },
       ],
     });
 
@@ -392,10 +445,12 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
     }
 
     pc.ontrack = (event) => {
-      if (event.streams && event.streams[0]) {
-        this.setRemoteStream(event.streams[0]);
-        this.setConnectionState('CONNECTED');
-      }
+      const stream =
+        event.streams && event.streams[0]
+          ? event.streams[0]
+          : new MediaStream([event.track]);
+      this.setRemoteStream(stream);
+      this.setConnectionState('CONNECTED');
     };
 
     pc.onicecandidate = (event) => {
@@ -411,9 +466,12 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
       if (pc.connectionState === 'connected') {
         this.setConnectionState('CONNECTED');
       } else if (pc.connectionState === 'disconnected') {
-        this.setConnectionState('DISCONNECTED');
+        this.setConnectionState('RECONNECTING');
       } else if (pc.connectionState === 'failed') {
-        this.setConnectionState('FAILED');
+        // Automatically attempt an ICE restart
+        this.resetAndOffer().catch(() => {
+          this.setConnectionState('FAILED');
+        });
       }
     };
 
@@ -421,43 +479,26 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
     return pc;
   }
 
-  private async initiatePeerOffer(): Promise<void> {
-    if (!this.socket || !this.config || !this.localStream || !this.peerReady || this.makingOffer) return;
-    try {
-      const pc = await this.getOrCreatePeerConnection();
-      if (!pc) return;
-      if (pc.signalingState !== 'stable') return;
-      this.makingOffer = true;
-      const offer = await pc.createOffer();
-      await pc.setLocalDescription(offer);
-      this.socket.emit('webrtc:signal', {
-        roomId: this.config.roomId,
-        signal: { offer: pc.localDescription },
-      });
-    } catch (offerErr) {
-      console.warn('[WebRTC] Error initiating peer offer:', offerErr);
-    } finally {
-      this.makingOffer = false;
-    }
-  }
-
-  private async processPeerSignal(data: any): Promise<void> {
+  private async handlePeerSignal(data: any): Promise<void> {
     if (!data?.signal) return;
     try {
       const pc = await this.getOrCreatePeerConnection();
       if (!pc) return;
+
       if (data.signal.offer) {
-        const offerCollision =
-          this.makingOffer ||
-          pc.signalingState !== 'stable' ||
-          pc.connectionState === 'connecting';
-        this.ignoreOffer = this.config?.role === 'DOCTOR' && offerCollision;
-        if (this.ignoreOffer) return;
-        if (offerCollision) {
-          await pc.setLocalDescription({ type: 'rollback' });
+        // Polite glare resolution: rollback local offer if in collision state
+        if (pc.signalingState !== 'stable') {
+          await Promise.all([
+            pc.setLocalDescription({ type: 'rollback' }),
+            pc.setRemoteDescription(new RTCSessionDescription(data.signal.offer)),
+          ]);
+        } else {
+          await pc.setRemoteDescription(new RTCSessionDescription(data.signal.offer));
         }
-        await pc.setRemoteDescription(new RTCSessionDescription(data.signal.offer));
+
+        // Flush queued ICE candidates
         await this.flushPendingCandidates(pc);
+
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
         this.socket?.emit('webrtc:signal', {
@@ -465,26 +506,37 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
           signal: { answer: pc.localDescription },
         });
       } else if (data.signal.answer) {
-        await pc.setRemoteDescription(new RTCSessionDescription(data.signal.answer));
-        await this.flushPendingCandidates(pc);
+        if (pc.signalingState === 'have-local-offer') {
+          await pc.setRemoteDescription(new RTCSessionDescription(data.signal.answer));
+          await this.flushPendingCandidates(pc);
+        }
       } else if (data.signal.candidate) {
-        if (pc.remoteDescription) {
-          await pc.addIceCandidate(new RTCIceCandidate(data.signal.candidate));
+        const cand = data.signal.candidate;
+        if (pc.remoteDescription && pc.remoteDescription.type) {
+          try {
+            await pc.addIceCandidate(new RTCIceCandidate(cand));
+          } catch (candErr) {
+            console.warn('[WebRTC] addIceCandidate error:', candErr);
+          }
         } else {
-          this.pendingCandidates.push(data.signal.candidate);
+          this.pendingIceCandidates.push(cand);
         }
       }
     } catch (sigErr) {
-      if (!this.ignoreOffer) {
-        console.warn('[WebRTC] Signal handling error:', sigErr);
-      }
+      console.warn('[WebRTC] Signal handling error:', sigErr);
     }
   }
 
   private async flushPendingCandidates(pc: RTCPeerConnection): Promise<void> {
-    const candidates = this.pendingCandidates.splice(0);
-    for (const candidate of candidates) {
-      await pc.addIceCandidate(new RTCIceCandidate(candidate));
+    if (this.pendingIceCandidates.length === 0) return;
+    const candidates = [...this.pendingIceCandidates];
+    this.pendingIceCandidates = [];
+    for (const cand of candidates) {
+      try {
+        await pc.addIceCandidate(new RTCIceCandidate(cand));
+      } catch (err) {
+        console.warn('[WebRTC] Error adding buffered ICE candidate:', err);
+      }
     }
   }
 
@@ -545,9 +597,12 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
 
     // 4. Close PeerConnection
     if (this.peerConnection) {
-      this.peerConnection.close();
+      try {
+        this.peerConnection.close();
+      } catch {}
       this.peerConnection = null;
     }
+    this.pendingIceCandidates = [];
 
     // 5. Disconnect Socket
     if (this.socket) {
@@ -555,10 +610,7 @@ export class RealWebRTCCommunicationService implements ICommunicationService {
         roomId: this.config?.roomId,
         userId: this.config?.userId,
       });
-      this.socket.off?.('peer:joined', this.handlePeerJoined);
-      this.socket.off?.('webrtc:signal', this.handlePeerSignal);
-      // The consultation page owns the shared socket.
-      if (!this.config?.signalingSocket) this.socket.disconnect?.();
+      this.socket.disconnect();
       this.socket = null;
     }
 

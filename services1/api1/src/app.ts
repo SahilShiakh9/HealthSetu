@@ -36,6 +36,7 @@ export const createApp = (): express.Application => {
         if (!origin) return callback(null, true);
         if (
           origin === env.CORS_ORIGIN ||
+          origin.endsWith('.vercel.app') ||
           (env.NODE_ENV !== 'production' && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin))
         ) {
           return callback(null, origin);

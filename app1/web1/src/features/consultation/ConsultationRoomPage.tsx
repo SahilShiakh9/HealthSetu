@@ -22,6 +22,7 @@ import { db } from '../../offline/db.js';
 import { apiClient } from '../../services/apiClient.js';
 import { io, Socket } from 'socket.io-client';
 import { SOCKET_EVENTS } from '@healthsetu/contracts';
+import { getBackendSocketUrl } from '../../services/socketHelper.js';
 import {
   RealWebRTCCommunicationService,
   type ICommunicationService,
@@ -131,17 +132,24 @@ export const ConsultationRoomPage: React.FC = () => {
 
           // Connect Socket.IO for real-time bidirectional messaging and synchronized lifecycle
           try {
-            const socketUrl =
-              (import.meta as any).env?.VITE_SOCKET_URL ||
-              (typeof window !== 'undefined' && window.location.hostname === 'localhost'
-                ? 'http://localhost:4000'
-                : typeof window !== 'undefined'
-                  ? window.location.origin
-                  : '');
+            const socketUrl = getBackendSocketUrl();
             if (socketUrl) {
-              const socket = io(socketUrl, { transports: ['websocket', 'polling'] });
+              const socket = io(socketUrl, {
+                transports: ['websocket', 'polling'],
+                reconnectionAttempts: 15,
+                reconnectionDelay: 1000,
+              });
               socketRef.current = socket;
               const rId = data.zego?.roomId || `consultation_${consultationId}`;
+
+              socket.on('connect', () => {
+                socket.emit('join:room', {
+                  roomId: rId,
+                  userId: user?.id,
+                  role: isDoctor ? 'DOCTOR' : 'PATIENT',
+                });
+              });
+
               socket.emit('join:room', {
                 roomId: rId,
                 userId: user?.id,
@@ -219,13 +227,18 @@ export const ConsultationRoomPage: React.FC = () => {
               const stream = await comm.startLocalStream(callMode === 'AUDIO');
               if (localVideoRef.current && isMounted) {
                 localVideoRef.current.srcObject = stream;
+                localVideoRef.current.play().catch(() => {});
               }
 
               comm.onRemoteStream((remoteStream) => {
                 if (remoteVideoRef.current && isMounted) {
-                  remoteVideoRef.current.srcObject = remoteStream;
-                  setHasRemoteTrack(true);
-                  setConnectionState('CONNECTED');
+                  const hasTracks = remoteStream.getTracks().length > 0;
+                  remoteVideoRef.current.srcObject = hasTracks ? remoteStream : null;
+                  setHasRemoteTrack(hasTracks);
+                  if (hasTracks) {
+                    setConnectionState('CONNECTED');
+                    remoteVideoRef.current.play().catch(() => {});
+                  }
                 }
               });
             } catch (err: any) {
@@ -347,6 +360,30 @@ export const ConsultationRoomPage: React.FC = () => {
     const s = secs % 60;
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
+
+  // Persistent video playback guarantee when switching tabs (Call <-> Chat <-> Rx)
+  useEffect(() => {
+    if (activeTab === 'CALL') {
+      const comm = commServiceRef.current;
+      if (comm) {
+        const localStream = comm.getLocalStream();
+        if (localVideoRef.current && localStream) {
+          if (localVideoRef.current.srcObject !== localStream) {
+            localVideoRef.current.srcObject = localStream;
+          }
+          localVideoRef.current.play().catch(() => {});
+        }
+        const remoteStream = comm.getRemoteStream();
+        if (remoteVideoRef.current && remoteStream && remoteStream.getTracks().length > 0) {
+          if (remoteVideoRef.current.srcObject !== remoteStream) {
+            remoteVideoRef.current.srcObject = remoteStream;
+          }
+          remoteVideoRef.current.play().catch(() => {});
+          setHasRemoteTrack(true);
+        }
+      }
+    }
+  }, [activeTab]);
 
   // Toggle call mode (Video <-> Audio)
   const handleToggleCallMode = async () => {
@@ -579,8 +616,12 @@ export const ConsultationRoomPage: React.FC = () => {
 
       {/* Main View Area */}
       <main className="flex-1 flex flex-col relative overflow-y-auto">
-        {activeTab === 'CALL' && (
-          <div className="flex-1 flex flex-col justify-center items-center p-4 relative min-h-[380px]">
+        {/* Call View: Persistent in DOM to prevent video track drops across tab switches */}
+        <div
+          className={`flex-1 flex flex-col justify-center items-center p-4 relative min-h-[380px] ${
+            activeTab === 'CALL' ? '' : 'hidden'
+          }`}
+        >
             {/* Unconfigured State (Section 0.2 honest diagnostic) */}
             {isConfigured === false ? (
               <div className="w-full flex-1 max-h-[420px] rounded-3xl bg-slate-900 border border-slate-800 p-6 flex flex-col items-center justify-center text-center space-y-3">
@@ -699,11 +740,13 @@ export const ConsultationRoomPage: React.FC = () => {
               </div>
             )}
           </div>
-        )}
 
-        {/* In-Call Text Chat Tab */}
-        {activeTab === 'CHAT' && (
-          <div className="flex-1 flex flex-col p-4 space-y-3">
+        {/* In-Call Text Chat Tab: Persistent in DOM */}
+        <div
+          className={`flex-1 flex flex-col p-4 space-y-3 ${
+            activeTab === 'CHAT' ? '' : 'hidden'
+          }`}
+        >
             <div className="flex-1 overflow-y-auto space-y-2.5 pr-1">
               {messages.map((msg) => {
                 const isMe =
@@ -747,11 +790,14 @@ export const ConsultationRoomPage: React.FC = () => {
               </button>
             </form>
           </div>
-        )}
 
         {/* Doctor Clinical Prescription Tab (clinician writes, never auto-filled) */}
-        {activeTab === 'PRESCRIPTION' && isDoctor && (
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {isDoctor && (
+          <div
+            className={`flex-1 overflow-y-auto p-4 space-y-4 ${
+              activeTab === 'PRESCRIPTION' ? '' : 'hidden'
+            }`}
+          >
             {consultStatus === 'DOCUMENTATION_PENDING' && (
               <div className="bg-teal-950/40 border border-teal-800 p-3 rounded-2xl text-xs text-teal-200 flex items-start gap-2">
                 <Info className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />

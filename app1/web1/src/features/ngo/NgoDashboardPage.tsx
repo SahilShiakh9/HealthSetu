@@ -19,12 +19,13 @@ import {
 import { io, Socket } from 'socket.io-client';
 import { useAuthStore } from '../auth/useAuthStore.js';
 import { apiClient } from '../../services/apiClient.js';
+import { getBackendSocketUrl } from '../../services/socketHelper.js';
 import type {
   NgoOverviewMetrics,
   NgoActivityEvent,
 } from '@healthsetu/contracts';
 
-const SOCKET_URL = (import.meta as any).env?.VITE_SOCKET_URL || 'http://localhost:4000';
+const SOCKET_URL = getBackendSocketUrl();
 
 export const NgoDashboardPage: React.FC = () => {
   const navigate = useNavigate();

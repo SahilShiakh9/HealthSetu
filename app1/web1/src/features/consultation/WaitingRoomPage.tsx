@@ -19,6 +19,7 @@ import { useAuthStore } from '../auth/useAuthStore.js';
 import { apiClient } from '../../services/apiClient.js';
 import { io } from 'socket.io-client';
 import { SOCKET_EVENTS } from '@healthsetu/contracts';
+import { getBackendSocketUrl } from '../../services/socketHelper.js';
 
 export const WaitingRoomPage: React.FC = () => {
   const { consultationId } = useParams<{ consultationId: string }>();
@@ -100,15 +101,12 @@ export const WaitingRoomPage: React.FC = () => {
     // Real-time socket listener for instant admission push
     let socket: any = null;
     try {
-      const socketUrl =
-        (import.meta as any).env?.VITE_SOCKET_URL ||
-        (typeof window !== 'undefined' && window.location.hostname === 'localhost'
-          ? 'http://localhost:4000'
-          : typeof window !== 'undefined'
-            ? window.location.origin
-            : '');
+      const socketUrl = getBackendSocketUrl();
       if (socketUrl) {
         socket = io(socketUrl, { transports: ['websocket', 'polling'] });
+        socket.on('connect', () => {
+          socket.emit('join:room', { roomId: `consultation_${consultationId}` });
+        });
         socket.emit('join:room', { roomId: `consultation_${consultationId}` });
         socket.on(SOCKET_EVENTS.CONSULTATION_ASSIGNED, (payload: any) => {
           if (isMounted && (!payload || payload.consultationId === consultationId)) {

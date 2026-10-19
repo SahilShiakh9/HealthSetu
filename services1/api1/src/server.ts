@@ -17,6 +17,7 @@ export const io = new SocketIOServer(server, {
       if (!origin) return callback(null, true);
       if (
         origin === env.CORS_ORIGIN ||
+        origin.endsWith('.vercel.app') ||
         (env.NODE_ENV !== 'production' && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin))
       ) {
         return callback(null, origin);
@@ -53,21 +54,13 @@ io.on('connection', (socket) => {
   // Join authorized consultation / RTC room
   socket.on('join:room', (data: { roomId: string; userId?: string; role?: string }) => {
     if (!data?.roomId) return;
-    const existingRoom = io.sockets.adapter.rooms.get(data.roomId);
-    const hasExistingPeer = Boolean(existingRoom && existingRoom.size > 0);
     socket.join(data.roomId);
     logger.info({ socketId: socket.id, roomId: data.roomId, userId: data.userId, role: data.role }, 'Socket joined consultation room');
-    const peerJoinedPayload = {
+    socket.to(data.roomId).emit('peer:joined', {
       socketId: socket.id,
       userId: data.userId,
       role: data.role,
-    };
-    socket.to(data.roomId).emit('peer:joined', peerJoinedPayload);
-    // Also notify a participant who joins second. This removes the join-order
-    // race where the doctor could miss the event and never start negotiation.
-    if (hasExistingPeer) {
-      socket.emit('peer:joined', peerJoinedPayload);
-    }
+    });
   });
 
   // Leave consultation room
@@ -95,6 +88,14 @@ io.on('connection', (socket) => {
   socket.on('message:send', (data: { roomId: string; message: any }) => {
     if (!data?.roomId || !data?.message) return;
     socket.to(data.roomId).emit('message:new', data);
+  });
+
+  socket.on('disconnecting', () => {
+    for (const room of socket.rooms) {
+      if (room !== socket.id) {
+        socket.to(room).emit('peer:left', { socketId: socket.id });
+      }
+    }
   });
 
   socket.on('disconnect', (reason) => {
