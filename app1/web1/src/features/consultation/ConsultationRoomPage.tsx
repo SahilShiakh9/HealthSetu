@@ -68,6 +68,8 @@ export const ConsultationRoomPage: React.FC = () => {
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const commServiceRef = useRef<ICommunicationService | null>(null);
+  const localStreamRef = useRef<MediaStream | null>(null);
+  const remoteStreamRef = useRef<MediaStream | null>(null);
   const socketRef = useRef<Socket | null>(null);
   const zegoRoomIdRef = useRef<string>('');
 
@@ -93,6 +95,24 @@ export const ConsultationRoomPage: React.FC = () => {
   const [doctorDisplayName, setDoctorDisplayName] = useState<string>('Assigned Medical Officer');
   const [patientDisplayName, setPatientDisplayName] = useState<string>('Patient');
 
+  // Video elements are unmounted when Chat/Rx is selected. Reattach the
+  // existing streams when the Call tab is rendered again.
+  useEffect(() => {
+    if (activeTab !== 'CALL') return;
+    const attachStreams = () => {
+      if (localVideoRef.current && localStreamRef.current) {
+        localVideoRef.current.srcObject = localStreamRef.current;
+        void localVideoRef.current.play().catch(() => {});
+      }
+      if (remoteVideoRef.current && remoteStreamRef.current) {
+        remoteVideoRef.current.srcObject = remoteStreamRef.current;
+        void remoteVideoRef.current.play().catch(() => {});
+      }
+    };
+    const frame = window.requestAnimationFrame(attachStreams);
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeTab]);
+
   // Join consultation on mount via POST /api/v1/consultations/:id/join
   useEffect(() => {
     if (!consultationId) return;
@@ -107,6 +127,7 @@ export const ConsultationRoomPage: React.FC = () => {
         const res = await fetch(`${API_BASE_URL}/consultations/${consultationId}/join`, {
           method: 'POST',
           headers,
+          credentials: 'include',
         });
 
         if (res.status === 400) {
@@ -148,7 +169,10 @@ export const ConsultationRoomPage: React.FC = () => {
               (import.meta as any).env?.VITE_SOCKET_URL ||
               API_BASE_URL.replace(/\/api\/v1\/?$/, '');
             if (socketUrl) {
-              const socket = io(socketUrl, { transports: ['websocket', 'polling'] });
+              const socket = io(socketUrl, {
+                transports: ['websocket', 'polling'],
+                withCredentials: true,
+              });
               socketRef.current = socket;
               const rId = data.zego?.roomId || `consultation_${consultationId}`;
               socket.emit('join:room', {
@@ -228,13 +252,17 @@ export const ConsultationRoomPage: React.FC = () => {
               });
 
               const stream = await comm.startLocalStream(callMode === 'AUDIO');
+              localStreamRef.current = stream;
               if (localVideoRef.current && isMounted) {
                 localVideoRef.current.srcObject = stream;
+                void localVideoRef.current.play().catch(() => {});
               }
 
               comm.onRemoteStream((remoteStream) => {
+                remoteStreamRef.current = remoteStream;
                 if (remoteVideoRef.current && isMounted) {
                   remoteVideoRef.current.srcObject = remoteStream;
+                  void remoteVideoRef.current.play().catch(() => {});
                   setHasRemoteTrack(true);
                   setConnectionState('CONNECTED');
                 }
@@ -265,7 +293,10 @@ export const ConsultationRoomPage: React.FC = () => {
       try {
         const headers: Record<string, string> = {};
         if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-        const res = await fetch(`${API_BASE_URL}/consultations/${consultationId}`, { headers });
+        const res = await fetch(`${API_BASE_URL}/consultations/${consultationId}`, {
+          headers,
+          credentials: 'include',
+        });
         if (res.ok) {
           const syncData = await res.json();
           const c = syncData.consultation;
@@ -322,6 +353,8 @@ export const ConsultationRoomPage: React.FC = () => {
             setConsultStatus('DOCUMENTATION_PENDING');
             if (!callEnded) {
               commServiceRef.current?.leaveRoom();
+              localStreamRef.current = null;
+              remoteStreamRef.current = null;
               setCallEnded(true);
               if (isDoctor) setActiveTab('PRESCRIPTION');
             }
@@ -347,6 +380,8 @@ export const ConsultationRoomPage: React.FC = () => {
         socketRef.current = null;
       }
       commServiceRef.current?.leaveRoom();
+      localStreamRef.current = null;
+      remoteStreamRef.current = null;
     };
   }, [consultationId, accessToken, user?.id, navigate, isDoctor]);
 
@@ -381,6 +416,7 @@ export const ConsultationRoomPage: React.FC = () => {
         await fetch(`${API_BASE_URL}/consultations/${consultationId}/mode`, {
           method: 'PATCH',
           headers,
+          credentials: 'include',
           body: JSON.stringify({ mode: nextMode, reason: 'Participant toggled mode' }),
         });
       } catch {
@@ -422,6 +458,7 @@ export const ConsultationRoomPage: React.FC = () => {
         await fetch(`${API_BASE_URL}/consultations/${consultationId}/messages`, {
           method: 'POST',
           headers,
+          credentials: 'include',
           body: JSON.stringify({
             clientId: newMsg.id,
             body: bodyToSend,
@@ -468,6 +505,7 @@ export const ConsultationRoomPage: React.FC = () => {
       await fetch(`${API_BASE_URL}/consultations/${consultationId}/end`, {
         method: 'POST',
         headers,
+        credentials: 'include',
       });
     } catch {
       // offline / local
@@ -513,6 +551,7 @@ export const ConsultationRoomPage: React.FC = () => {
         await fetch(`${API_BASE_URL}/consultations/${consultationId}/complete`, {
           method: 'POST',
           headers,
+          credentials: 'include',
           body: JSON.stringify(outcomeData),
         });
 

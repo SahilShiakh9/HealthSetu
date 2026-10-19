@@ -250,6 +250,7 @@ export const ScreeningPage: React.FC = () => {
   const silenceTimerRef = useRef<any>(null);
   const voiceStopRequestedRef = useRef(false);
   const userActivatedAudioRef = useRef(false);
+  const finalTranscriptRef = useRef('');
   const transcriptRef = useRef<string>('');
   const stateRef = useRef<LifecycleState>('idle');
 
@@ -403,11 +404,17 @@ export const ScreeningPage: React.FC = () => {
     rec.lang = selectedLanguage === 'mr' ? 'mr-IN' : selectedLanguage === 'hi' ? 'hi-IN' : 'en-IN';
 
     rec.onresult = (event: any) => {
-      let finalStr = '';
-      for (let i = 0; i < event.results.length; i++) {
-        finalStr += event.results[i][0].transcript + ' ';
+      let interimText = '';
+      for (let i = event.resultIndex || 0; i < event.results.length; i++) {
+        const result = event.results[i];
+        const text = result[0]?.transcript || '';
+        if (result.isFinal) {
+          finalTranscriptRef.current = `${finalTranscriptRef.current} ${text}`.trim();
+        } else {
+          interimText += `${text} `;
+        }
       }
-      const cleaned = finalStr.trim();
+      const cleaned = `${finalTranscriptRef.current} ${interimText}`.trim();
       setTranscript(cleaned);
       setTextInput(cleaned);
       transcriptRef.current = cleaned;
@@ -492,6 +499,7 @@ export const ScreeningPage: React.FC = () => {
     setTranscript('');
     setTextInput('');
     transcriptRef.current = '';
+    finalTranscriptRef.current = '';
     setState('idle');
     setErrorMessage(null);
 

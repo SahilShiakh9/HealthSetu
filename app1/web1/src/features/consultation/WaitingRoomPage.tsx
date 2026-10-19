@@ -110,7 +110,10 @@ export const WaitingRoomPage: React.FC = () => {
         (import.meta as any).env?.VITE_SOCKET_URL ||
         API_BASE_URL.replace(/\/api\/v1\/?$/, '');
       if (socketUrl) {
-        socket = io(socketUrl, { transports: ['websocket', 'polling'] });
+        socket = io(socketUrl, {
+          transports: ['websocket', 'polling'],
+          withCredentials: true,
+        });
         socket.emit('join:room', { roomId: `consultation_${consultationId}` });
         socket.on(SOCKET_EVENTS.CONSULTATION_ASSIGNED, (payload: any) => {
           if (isMounted && (!payload || payload.consultationId === consultationId)) {

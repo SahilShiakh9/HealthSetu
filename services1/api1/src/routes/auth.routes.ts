@@ -37,7 +37,9 @@ const setRefreshCookie = (res: Response, rawRefreshToken: string) => {
   res.cookie('refreshToken', rawRefreshToken, {
     httpOnly: true,
     secure: env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    // Vercel and Render are different sites, so the refresh cookie must be
+    // sent on cross-origin fetch requests from the deployed frontend.
+    sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
     path: '/api/v1/auth',
     maxAge: 7 * 24 * 3600 * 1000, // 7 days
   });
@@ -47,7 +49,7 @@ const clearRefreshCookie = (res: Response) => {
   res.clearCookie('refreshToken', {
     httpOnly: true,
     secure: env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
     path: '/api/v1/auth',
     maxAge: 0,
   });
@@ -420,4 +422,3 @@ authRouter.get('/auth/me', requireAuth, async (req, res, next) => {
     next(err);
   }
 });
-
