@@ -412,26 +412,17 @@ export class ConsultationService {
 
     if (consultation.status === 'QUEUED') {
       if (user.role === 'DOCTOR') {
+        const isAssignedDoctor = consultation.doctorId?.toString() === user.id;
+        if (!isAssignedDoctor) {
+          throw new AppError({
+            statusCode: 409,
+            code: 'CONSULTATION_NOT_ADMITTED',
+            message: 'The patient is still queued. Admit the patient from the doctor queue before joining the consultation.',
+          });
+        }
         consultation.status = 'IN_PROGRESS';
         if (!consultation.startedAt) consultation.startedAt = new Date();
         await consultation.save();
-
-        import('../server.js')
-          .then(({ io }) => {
-            const assignment = {
-              consultationId: consultation._id.toString(),
-              doctorId: user.id,
-              status: 'IN_PROGRESS',
-            };
-            // The waiting room subscribes before it has RTC credentials, so
-            // notify its stable consultation room as well as the RTC room.
-            io.to(consultation.zegoRoomId).emit(SOCKET_EVENTS.CONSULTATION_ASSIGNED, assignment);
-            io.to(`consultation_${consultation._id.toString()}`).emit(
-              SOCKET_EVENTS.CONSULTATION_ASSIGNED,
-              assignment,
-            );
-          })
-          .catch((err) => logger.warn({ err }, 'Failed to emit consultation:assigned'));
       }
       // If patient enters pre-call room while QUEUED, they receive credentials but
       // consultation.status remains QUEUED until doctor admits.

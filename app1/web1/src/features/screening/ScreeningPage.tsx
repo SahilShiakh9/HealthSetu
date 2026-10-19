@@ -253,7 +253,6 @@ export const ScreeningPage: React.FC = () => {
   const finalTranscriptRef = useRef('');
   const transcriptRef = useRef<string>('');
   const stateRef = useRef<LifecycleState>('idle');
-  const voiceSessionRef = useRef(0);
 
   useEffect(() => {
     stateRef.current = state;
@@ -455,12 +454,6 @@ export const ScreeningPage: React.FC = () => {
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
       if (voiceStopRequestedRef.current) {
         voiceStopRequestedRef.current = false;
-        const textToSubmit = finalTranscriptRef.current.trim();
-        if (textToSubmit) {
-          handleProcessSubmission(textToSubmit);
-        } else {
-          setState('idle');
-        }
         return;
       }
       if (stateRef.current === 'listening') {
@@ -546,7 +539,13 @@ export const ScreeningPage: React.FC = () => {
       } catch (err) {
         console.warn('Could not stop recognition:', err);
       }
-        return;
+      const textToSubmit = (transcriptRef.current || transcript || textInput).trim();
+      if (textToSubmit) {
+        handleProcessSubmission(textToSubmit);
+      } else {
+        setState('idle');
+      }
+      return;
     }
 
     if (state === 'processing' || state === 'speaking') {
@@ -569,8 +568,6 @@ export const ScreeningPage: React.FC = () => {
     setTextInput('');
     transcriptRef.current = '';
     voiceStopRequestedRef.current = false;
-    finalTranscriptRef.current = '';
-    voiceSessionRef.current += 1;
     setIsEditingTranscript(false);
     setState('listening');
 
@@ -631,10 +628,7 @@ export const ScreeningPage: React.FC = () => {
   };
 
   // Submit patient statement to backend dialogue engine
-  const handleProcessSubmission = async (
-    statementText: string,
-    answerContext?: { questionId: string; symptomId: string; value: 'yes' | 'no' | 'unknown' },
-  ) => {
+  const handleProcessSubmission = async (statementText: string) => {
     const textToSend = statementText.trim();
     if (!textToSend || state === 'processing') return;
 
@@ -668,7 +662,6 @@ export const ScreeningPage: React.FC = () => {
           sessionId,
           text: textToSend,
           language: selectedLanguage,
-          answerContext,
           currentSymptoms,
           negatedSymptoms,
           answeredQuestions,
@@ -789,11 +782,7 @@ export const ScreeningPage: React.FC = () => {
 
     const valLabel = value === 'yes' ? S.yes : value === 'no' ? S.no : S.notSure;
     setCurrentFollowUp(null);
-    await handleProcessSubmission(`${valLabel}`, {
-      questionId: qId,
-      symptomId: currentFollowUp.symptomId,
-      value,
-    });
+    await handleProcessSubmission(`${valLabel} (${currentFollowUp.symptomId})`);
   };
 
   // Persist screening to Dexie and queue Outbox synchronization
@@ -1120,11 +1109,9 @@ export const ScreeningPage: React.FC = () => {
                     <span className="font-bold text-emerald-400 text-base">
                       {screeningResult.candidateCategory}
                     </span>
-                    {screeningResult.riskTier !== 'LOW' && (
-                      <p className="text-[10px] text-slate-400 mt-0.5 italic">
-                        {S.disclaimer}
-                      </p>
-                    )}
+                    <p className="text-[10px] text-slate-400 mt-0.5 italic">
+                      {S.disclaimer}
+                    </p>
                   </>
                 ) : (
                   <>

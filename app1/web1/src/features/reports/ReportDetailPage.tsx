@@ -178,38 +178,24 @@ export const ReportDetailPage: React.FC = () => {
 
   const handleDownloadPdf = () => {
     if (!encounter) return;
-    try {
-      const doc = generateMedicalReportPdf({
-        reportNumber: encounter.id,
-        facilityName: encounter.facilityName,
-        doctorName: encounter.doctorName,
-        doctorRegistration: encounter.doctorQualification,
-        patientName: encounter.patientName,
-        patientPhone: encounter.patientPhone,
-        issuedAt: encounter.date || new Date().toISOString(),
-        diagnosis: encounter.diagnosis,
-        assessment: encounter.assessment,
-        medications: encounter.medications,
-        tests: encounter.tests,
-        notes: encounter.notes,
-        followUpDate: encounter.followUpDate,
-        screeningSummary: 'AI-assisted screening, not a diagnosis',
-        isMock: encounter.isMock,
-      });
-      const blob = doc.output('blob');
-      const url = URL.createObjectURL(blob);
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.download = `Prescription_${encounter.id}.pdf`;
-      anchor.rel = 'noopener';
-      document.body.appendChild(anchor);
-      anchor.click();
-      anchor.remove();
-      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-    } catch (error) {
-      console.error('Failed to generate medical report PDF', error);
-      window.alert('The report could not be downloaded. Please try again or use Print.');
-    }
+    const doc = generateMedicalReportPdf({
+      reportNumber: encounter.id,
+      facilityName: encounter.facilityName,
+      doctorName: encounter.doctorName,
+      doctorRegistration: encounter.doctorQualification,
+      patientName: encounter.patientName,
+      patientPhone: encounter.patientPhone,
+      issuedAt: encounter.date || new Date().toISOString(),
+      diagnosis: encounter.diagnosis,
+      assessment: encounter.assessment,
+      medications: encounter.medications,
+      tests: encounter.tests,
+      notes: encounter.notes,
+      followUpDate: encounter.followUpDate,
+      screeningSummary: 'AI-assisted screening, not a diagnosis',
+      isMock: encounter.isMock,
+    });
+    doc.save(`Prescription_${encounter.id}.pdf`);
   };
 
   if (loading) {

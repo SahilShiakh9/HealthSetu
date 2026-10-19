@@ -60,7 +60,6 @@ interface DoctorProfileInfo {
   registrationNumber?: string;
   specialties?: string[];
   qualification?: string;
-  availability?: DoctorAvailability;
 }
 
 export const DoctorDashboardPage: React.FC = () => {
@@ -124,9 +123,6 @@ export const DoctorDashboardPage: React.FC = () => {
       setAffiliations(data.affiliations || []);
       if (data.doctorProfile) {
         setDoctorProfile(data.doctorProfile);
-        if (data.doctorProfile.availability) {
-          setAvailability(data.doctorProfile.availability);
-        }
       }
     } catch {
       // ignore
@@ -138,7 +134,6 @@ export const DoctorDashboardPage: React.FC = () => {
     fetchAffiliations();
     fetchAvailableFacilities();
     const queueInterval = setInterval(fetchDoctorQueue, 8000);
-    const profileInterval = setInterval(fetchAffiliations, 8000);
 
     // Heartbeat every 20 seconds when doctor is available
     const heartbeatInterval = setInterval(async () => {
@@ -155,7 +150,6 @@ export const DoctorDashboardPage: React.FC = () => {
 
     return () => {
       clearInterval(queueInterval);
-      clearInterval(profileInterval);
       clearInterval(heartbeatInterval);
     };
   }, [accessToken, availability]);
