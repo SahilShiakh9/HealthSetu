@@ -15,7 +15,7 @@ import { User } from '../models/User.js';
 import { QueueEntry } from '../models/QueueEntry.js';
 import { AuditEvent } from '../models/AuditEvent.js';
 import { queueService, NOW_MAX_WAIT_MIN } from './queue.service.js';
-import { scoreDoctor, calculateEstimatedWait } from './matching.service.js';
+import { buildPoolKey, scoreDoctor, calculateEstimatedWait } from './matching.service.js';
 import { zegoService } from './zego.service.js';
 import { authzService, type UserContext } from './authz.service.js';
 import { AppError } from '../middleware/errorHandler.js';
@@ -298,33 +298,52 @@ export class ConsultationService {
     const doctor = await Doctor.findOne({ userId: new mongoose.Types.ObjectId(doctorId) });
     const doctorSpecialties = doctor?.specialties || ['General Physician'];
     const doctorLanguages = doctor?.languages || ['hi', 'en'];
+    const doctorObjectId = new mongoose.Types.ObjectId(doctorId);
+    const poolKeys = Array.from(
+      new Set(
+        [...doctorSpecialties, 'General Physician'].flatMap((specialty) =>
+          doctorLanguages.map((language) => buildPoolKey(specialty, language)),
+        ),
+      ),
+    );
 
-    const filter: Record<string, any> = {
-      status: 'QUEUED',
+    // QueueEntry is the authoritative waiting-state record. Querying it avoids
+    // hiding pooled patients because of raw specialty/language casing or stale
+    // consultation fields.
+    const waitingEntries = await QueueEntry.find({
+      status: 'WAITING',
       $or: [
-        { doctorId: new mongoose.Types.ObjectId(doctorId) },
-        {
-          doctorId: null,
-          requiredSpecialty: { $in: [...doctorSpecialties, 'General Physician'] },
-          preferredLanguage: { $in: doctorLanguages },
-        },
+        { preferredDoctorId: doctorObjectId },
+        { preferredDoctorId: null, poolKey: { $in: poolKeys } },
       ],
-    };
-
-    const consultations = await Consultation.find(filter)
+    })
       .sort({ effectivePriority: 1, sequence: 1, createdAt: 1 })
+      .select('consultationId patientId');
+
+    if (waitingEntries.length === 0) return [];
+
+    const consultationIds = waitingEntries.map((entry) => entry.consultationId);
+    const consultations = (await Consultation.find({
+      _id: { $in: consultationIds },
+      status: 'QUEUED',
+    })
       .populate('patientId', 'name phone language')
-      .populate('screeningId') as any;
+      .populate('screeningId')) as unknown as IConsultation[];
+    const consultationById = new Map<string, IConsultation>(
+      consultations.map((consultation) => [consultation._id.toString(), consultation]),
+    );
 
     // Older clients could create duplicate requests with fresh idempotency
     // keys. Show one authoritative active consultation per patient while the
     // queue service prevents new duplicates.
     const seenPatients = new Set<string>();
-    return consultations.filter((consultation: IConsultation) => {
+    return waitingEntries.flatMap((entry): IConsultation[] => {
+      const consultation = consultationById.get(entry.consultationId.toString());
+      if (!consultation) return [];
       const patientId = consultation.patientId?._id?.toString() || consultation.patientId?.toString();
-      if (!patientId || seenPatients.has(patientId)) return false;
+      if (!patientId || seenPatients.has(patientId)) return [];
       seenPatients.add(patientId);
-      return true;
+      return [consultation];
     });
   }
 

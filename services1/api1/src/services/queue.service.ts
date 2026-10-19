@@ -68,6 +68,19 @@ export class QueueService {
       }
     }
 
+    // 2. Emergency Rule: Emergencies NEVER enter the teleconsultation queue
+    if (input.screeningId && Types.ObjectId.isValid(input.screeningId)) {
+      const screening = await Screening.findById(input.screeningId);
+      if (screening && (screening.isEmergency || (screening.emergencyFlags && screening.emergencyFlags.length > 0))) {
+        throw new AppError({
+          statusCode: 400,
+          code: 'EMERGENCY_QUEUE_BYPASS',
+          message: 'Emergency red-flag symptoms detected. Emergencies must never enter teleconsultation queue. Route to Emergency 108 immediately.',
+          details: { emergencyFlags: screening.emergencyFlags, isEmergency: true },
+        });
+      }
+    }
+
     // A patient may have only one active instant consultation. Mobile retries
     // can generate a new idempotency key, so also deduplicate by patient and
     // active status instead of creating duplicate queue tokens.
@@ -91,19 +104,6 @@ export class QueueService {
           overflow: pos.overflow,
           suggestedAction: pos.overflow ? 'BOOK_LATER' : 'CONSULT_NOW',
         };
-      }
-    }
-
-    // 2. Emergency Rule: Emergencies NEVER enter the teleconsultation queue
-    if (input.screeningId && Types.ObjectId.isValid(input.screeningId)) {
-      const screening = await Screening.findById(input.screeningId);
-      if (screening && (screening.isEmergency || (screening.emergencyFlags && screening.emergencyFlags.length > 0))) {
-        throw new AppError({
-          statusCode: 400,
-          code: 'EMERGENCY_QUEUE_BYPASS',
-          message: 'Emergency red-flag symptoms detected. Emergencies must never enter teleconsultation queue. Route to Emergency 108 immediately.',
-          details: { emergencyFlags: screening.emergencyFlags, isEmergency: true },
-        });
       }
     }
 
