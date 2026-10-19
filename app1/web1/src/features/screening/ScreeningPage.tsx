@@ -68,6 +68,12 @@ const UI_STRINGS: Record<
     yes: string;
     no: string;
     notSure: string;
+    today: string;
+    oneTwoDays: string;
+    moreThanWeek: string;
+    mild: string;
+    moderate: string;
+    severe: string;
     quickAnswer: string;
     processing: string;
     permDenied: string;
@@ -105,6 +111,12 @@ const UI_STRINGS: Record<
     yes: 'होय',
     no: 'नाही',
     notSure: 'निश्चित नाही',
+    today: 'आजपासून',
+    oneTwoDays: '१-२ दिवस',
+    moreThanWeek: '१ आठवड्यापेक्षा जास्त',
+    mild: 'किरकोळ / सौम्य',
+    moderate: 'मध्यम',
+    severe: 'खूप जास्त / तीव्र',
     quickAnswer: 'जलद उत्तर निवडा:',
     processing: 'लक्षणांचे विश्लेषण करत आहे...',
     permDenied: 'मायक्रोफोन परवानगी नाकारली गेली आहे. कृपया ब्राऊझर सेटिंग्जमध्ये परवानगी द्या किंवा टाईप करा.',
@@ -141,6 +153,12 @@ const UI_STRINGS: Record<
     yes: 'हां',
     no: 'नहीं',
     notSure: 'निश्चित नहीं',
+    today: 'आज से',
+    oneTwoDays: '1-2 दिन से',
+    moreThanWeek: '1 हफ्ते से ज्यादा',
+    mild: 'हल्का',
+    moderate: 'मध्यम',
+    severe: 'बहुत तेज',
     quickAnswer: 'उत्तर चुनें:',
     processing: 'लक्षणों का विश्लेषण कर रहा है...',
     permDenied: 'माइक्रोफोन की अनुमति नहीं मिली। कृपया ब्राउज़र सेटिंग्स में अनुमति दें या लिखकर बताएं।',
@@ -177,6 +195,12 @@ const UI_STRINGS: Record<
     yes: 'Yes',
     no: 'No',
     notSure: 'Not Sure',
+    today: 'Today',
+    oneTwoDays: '1-2 days',
+    moreThanWeek: '>1 week',
+    mild: 'Mild',
+    moderate: 'Moderate',
+    severe: 'Severe',
     quickAnswer: 'Quick Answer:',
     processing: 'Analyzing your health concerns...',
     permDenied: 'Microphone permission was denied. Please allow microphone access in browser settings or type instead.',
@@ -230,12 +254,13 @@ export const ScreeningPage: React.FC = () => {
   // Conversational thread
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentSymptoms, setCurrentSymptoms] = useState<string[]>([]);
-  const [answeredQuestions, setAnsweredQuestions] = useState<Record<string, 'yes' | 'no' | 'unknown'>>({});
+  const [answeredQuestions, setAnsweredQuestions] = useState<Record<string, string>>({});
   const [questionHistory, setQuestionHistory] = useState<string[]>([]);
   const [currentFollowUp, setCurrentFollowUp] = useState<{
     questionId: string;
     symptomId: string;
     text: string;
+    questionType?: 'yes_no' | 'duration' | 'severity';
   } | null>(null);
 
   // Final outcome state
@@ -260,6 +285,8 @@ export const ScreeningPage: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const silenceTimerRef = useRef<any>(null);
   const transcriptRef = useRef<string>('');
+  const sessionFinalTranscriptRef = useRef<string>('');
+  const isSubmittingRef = useRef<boolean>(false);
   const stateRef = useRef<LifecycleState>('idle');
 
   useEffect(() => {
@@ -403,52 +430,74 @@ export const ScreeningPage: React.FC = () => {
     rec.lang = selectedLanguage === 'mr' ? 'mr-IN' : selectedLanguage === 'hi' ? 'hi-IN' : 'en-IN';
 
     rec.onresult = (event: any) => {
-      let finalStr = '';
-      for (let i = 0; i < event.results.length; i++) {
-        finalStr += event.results[i][0].transcript + ' ';
+      let interimStr = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcriptPiece = event.results[i][0]?.transcript || '';
+        if (event.results[i].isFinal) {
+          sessionFinalTranscriptRef.current = (sessionFinalTranscriptRef.current + ' ' + transcriptPiece).trim();
+        } else {
+          interimStr += transcriptPiece + ' ';
+        }
       }
-      const cleaned = finalStr.trim();
-      setTranscript(cleaned);
-      setTextInput(cleaned);
-      transcriptRef.current = cleaned;
 
-      // Snappy silence detection: auto-submit statement 800ms after user pauses speaking
+      const fullTranscript = (sessionFinalTranscriptRef.current + ' ' + interimStr).trim();
+      if (!fullTranscript) return;
+
+      setTranscript(fullTranscript);
+      setTextInput(fullTranscript);
+      transcriptRef.current = fullTranscript;
+
+      // Natural silence detection: pause 2500ms after user stops speaking before submitting
       if (silenceTimerRef.current) {
         clearTimeout(silenceTimerRef.current);
       }
-      if (cleaned.length > 1) {
-        silenceTimerRef.current = setTimeout(() => {
-          if (stateRef.current === 'listening') {
-            try {
-              recognitionRef.current?.stop();
-            } catch {}
-            handleProcessSubmission(cleaned);
+      silenceTimerRef.current = setTimeout(() => {
+        if (stateRef.current === 'listening') {
+          const textToSubmit = transcriptRef.current.trim();
+          setState('processing');
+          try {
+            recognitionRef.current?.stop();
+          } catch {}
+          if (textToSubmit) {
+            handleProcessSubmission(textToSubmit);
+          } else {
+            setState('idle');
           }
-        }, 800);
-      }
+        }
+      }, 2500);
     };
 
     rec.onerror = (e: any) => {
       console.warn('Speech recognition error event:', e.error);
-      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
       if (e.error === 'not-allowed') {
+        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
         setErrorMessage(S.permDenied);
+        setState('idle');
       } else if (e.error === 'no-speech') {
-        // User remained silent, return to idle
-      } else {
-        setErrorMessage(S.speechError);
+        // Only return to idle if no speech was ever captured
+        if (!transcriptRef.current.trim() && !sessionFinalTranscriptRef.current.trim()) {
+          setState('idle');
+        }
       }
-      setState('idle');
     };
 
     rec.onend = () => {
-      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      // Safe mobile Web Speech handling:
+      // Mobile browsers frequently stop recognition after short pauses.
+      // If patient is still actively in their listening turn, resume listening without losing accumulated speech.
       if (stateRef.current === 'listening') {
-        const textToSubmit = transcriptRef.current.trim();
-        if (textToSubmit) {
-          handleProcessSubmission(textToSubmit);
-        } else {
-          setState('idle');
+        try {
+          rec.start();
+        } catch {
+          // If browser rejects restart, handle graceful fallback only if silence timer isn't pending
+          if (!silenceTimerRef.current) {
+            const textToSubmit = transcriptRef.current.trim();
+            if (textToSubmit) {
+              handleProcessSubmission(textToSubmit);
+            } else {
+              setState('idle');
+            }
+          }
         }
       }
     };
@@ -486,6 +535,7 @@ export const ScreeningPage: React.FC = () => {
     setTranscript('');
     setTextInput('');
     transcriptRef.current = '';
+    sessionFinalTranscriptRef.current = '';
     setState('idle');
     setErrorMessage(null);
 
@@ -516,6 +566,7 @@ export const ScreeningPage: React.FC = () => {
       if (silenceTimerRef.current) {
         clearTimeout(silenceTimerRef.current);
       }
+      setState('processing');
       try {
         recognitionRef.current?.stop();
       } catch (err) {
@@ -549,6 +600,7 @@ export const ScreeningPage: React.FC = () => {
     setTranscript('');
     setTextInput('');
     transcriptRef.current = '';
+    sessionFinalTranscriptRef.current = '';
     setIsEditingTranscript(false);
     setState('listening');
 
@@ -611,152 +663,159 @@ export const ScreeningPage: React.FC = () => {
   // Submit patient statement to backend dialogue engine
   const handleProcessSubmission = async (statementText: string) => {
     const textToSend = statementText.trim();
-    if (!textToSend || state === 'processing') return;
+    if (!textToSend || isSubmittingRef.current) return;
 
-    // Immediately stop any ongoing assistant speech
-    handleStopSpeaking();
-
-    // Independent Emergency Rule Check runs FIRST
-    if (checkEmergencySignsLocally(textToSend)) {
-      return;
-    }
-
-    // Append user message
-    const userMsg: Message = {
-      id: `msg-user-${Date.now()}`,
-      sender: 'user',
-      text: textToSend,
-      timestamp: Date.now(),
-    };
-
-    setMessages((prev) => [...prev, userMsg]);
-    setState('processing');
-    setErrorMessage(null);
-
-    const startTime = performance.now();
-
+    isSubmittingRef.current = true;
     try {
-      const data = await apiClient<any>('/screenings/dialogue', {
-        method: 'POST',
-        body: JSON.stringify({
-          sessionId,
-          text: textToSend,
-          language: selectedLanguage,
-          currentSymptoms,
-          negatedSymptoms,
-          answeredQuestions,
-          questionHistory,
-          patientName: patientName || undefined,
-          conversationHistory: messages.slice(-6).map((m) => ({
-            role: m.sender === 'user' ? 'user' : 'assistant',
-            text: m.text,
-          })),
-        }),
-      });
+      // Immediately stop any ongoing assistant speech
+      handleStopSpeaking();
 
-      const elapsed = Math.round(performance.now() - startTime);
-      console.log(`[HealthSetu AI] Dialogue turnaround: ${elapsed}ms`);
-
-      // Urgent red flag check
-      if (data.isEmergency) {
-        navigate(`/screening/emergency?flags=${encodeURIComponent((data.emergencyFlags || []).join(','))}`);
+      // Independent Emergency Rule Check runs FIRST
+      if (checkEmergencySignsLocally(textToSend)) {
         return;
       }
 
-      if (data.patientName && !patientName) {
-        setPatientName(data.patientName);
-      }
-      if (data.negatedSymptoms) {
-        setNegatedSymptoms(data.negatedSymptoms);
-      }
-      if (data.extractedSymptoms) {
-        setCurrentSymptoms(data.extractedSymptoms);
-      }
+      // Append user message
+      const userMsg: Message = {
+        id: `msg-user-${Date.now()}`,
+        sender: 'user',
+        text: textToSend,
+        timestamp: Date.now(),
+      };
 
-      // Check if dialogue concluded
-      if (data.isFinished) {
-        setState('concluded');
-        setCurrentFollowUp(null);
+      setMessages((prev) => [...prev, userMsg]);
+      setState('processing');
+      setErrorMessage(null);
 
-        const resultObj = {
-          riskTier: data.riskTier,
-          candidateCategory: data.candidateCategory,
-          recommendedSpecialty: data.recommendedSpecialty,
-          guidanceText: data.guidanceText,
-          modelVersion: data.modelVersion,
-        };
-        setScreeningResult(resultObj);
+      const startTime = performance.now();
 
-        const finalMsg: Message = {
-          id: `msg-asst-${Date.now()}`,
-          sender: 'assistant',
-          text: data.guidanceText,
-          timestamp: Date.now(),
-        };
-        setMessages((prev) => [...prev, finalMsg]);
+      try {
+        const data = await apiClient<any>('/screenings/dialogue', {
+          method: 'POST',
+          body: JSON.stringify({
+            sessionId,
+            text: textToSend,
+            language: selectedLanguage,
+            currentSymptoms,
+            negatedSymptoms,
+            answeredQuestions,
+            questionHistory,
+            patientName: patientName || undefined,
+            conversationHistory: messages.slice(-6).map((m) => ({
+              role: m.sender === 'user' ? 'user' : 'assistant',
+              text: m.text,
+            })),
+          }),
+        });
 
-        // Speak outcome automatically
-        speakAssistantText(data.guidanceText, finalMsg.id);
+        const elapsed = Math.round(performance.now() - startTime);
+        console.log(`[HealthSetu AI] Dialogue turnaround: ${elapsed}ms`);
 
-        // Persist locally to Dexie and Outbox
-        await persistScreening(resultObj, textToSend);
-      } else {
-        // Continuous adaptive dialogue: greeting acknowledged, general query answered, or follow-up question
-        setCurrentFollowUp(data.followUpQuestion || null);
-        if (data.followUpQuestion) {
-          setQuestionHistory((prev) => [...prev, data.followUpQuestion.questionId]);
+        // Urgent red flag check
+        if (data.isEmergency) {
+          navigate(`/screening/emergency?flags=${encodeURIComponent((data.emergencyFlags || []).join(','))}`);
+          return;
         }
-        setTranscript('');
-        setTextInput('');
-        setState('idle');
 
-        const replyText = data.followUpQuestion ? data.followUpQuestion.text : data.guidanceText;
-        if (replyText) {
-          const asstMsg: Message = {
+        if (data.patientName && !patientName) {
+          setPatientName(data.patientName);
+        }
+        if (data.negatedSymptoms) {
+          setNegatedSymptoms(data.negatedSymptoms);
+        }
+        if (data.extractedSymptoms) {
+          setCurrentSymptoms(data.extractedSymptoms);
+        }
+
+        // Check if dialogue concluded
+        if (data.isFinished) {
+          setState('concluded');
+          setCurrentFollowUp(null);
+
+          const resultObj = {
+            riskTier: data.riskTier,
+            candidateCategory: data.candidateCategory,
+            recommendedSpecialty: data.recommendedSpecialty,
+            guidanceText: data.guidanceText,
+            modelVersion: data.modelVersion,
+          };
+          setScreeningResult(resultObj);
+
+          const finalMsg: Message = {
             id: `msg-asst-${Date.now()}`,
             sender: 'assistant',
-            text: replyText,
+            text: data.guidanceText,
             timestamp: Date.now(),
-            questionId: data.followUpQuestion?.questionId,
           };
-          setMessages((prev) => [...prev, asstMsg]);
+          setMessages((prev) => [...prev, finalMsg]);
 
-          // Speak assistant reply automatically
-          speakAssistantText(replyText, asstMsg.id);
+          // Speak outcome automatically
+          speakAssistantText(data.guidanceText, finalMsg.id);
+
+          // Persist locally to Dexie and Outbox
+          await persistScreening(resultObj, textToSend);
+        } else {
+          // Continuous adaptive dialogue: greeting acknowledged, general query answered, or follow-up question
+          setCurrentFollowUp(data.followUpQuestion || null);
+          if (data.followUpQuestion) {
+            setQuestionHistory((prev) => [...prev, data.followUpQuestion.questionId]);
+          }
+          setTranscript('');
+          setTextInput('');
+          sessionFinalTranscriptRef.current = '';
+          transcriptRef.current = '';
+          setState('idle');
+
+          const replyText = data.followUpQuestion ? data.followUpQuestion.text : data.guidanceText;
+          if (replyText) {
+            const asstMsg: Message = {
+              id: `msg-asst-${Date.now()}`,
+              sender: 'assistant',
+              text: replyText,
+              timestamp: Date.now(),
+              questionId: data.followUpQuestion?.questionId,
+            };
+            setMessages((prev) => [...prev, asstMsg]);
+
+            // Speak assistant reply automatically
+            speakAssistantText(replyText, asstMsg.id);
+          }
         }
+      } catch (err: any) {
+        console.warn('Backend dialogue error; using on-device fallback:', err);
+
+        // Preserve existing transcript so user does not have to repeat everything!
+        setErrorMessage(S.networkError);
+
+        // On-device deterministic emergency check
+        const symMap: Record<string, 'yes' | 'no' | 'unknown'> = {};
+        currentSymptoms.forEach((s) => {
+          symMap[s] = 'yes';
+        });
+        const localEmerg = evaluateEmergencyRules(symMap, 'moderate', selectedLanguage);
+        if (localEmerg.isEmergency) {
+          navigate(`/screening/emergency?flags=${encodeURIComponent(localEmerg.flags.join(','))}`);
+          return;
+        }
+
+        setState('confirming');
       }
-    } catch (err: any) {
-      console.warn('Backend dialogue error; using on-device fallback:', err);
-
-      // Preserve existing transcript so user does not have to repeat everything!
-      setErrorMessage(S.networkError);
-
-      // On-device deterministic emergency check
-      const symMap: Record<string, 'yes' | 'no' | 'unknown'> = {};
-      currentSymptoms.forEach((s) => {
-        symMap[s] = 'yes';
-      });
-      const localEmerg = evaluateEmergencyRules(symMap, 'moderate', selectedLanguage);
-      if (localEmerg.isEmergency) {
-        navigate(`/screening/emergency?flags=${encodeURIComponent(localEmerg.flags.join(','))}`);
-        return;
-      }
-
-      setState('confirming');
+    } finally {
+      isSubmittingRef.current = false;
     }
   };
 
-  // Handle quick Yes / No / Not Sure response
-  const handleQuickAnswer = async (value: 'yes' | 'no' | 'unknown') => {
-    if (!currentFollowUp) return;
+  // Handle quick response pills (Yes/No, Duration, Severity)
+  const handleQuickAnswer = async (value: string, label: string) => {
+    if (!currentFollowUp || isSubmittingRef.current) return;
 
     const qId = currentFollowUp.questionId;
     const updated = { ...answeredQuestions, [qId]: value };
     setAnsweredQuestions(updated);
 
-    const valLabel = value === 'yes' ? S.yes : value === 'no' ? S.no : S.notSure;
+    const followUpCopy = currentFollowUp;
     setCurrentFollowUp(null);
-    await handleProcessSubmission(`${valLabel} (${currentFollowUp.symptomId})`);
+    await handleProcessSubmission(`${label} (${followUpCopy.symptomId})`);
   };
 
   // Persist screening to Dexie and queue Outbox synchronization
@@ -774,7 +833,7 @@ export const ScreeningPage: React.FC = () => {
       const answersArray = Object.entries(answeredQuestions).map(([qId, val]) => ({
         questionId: qId,
         symptomId: qId,
-        value: val,
+        value: (val === 'yes' || val === 'no' || val === 'unknown' ? val : 'unknown') as any,
         at: Date.now(),
       }));
 
@@ -989,33 +1048,77 @@ export const ScreeningPage: React.FC = () => {
             </div>
           )}
 
-          {/* Large Yes / No / Not Sure Touch Targets for Follow-up Questions */}
+          {/* Dynamic Touch Targets for Follow-up Questions (Duration / Severity / Yes-No) */}
           {currentFollowUp && state !== 'processing' && (
             <div className="bg-slate-800/90 border border-emerald-500/30 p-3.5 rounded-2xl flex flex-col gap-2 mt-1 shadow-md">
               <span className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
                 <HelpCircle className="w-3.5 h-3.5 text-emerald-400" />
                 {S.quickAnswer}
               </span>
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  onClick={() => handleQuickAnswer('yes')}
-                  className="min-h-[46px] bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer"
-                >
-                  {S.yes}
-                </button>
-                <button
-                  onClick={() => handleQuickAnswer('no')}
-                  className="min-h-[46px] bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 font-bold text-xs rounded-xl transition-all cursor-pointer"
-                >
-                  {S.no}
-                </button>
-                <button
-                  onClick={() => handleQuickAnswer('unknown')}
-                  className="min-h-[46px] bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 font-bold text-xs rounded-xl transition-all cursor-pointer"
-                >
-                  {S.notSure}
-                </button>
-              </div>
+              {currentFollowUp.questionType === 'duration' ? (
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    onClick={() => handleQuickAnswer('today', S.today)}
+                    className="min-h-[46px] px-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer text-center"
+                  >
+                    {S.today}
+                  </button>
+                  <button
+                    onClick={() => handleQuickAnswer('1-2_days', S.oneTwoDays)}
+                    className="min-h-[46px] px-2 bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                  >
+                    {S.oneTwoDays}
+                  </button>
+                  <button
+                    onClick={() => handleQuickAnswer('more_than_week', S.moreThanWeek)}
+                    className="min-h-[46px] px-2 bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                  >
+                    {S.moreThanWeek}
+                  </button>
+                </div>
+              ) : currentFollowUp.questionType === 'severity' ? (
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    onClick={() => handleQuickAnswer('mild', S.mild)}
+                    className="min-h-[46px] px-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer text-center"
+                  >
+                    {S.mild}
+                  </button>
+                  <button
+                    onClick={() => handleQuickAnswer('moderate', S.moderate)}
+                    className="min-h-[46px] px-2 bg-amber-600 hover:bg-amber-500 active:scale-95 text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                  >
+                    {S.moderate}
+                  </button>
+                  <button
+                    onClick={() => handleQuickAnswer('severe', S.severe)}
+                    className="min-h-[46px] px-2 bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                  >
+                    {S.severe}
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    onClick={() => handleQuickAnswer('yes', S.yes)}
+                    className="min-h-[46px] px-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer text-center"
+                  >
+                    {S.yes}
+                  </button>
+                  <button
+                    onClick={() => handleQuickAnswer('no', S.no)}
+                    className="min-h-[46px] px-2 bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                  >
+                    {S.no}
+                  </button>
+                  <button
+                    onClick={() => handleQuickAnswer('unknown', S.notSure)}
+                    className="min-h-[46px] px-2 bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                  >
+                    {S.notSure}
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
