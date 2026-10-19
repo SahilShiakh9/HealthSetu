@@ -276,6 +276,22 @@ export const WaitingRoomPage: React.FC = () => {
             <p className="mt-1 text-sm text-slate-400">
               Open Reports to view the doctor&apos;s completed report.
             </p>
+            <div className="mt-3 flex flex-wrap justify-center gap-2">
+              <button
+                type="button"
+                onClick={() => navigate('/screening')}
+                className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-700"
+              >
+                Start New Consultation
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/reports')}
+                className="rounded-xl bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-slate-700"
+              >
+                View Report
+              </button>
+            </div>
           </div>
         )}
 

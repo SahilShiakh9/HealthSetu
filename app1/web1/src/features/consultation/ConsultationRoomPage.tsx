@@ -145,7 +145,28 @@ export const ConsultationRoomPage: React.FC = () => {
 
           if (data.consultation?.doctorId?.name) setDoctorDisplayName(data.consultation.doctorId.name);
           if (data.consultation?.patientId?.name) setPatientDisplayName(data.consultation.patientId.name);
-          if (data.consultation?.status) setConsultStatus(data.consultation.status);
+          const returnedStatus = data.consultation?.status as string | undefined;
+          if (returnedStatus) setConsultStatus(returnedStatus);
+
+          // A patient must never initialize camera, microphone, sockets, or
+          // WebRTC while the consultation is still waiting for admission.
+          if (!isDoctor && returnedStatus === 'QUEUED') {
+            navigate(`/consult/waiting/${consultationId}`);
+            return;
+          }
+
+          // Old room links remain valid for history, but ended consultations
+          // must be read-only and must not request media permissions.
+          if (
+            !isDoctor &&
+            returnedStatus &&
+            ['DOCUMENTATION_PENDING', 'COMPLETED', 'CANCELLED', 'EXPIRED'].includes(returnedStatus)
+          ) {
+            setCallEnded(true);
+            setIsConfigured(false);
+            return;
+          }
+
           if (data.zego?.roomId) zegoRoomIdRef.current = data.zego.roomId;
 
           // Restore persisted chat messages from MongoDB
@@ -654,7 +675,47 @@ export const ConsultationRoomPage: React.FC = () => {
         {activeTab === 'CALL' && (
           <div className="flex-1 flex flex-col justify-center items-center p-4 relative min-h-[380px]">
             {/* Unconfigured State (Section 0.2 honest diagnostic) */}
-            {isConfigured === false ? (
+            {callEnded ? (
+              <div className="w-full flex-1 max-h-[420px] rounded-3xl bg-slate-900 border border-slate-800 p-6 flex flex-col items-center justify-center text-center space-y-3">
+                <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-2xl">
+                  <CheckCircle2 className="w-8 h-8" />
+                </div>
+                <h3 className="font-bold text-base text-white">
+                  {isDoctor ? 'Consultation Call Concluded' : 'This consultation has ended.'}
+                </h3>
+                <p className="text-xs text-slate-400 max-w-xs">
+                  {isDoctor
+                    ? 'Call ended. Complete the clinical diagnosis and prescription below to issue the report.'
+                    : 'You cannot reconnect to this completed consultation. Start a new consultation or view the existing report.'}
+                </p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {isDoctor ? (
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('PRESCRIPTION')}
+                      className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl transition-colors"
+                    >
+                      Complete Documentation
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => navigate('/screening')}
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-colors"
+                    >
+                      Start New Consultation
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => navigate('/reports')}
+                    className="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-semibold rounded-xl hover:bg-slate-700 transition-colors"
+                  >
+                    View Report
+                  </button>
+                </div>
+              </div>
+            ) : isConfigured === false ? (
               <div className="w-full flex-1 max-h-[420px] rounded-3xl bg-slate-900 border border-slate-800 p-6 flex flex-col items-center justify-center text-center space-y-3">
                 <div className="p-3 bg-amber-500/20 text-amber-400 rounded-2xl">
                   <VideoOff className="w-8 h-8" />
@@ -670,35 +731,6 @@ export const ConsultationRoomPage: React.FC = () => {
                 >
                   Open Secure Chat
                 </button>
-              </div>
-            ) : callEnded ? (
-              <div className="w-full flex-1 max-h-[420px] rounded-3xl bg-slate-900 border border-slate-800 p-6 flex flex-col items-center justify-center text-center space-y-3">
-                <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-2xl">
-                  <CheckCircle2 className="w-8 h-8" />
-                </div>
-                <h3 className="font-bold text-base text-white">Consultation Call Concluded</h3>
-                <p className="text-xs text-slate-400 max-w-xs">
-                  {isDoctor
-                    ? 'Call ended. Status is DOCUMENTATION_PENDING. Please complete clinical diagnosis and prescription below to issue report.'
-                    : 'Call ended. The Medical Officer is currently preparing your clinical summary and prescription.'}
-                </p>
-                {isDoctor ? (
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('PRESCRIPTION')}
-                    className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl transition-colors"
-                  >
-                    Complete Documentation
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => navigate('/reports')}
-                    className="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-semibold rounded-xl hover:bg-slate-700 transition-colors"
-                  >
-                    View Medical Reports
-                  </button>
-                )}
               </div>
             ) : (
               /* Real Live RTC Feed Display */
