@@ -271,6 +271,56 @@ export const ScreeningPage: React.FC = () => {
 
   const activeAudioRef = useRef<HTMLAudioElement | null>(null);
 
+  const normalizeRecognizedText = useCallback((text: string): string => {
+    const words = text.trim().split(/\s+/).filter(Boolean);
+    if (words.length < 2) return words.join(' ');
+
+    const normalized: string[] = [];
+    for (const word of words) {
+      if (normalized[normalized.length - 1]?.toLocaleLowerCase() === word.toLocaleLowerCase()) continue;
+      normalized.push(word);
+    }
+
+    let changed = true;
+    while (changed && normalized.length >= 4) {
+      changed = false;
+      const maxPhraseLength = Math.min(8, Math.floor(normalized.length / 2));
+      for (let size = maxPhraseLength; size >= 2; size -= 1) {
+        const start = normalized.length - size * 2;
+        const first = normalized.slice(start, start + size).map((word) => word.toLocaleLowerCase());
+        const second = normalized.slice(start + size).map((word) => word.toLocaleLowerCase());
+        if (first.every((word, index) => word === second[index])) {
+          normalized.splice(start + size, size);
+          changed = true;
+          break;
+        }
+      }
+    }
+
+    return normalized.join(' ');
+  }, []);
+
+  const appendUniqueTranscript = useCallback((existing: string, incoming: string): string => {
+    const current = normalizeRecognizedText(existing);
+    const next = normalizeRecognizedText(incoming);
+    if (!next) return current;
+    if (!current) return next;
+    if (current === next || current.endsWith(next)) return current;
+    if (next.startsWith(current)) return next;
+
+    const currentWords = current.split(/\s+/);
+    const nextWords = next.split(/\s+/);
+    const maxOverlap = Math.min(currentWords.length, nextWords.length);
+    for (let size = maxOverlap; size > 0; size -= 1) {
+      const currentTail = currentWords.slice(-size).join(' ').toLowerCase();
+      const nextHead = nextWords.slice(0, size).join(' ').toLowerCase();
+      if (currentTail === nextHead) {
+        return `${current} ${nextWords.slice(size).join(' ')}`.trim();
+      }
+    }
+    return `${current} ${next}`.trim();
+  }, [normalizeRecognizedText]);
+
   // Stop active speech playback immediately and cleanly across all audio pipelines
   const handleStopSpeaking = useCallback(() => {
     if ('speechSynthesis' in window) {
@@ -409,12 +459,12 @@ export const ScreeningPage: React.FC = () => {
         const result = event.results[i];
         const text = result[0]?.transcript || '';
         if (result.isFinal) {
-          finalTranscriptRef.current = `${finalTranscriptRef.current} ${text}`.trim();
+          finalTranscriptRef.current = appendUniqueTranscript(finalTranscriptRef.current, text);
         } else {
           interimText += `${text} `;
         }
       }
-      const cleaned = `${finalTranscriptRef.current} ${interimText}`.trim();
+      const cleaned = normalizeRecognizedText(`${finalTranscriptRef.current} ${interimText}`);
       setTranscript(cleaned);
       setTextInput(cleaned);
       transcriptRef.current = cleaned;
@@ -472,7 +522,7 @@ export const ScreeningPage: React.FC = () => {
         rec.abort();
       } catch {}
     };
-  }, [selectedLanguage, S.permDenied, S.speechError]);
+  }, [appendUniqueTranscript, normalizeRecognizedText, selectedLanguage, S.permDenied, S.speechError]);
 
   // Pre-warm audio cache for Marathi, Hindi, and English greetings for near-instant 0ms audio latency
   useEffect(() => {
