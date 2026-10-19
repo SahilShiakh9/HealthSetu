@@ -26,6 +26,7 @@ interface EncounterDetail {
   patientName: string;
   patientPhone: string;
   date: string;
+  rawDate?: string;
   diagnosis: string;
   assessment: string;
   outcomeType: string;
@@ -62,6 +63,7 @@ export const ReportDetailPage: React.FC = () => {
           patientName: user?.name || (user?.phone ? `Patient (${user.phone})` : 'Demo Patient'),
           patientPhone: user?.phone || '9876543210',
           date: new Date().toLocaleDateString(),
+          rawDate: new Date().toISOString(),
           diagnosis: 'Acute Upper Respiratory Tract Infection (Demo Sample)',
           assessment: 'Mild throat congestion. Vitals stable.',
           outcomeType: 'PRESCRIPTION',
@@ -97,6 +99,7 @@ export const ReportDetailPage: React.FC = () => {
             patientName: r.patientName || (user?.name || (user?.phone ? `Patient (${user.phone})` : 'Patient')),
             patientPhone: r.patientPhone || user?.phone || '',
             date: new Date(r.issuedAt).toLocaleDateString(),
+            rawDate: r.issuedAt,
             diagnosis: r.diagnosis || 'Clinical Assessment',
             assessment: r.assessment || 'Consultation concluded.',
             outcomeType: 'PRESCRIPTION',
@@ -128,6 +131,7 @@ export const ReportDetailPage: React.FC = () => {
             patientName: consult.patientId?.name || (user?.name || (user?.phone ? `Patient (${user.phone})` : 'Patient')),
             patientPhone: consult.patientId?.phone || user?.phone || '',
             date: new Date(consult.createdAt).toLocaleDateString(),
+            rawDate: outcome.issuedAt || consult.createdAt,
             diagnosis: outcome.diagnosisLabel || 'Clinical Assessment',
             assessment: outcome.assessment || 'Consultation completed.',
             outcomeType: outcome.outcomeType || 'COMPLETED',
@@ -156,6 +160,7 @@ export const ReportDetailPage: React.FC = () => {
           patientName: user?.name || (user?.phone ? `Patient (${user.phone})` : 'Patient'),
           patientPhone: user?.phone || '',
           date: new Date(cached.updatedAt).toLocaleDateString(),
+          rawDate: (cached.data as any)?.outcome?.issuedAt || (cached.data as any)?.completedAt || new Date(cached.updatedAt).toISOString(),
           diagnosis: outcome.diagnosisLabel || 'Clinical Assessment',
           assessment: outcome.assessment || '',
           outcomeType: outcome.outcomeType || 'COMPLETED',
@@ -181,24 +186,48 @@ export const ReportDetailPage: React.FC = () => {
 
   const handleDownloadPdf = () => {
     if (!encounter) return;
-    const doc = generateMedicalReportPdf({
-      reportNumber: encounter.id,
-      facilityName: encounter.facilityName,
-      doctorName: encounter.doctorName,
-      doctorRegistration: encounter.doctorQualification,
-      patientName: encounter.patientName,
-      patientPhone: encounter.patientPhone,
-      issuedAt: encounter.date || new Date().toISOString(),
-      diagnosis: encounter.diagnosis,
-      assessment: encounter.assessment,
-      medications: encounter.medications,
-      tests: encounter.tests,
-      notes: encounter.notes,
-      followUpDate: encounter.followUpDate,
-      screeningSummary: 'AI-assisted screening, not a diagnosis',
-      isMock: encounter.isMock,
-    });
-    doc.save(`Prescription_${encounter.id}.pdf`);
+    try {
+      const doc = generateMedicalReportPdf({
+        reportNumber: encounter.id,
+        facilityName: encounter.facilityName,
+        doctorName: encounter.doctorName,
+        doctorRegistration: encounter.doctorQualification,
+        patientName: encounter.patientName,
+        patientPhone: encounter.patientPhone,
+        issuedAt: encounter.rawDate || encounter.date || new Date().toISOString(),
+        diagnosis: encounter.diagnosis,
+        assessment: encounter.assessment,
+        medications: encounter.medications,
+        tests: encounter.tests,
+        notes: encounter.notes,
+        followUpDate: encounter.followUpDate,
+        screeningSummary: 'AI-assisted screening, not a diagnosis',
+        isMock: encounter.isMock,
+      });
+
+      const fileName = `Prescription_${encounter.id || 'Report'}.pdf`;
+
+      try {
+        const blob = doc.output('blob');
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+      } catch {
+        doc.save(fileName);
+      }
+    } catch (err) {
+      console.error('Error generating PDF download:', err);
+      try {
+        window.print();
+      } catch {
+        // ignore
+      }
+    }
   };
 
   if (loading) {

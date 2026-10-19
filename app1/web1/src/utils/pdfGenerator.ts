@@ -39,12 +39,44 @@ export function generateMedicalReportPdf(data: ReportPdfData): jsPDF {
   const margin = 15;
   const contentWidth = pageWidth - margin * 2;
 
-  // Format timestamp in Indian Standard Time (IST)
-  const istDateString = new Intl.DateTimeFormat('en-IN', {
-    timeZone: 'Asia/Kolkata',
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(new Date(data.issuedAt));
+  // Format timestamp in Indian Standard Time (IST) with foolproof date parsing
+  let safeDate: Date;
+  try {
+    if (data.issuedAt instanceof Date) {
+      safeDate = isNaN(data.issuedAt.getTime()) ? new Date() : data.issuedAt;
+    } else if (typeof data.issuedAt === 'string') {
+      const d = new Date(data.issuedAt);
+      if (!isNaN(d.getTime())) {
+        safeDate = d;
+      } else {
+        const parts = data.issuedAt.split(/[/.-]/);
+        if (parts.length === 3) {
+          const dPart = parseInt(parts[0], 10);
+          const mPart = parseInt(parts[1], 10) - 1;
+          const yPart = parseInt(parts[2], 10);
+          const manualDate = new Date(yPart, mPart, dPart);
+          safeDate = isNaN(manualDate.getTime()) ? new Date() : manualDate;
+        } else {
+          safeDate = new Date();
+        }
+      }
+    } else {
+      safeDate = new Date();
+    }
+  } catch {
+    safeDate = new Date();
+  }
+
+  let istDateString: string;
+  try {
+    istDateString = new Intl.DateTimeFormat('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(safeDate);
+  } catch {
+    istDateString = safeDate.toLocaleDateString();
+  }
 
   let y = 16;
 
