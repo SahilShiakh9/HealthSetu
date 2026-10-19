@@ -420,7 +420,7 @@ export const ScreeningPage: React.FC = () => {
       setTextInput(cleaned);
       // Interim recognition is only a visual preview. Never submit it or
       // carry it into the next microphone session.
-      transcriptRef.current = normalizeRecognizedText(finalTranscriptRef.current);
+      transcriptRef.current = finalTranscriptRef.current.trim();
 
       // Stop capture after a natural pause, but submit from onend only. This
       // prevents early submission and duplicate requests on mobile browsers.
