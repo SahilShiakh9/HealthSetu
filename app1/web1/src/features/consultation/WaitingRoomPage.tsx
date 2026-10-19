@@ -34,6 +34,8 @@ export const WaitingRoomPage: React.FC = () => {
   const [audioOnlyPreference, setAudioOnlyPreference] = useState<boolean>(false);
 
   const isAdmitted = status === 'IN_PROGRESS' || status === 'CALLED' || status === 'ACTIVE';
+  const isCompleted = status === 'COMPLETED' || status === 'DONE';
+  const isCancelled = status === 'CANCELLED' || status === 'MISSED';
 
   // Sync and poll queue status
   useEffect(() => {
@@ -260,11 +262,29 @@ export const WaitingRoomPage: React.FC = () => {
         </div>
 
         {/* Waiting notice when not admitted yet */}
-        {!isAdmitted && (
+        {!isAdmitted && !isCompleted && !isCancelled && (
           <p className="text-[11px] text-amber-600 dark:text-amber-400 font-semibold text-center flex items-center justify-center space-x-1">
             <Clock className="w-3.5 h-3.5 animate-spin" />
             <span>Waiting for Doctor to Admit You...</span>
           </p>
+        )}
+
+        {isCompleted && (
+          <div className="mt-6 rounded-2xl border border-slate-700 bg-slate-900/70 p-4 text-center">
+            <CheckCircle2 className="mx-auto mb-2 h-7 w-7 text-emerald-400" />
+            <p className="font-semibold text-slate-100">This consultation has ended.</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Open Reports to view the doctor&apos;s completed report.
+            </p>
+          </div>
+        )}
+
+        {isCancelled && (
+          <div className="mt-6 rounded-2xl border border-amber-700/60 bg-amber-950/30 p-4 text-center">
+            <AlertCircle className="mx-auto mb-2 h-7 w-7 text-amber-400" />
+            <p className="font-semibold text-slate-100">This consultation is no longer active.</p>
+            <p className="mt-1 text-sm text-slate-400">Please start a new consultation if you still need help.</p>
+          </div>
         )}
 
         {isAdmitted && (

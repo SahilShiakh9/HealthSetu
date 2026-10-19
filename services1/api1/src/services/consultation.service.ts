@@ -300,7 +300,7 @@ export class ConsultationService {
     const doctorLanguages = doctor?.languages || ['hi', 'en'];
 
     const filter: Record<string, any> = {
-      status: { $in: ['QUEUED', 'IN_PROGRESS'] },
+      status: 'QUEUED',
       $or: [
         { doctorId: new mongoose.Types.ObjectId(doctorId) },
         {

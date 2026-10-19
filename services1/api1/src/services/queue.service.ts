@@ -457,6 +457,28 @@ export class QueueService {
       };
     }
 
+    const consult = await Consultation.findById(consultationId).select('status');
+    if (consult?.status === 'IN_PROGRESS') {
+      return {
+        consultationId,
+        positionInQueue: 0,
+        entriesAhead: 0,
+        estimatedWaitMinutes: 0,
+        status: 'IN_PROGRESS',
+        poolKey: entry.poolKey,
+        overflow: false,
+      };
+    }
+
+    // Recover records created before consultation and queue statuses were
+    // updated atomically. An active queued consultation must remain claimable.
+    if (consult?.status === 'QUEUED' && entry.status === 'DONE') {
+      entry.status = 'WAITING';
+      entry.calledAt = undefined;
+      entry.doctorId = undefined;
+      await entry.save();
+    }
+
     if (entry.status !== 'WAITING') {
       return {
         consultationId,
