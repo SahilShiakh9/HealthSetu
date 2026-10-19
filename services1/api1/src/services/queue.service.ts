@@ -86,7 +86,9 @@ export class QueueService {
     // active status instead of creating duplicate queue tokens.
     const activeConsultation = await Consultation.findOne({
       patientId: new Types.ObjectId(patientId),
-      status: { $in: ['QUEUED', 'IN_PROGRESS', 'DOCUMENTATION_PENDING'] },
+      // DOCUMENTATION_PENDING belongs to the previous encounter. It must not
+      // be reused when the patient starts a new consultation.
+      status: { $in: ['QUEUED', 'IN_PROGRESS'] },
     }).sort({ createdAt: -1 });
     if (activeConsultation) {
       const activeQueue = await QueueEntry.findOne({ consultationId: activeConsultation._id });
