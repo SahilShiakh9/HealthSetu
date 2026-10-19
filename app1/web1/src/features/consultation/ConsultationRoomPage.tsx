@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Mic,
   MicOff,
@@ -18,7 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../auth/useAuthStore.js';
 import { db } from '../../offline/db.js';
-import { API_BASE_URL } from '../../services/apiClient.js';
+import { apiClient } from '../../services/apiClient.js';
 import { io, Socket } from 'socket.io-client';
 import { SOCKET_EVENTS } from '@healthsetu/contracts';
 import {
@@ -48,6 +49,7 @@ export const ConsultationRoomPage: React.FC = () => {
   const { consultationId } = useParams<{ consultationId: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, accessToken } = useAuthStore();
 
   const isDoctor = user?.role === 'DOCTOR' || searchParams.get('role') === 'doctor';
@@ -68,8 +70,6 @@ export const ConsultationRoomPage: React.FC = () => {
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const commServiceRef = useRef<ICommunicationService | null>(null);
-  const localStreamRef = useRef<MediaStream | null>(null);
-  const remoteStreamRef = useRef<MediaStream | null>(null);
   const socketRef = useRef<Socket | null>(null);
   const zegoRoomIdRef = useRef<string>('');
 
@@ -95,24 +95,6 @@ export const ConsultationRoomPage: React.FC = () => {
   const [doctorDisplayName, setDoctorDisplayName] = useState<string>('Assigned Medical Officer');
   const [patientDisplayName, setPatientDisplayName] = useState<string>('Patient');
 
-  // Video elements are unmounted when Chat/Rx is selected. Reattach the
-  // existing streams when the Call tab is rendered again.
-  useEffect(() => {
-    if (activeTab !== 'CALL') return;
-    const attachStreams = () => {
-      if (localVideoRef.current && localStreamRef.current) {
-        localVideoRef.current.srcObject = localStreamRef.current;
-        void localVideoRef.current.play().catch(() => {});
-      }
-      if (remoteVideoRef.current && remoteStreamRef.current) {
-        remoteVideoRef.current.srcObject = remoteStreamRef.current;
-        void remoteVideoRef.current.play().catch(() => {});
-      }
-    };
-    const frame = window.requestAnimationFrame(attachStreams);
-    return () => window.cancelAnimationFrame(frame);
-  }, [activeTab]);
-
   // Join consultation on mount via POST /api/v1/consultations/:id/join
   useEffect(() => {
     if (!consultationId) return;
@@ -121,53 +103,16 @@ export const ConsultationRoomPage: React.FC = () => {
 
     const joinConsultation = async () => {
       try {
-        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-        if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-
-        const res = await fetch(`${API_BASE_URL}/consultations/${consultationId}/join`, {
+        const data: any = await apiClient(`/consultations/${consultationId}/join`, {
           method: 'POST',
-          headers,
-          credentials: 'include',
         });
 
-        if (res.status === 400) {
-          const errData = await res.json().catch(() => ({}));
-          // If patient is not yet admitted by doctor, redirect back to waiting room
-          if (errData.error?.code === 'CONSULTATION_NOT_ADMITTED' || errData.code === 'CONSULTATION_NOT_ADMITTED') {
-            if (isMounted) navigate(`/consult/waiting/${consultationId}`);
-            return;
-          }
-        }
+        if (!isMounted) return;
 
-        if (res.ok) {
-          const data = await res.json();
-          if (!isMounted) return;
-
-          if (data.consultation?.doctorId?.name) setDoctorDisplayName(data.consultation.doctorId.name);
-          if (data.consultation?.patientId?.name) setPatientDisplayName(data.consultation.patientId.name);
-          const returnedStatus = data.consultation?.status as string | undefined;
-          if (returnedStatus) setConsultStatus(returnedStatus);
-
-          // A patient must never initialize camera, microphone, sockets, or
-          // WebRTC while the consultation is still waiting for admission.
-          if (!isDoctor && returnedStatus === 'QUEUED') {
-            navigate(`/consult/waiting/${consultationId}`);
-            return;
-          }
-
-          // Old room links remain valid for history, but ended consultations
-          // must be read-only and must not request media permissions.
-          if (
-            !isDoctor &&
-            returnedStatus &&
-            ['DOCUMENTATION_PENDING', 'COMPLETED', 'CANCELLED', 'EXPIRED'].includes(returnedStatus)
-          ) {
-            setCallEnded(true);
-            setIsConfigured(false);
-            return;
-          }
-
-          if (data.zego?.roomId) zegoRoomIdRef.current = data.zego.roomId;
+        if (data.consultation?.doctorId?.name) setDoctorDisplayName(data.consultation.doctorId.name);
+        if (data.consultation?.patientId?.name) setPatientDisplayName(data.consultation.patientId.name);
+        if (data.consultation?.status) setConsultStatus(data.consultation.status);
+        if (data.zego?.roomId) zegoRoomIdRef.current = data.zego.roomId;
 
           // Restore persisted chat messages from MongoDB
           if (Array.isArray(data.consultation?.messages) && data.consultation.messages.length > 0) {
@@ -188,12 +133,13 @@ export const ConsultationRoomPage: React.FC = () => {
           try {
             const socketUrl =
               (import.meta as any).env?.VITE_SOCKET_URL ||
-              API_BASE_URL.replace(/\/api\/v1\/?$/, '');
+              (typeof window !== 'undefined' && window.location.hostname === 'localhost'
+                ? 'http://localhost:4000'
+                : typeof window !== 'undefined'
+                  ? window.location.origin
+                  : '');
             if (socketUrl) {
-              const socket = io(socketUrl, {
-                transports: ['websocket', 'polling'],
-                withCredentials: true,
-              });
+              const socket = io(socketUrl, { transports: ['websocket', 'polling'] });
               socketRef.current = socket;
               const rId = data.zego?.roomId || `consultation_${consultationId}`;
               socket.emit('join:room', {
@@ -267,23 +213,17 @@ export const ConsultationRoomPage: React.FC = () => {
                 token: data.zego.token,
                 roomId: data.zego.roomId,
                 userId: user?.id || 'anon',
-                role: isDoctor ? 'DOCTOR' : 'PATIENT',
-                signalingSocket: socketRef.current || undefined,
                 isConfigured: true,
               });
 
               const stream = await comm.startLocalStream(callMode === 'AUDIO');
-              localStreamRef.current = stream;
               if (localVideoRef.current && isMounted) {
                 localVideoRef.current.srcObject = stream;
-                void localVideoRef.current.play().catch(() => {});
               }
 
               comm.onRemoteStream((remoteStream) => {
-                remoteStreamRef.current = remoteStream;
                 if (remoteVideoRef.current && isMounted) {
                   remoteVideoRef.current.srcObject = remoteStream;
-                  void remoteVideoRef.current.play().catch(() => {});
                   setHasRemoteTrack(true);
                   setConnectionState('CONNECTED');
                 }
@@ -294,12 +234,11 @@ export const ConsultationRoomPage: React.FC = () => {
               }
             }
           }
-        } else {
-          if (isMounted) {
-            setIsConfigured(false);
-          }
+      } catch (err: any) {
+        if (err?.code === 'CONSULTATION_NOT_ADMITTED' || err?.message?.includes('CONSULTATION_NOT_ADMITTED')) {
+          if (isMounted) navigate(`/consult/waiting/${consultationId}`);
+          return;
         }
-      } catch {
         if (isMounted) {
           setIsConfigured(false);
         }
@@ -312,16 +251,9 @@ export const ConsultationRoomPage: React.FC = () => {
     const syncInterval = setInterval(async () => {
       if (!consultationId || !isMounted) return;
       try {
-        const headers: Record<string, string> = {};
-        if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-        const res = await fetch(`${API_BASE_URL}/consultations/${consultationId}`, {
-          headers,
-          credentials: 'include',
-        });
-        if (res.ok) {
-          const syncData = await res.json();
-          const c = syncData.consultation;
-          if (!c) return;
+        const syncData = await apiClient<{ consultation?: any }>(`/consultations/${consultationId}`);
+        const c = syncData?.consultation;
+        if (!c) return;
 
           // Sync incoming messages
           if (Array.isArray(c.messages) && c.messages.length > 0) {
@@ -374,8 +306,6 @@ export const ConsultationRoomPage: React.FC = () => {
             setConsultStatus('DOCUMENTATION_PENDING');
             if (!callEnded) {
               commServiceRef.current?.leaveRoom();
-              localStreamRef.current = null;
-              remoteStreamRef.current = null;
               setCallEnded(true);
               if (isDoctor) setActiveTab('PRESCRIPTION');
             }
@@ -387,7 +317,6 @@ export const ConsultationRoomPage: React.FC = () => {
               navigate(`/reports/${consultationId}`);
             }
           }
-        }
       } catch {
         // Silent catch for background poll
       }
@@ -401,8 +330,6 @@ export const ConsultationRoomPage: React.FC = () => {
         socketRef.current = null;
       }
       commServiceRef.current?.leaveRoom();
-      localStreamRef.current = null;
-      remoteStreamRef.current = null;
     };
   }, [consultationId, accessToken, user?.id, navigate, isDoctor]);
 
@@ -431,13 +358,8 @@ export const ConsultationRoomPage: React.FC = () => {
 
     if (consultationId) {
       try {
-        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-        if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-
-        await fetch(`${API_BASE_URL}/consultations/${consultationId}/mode`, {
+        await apiClient(`/consultations/${consultationId}/mode`, {
           method: 'PATCH',
-          headers,
-          credentials: 'include',
           body: JSON.stringify({ mode: nextMode, reason: 'Participant toggled mode' }),
         });
       } catch {
@@ -473,13 +395,8 @@ export const ConsultationRoomPage: React.FC = () => {
 
     if (consultationId) {
       try {
-        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-        if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-
-        await fetch(`${API_BASE_URL}/consultations/${consultationId}/messages`, {
+        await apiClient(`/consultations/${consultationId}/messages`, {
           method: 'POST',
-          headers,
-          credentials: 'include',
           body: JSON.stringify({
             clientId: newMsg.id,
             body: bodyToSend,
@@ -520,13 +437,8 @@ export const ConsultationRoomPage: React.FC = () => {
   // Conclude Call (ends media and sets DOCUMENTATION_PENDING without auto-finalizing)
   const handleEndCall = async () => {
     try {
-      const headers: Record<string, string> = {};
-      if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-
-      await fetch(`${API_BASE_URL}/consultations/${consultationId}/end`, {
+      await apiClient(`/consultations/${consultationId}/end`, {
         method: 'POST',
-        headers,
-        credentials: 'include',
       });
     } catch {
       // offline / local
@@ -566,13 +478,8 @@ export const ConsultationRoomPage: React.FC = () => {
 
     try {
       if (consultationId) {
-        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-        if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
-
-        await fetch(`${API_BASE_URL}/consultations/${consultationId}/complete`, {
+        await apiClient(`/consultations/${consultationId}/complete`, {
           method: 'POST',
-          headers,
-          credentials: 'include',
           body: JSON.stringify(outcomeData),
         });
 
@@ -645,7 +552,7 @@ export const ConsultationRoomPage: React.FC = () => {
               activeTab === 'CALL' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
             }`}
           >
-            Call
+            {t('consult.tab_call', 'Call')}
           </button>
           <button
             onClick={() => setActiveTab('CHAT')}
@@ -654,7 +561,7 @@ export const ConsultationRoomPage: React.FC = () => {
             }`}
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            <span>Chat</span>
+            <span>{t('consult.tab_chat', 'Chat')}</span>
           </button>
           {isDoctor && (
             <button
@@ -664,7 +571,7 @@ export const ConsultationRoomPage: React.FC = () => {
               }`}
             >
               <FileText className="w-3.5 h-3.5" />
-              <span>Rx</span>
+              <span>{t('consult.tab_rx', 'Rx')}</span>
             </button>
           )}
         </div>
@@ -675,62 +582,51 @@ export const ConsultationRoomPage: React.FC = () => {
         {activeTab === 'CALL' && (
           <div className="flex-1 flex flex-col justify-center items-center p-4 relative min-h-[380px]">
             {/* Unconfigured State (Section 0.2 honest diagnostic) */}
-            {callEnded ? (
-              <div className="w-full flex-1 max-h-[420px] rounded-3xl bg-slate-900 border border-slate-800 p-6 flex flex-col items-center justify-center text-center space-y-3">
-                <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-2xl">
-                  <CheckCircle2 className="w-8 h-8" />
-                </div>
-                <h3 className="font-bold text-base text-white">
-                  {isDoctor ? 'Consultation Call Concluded' : 'This consultation has ended.'}
-                </h3>
-                <p className="text-xs text-slate-400 max-w-xs">
-                  {isDoctor
-                    ? 'Call ended. Complete the clinical diagnosis and prescription below to issue the report.'
-                    : 'You cannot reconnect to this completed consultation. Start a new consultation or view the existing report.'}
-                </p>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {isDoctor ? (
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab('PRESCRIPTION')}
-                      className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl transition-colors"
-                    >
-                      Complete Documentation
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => navigate('/screening')}
-                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-colors"
-                    >
-                      Start New Consultation
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => navigate('/reports')}
-                    className="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-semibold rounded-xl hover:bg-slate-700 transition-colors"
-                  >
-                    View Report
-                  </button>
-                </div>
-              </div>
-            ) : isConfigured === false ? (
+            {isConfigured === false ? (
               <div className="w-full flex-1 max-h-[420px] rounded-3xl bg-slate-900 border border-slate-800 p-6 flex flex-col items-center justify-center text-center space-y-3">
                 <div className="p-3 bg-amber-500/20 text-amber-400 rounded-2xl">
                   <VideoOff className="w-8 h-8" />
                 </div>
-                <h3 className="font-bold text-base text-white">Video calling is not configured on this server</h3>
+                <h3 className="font-bold text-base text-white">{t('consult.video_unconfigured_title', 'Video calling is not configured on this server')}</h3>
                 <p className="text-xs text-slate-400 max-w-xs">
-                  ZEGOCLOUD or WebRTC provider credentials are not configured on this server. Please use in-call secure text chat below.
+                  {t('consult.video_unconfigured_desc', 'ZEGOCLOUD or WebRTC provider credentials are not configured on this server. Please use in-call secure text chat below.')}
                 </p>
                 <button
                   type="button"
                   onClick={() => setActiveTab('CHAT')}
                   className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-colors"
                 >
-                  Open Secure Chat
+                  {t('consult.open_secure_chat', 'Open Secure Chat')}
                 </button>
+              </div>
+            ) : callEnded ? (
+              <div className="w-full flex-1 max-h-[420px] rounded-3xl bg-slate-900 border border-slate-800 p-6 flex flex-col items-center justify-center text-center space-y-3">
+                <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-2xl">
+                  <CheckCircle2 className="w-8 h-8" />
+                </div>
+                <h3 className="font-bold text-base text-white">{t('consult.call_concluded', 'Consultation Call Concluded')}</h3>
+                <p className="text-xs text-slate-400 max-w-xs">
+                  {isDoctor
+                    ? 'Call ended. Status is DOCUMENTATION_PENDING. Please complete clinical diagnosis and prescription below to issue report.'
+                    : t('consult.call_ended_patient_sub', 'Call ended. The Medical Officer is currently preparing your clinical summary and prescription.')}
+                </p>
+                {isDoctor ? (
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('PRESCRIPTION')}
+                    className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl transition-colors"
+                  >
+                    Complete Documentation
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => navigate('/reports')}
+                    className="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-semibold rounded-xl hover:bg-slate-700 transition-colors"
+                  >
+                    {t('consult.view_prescription', 'View Prescription & Records')}
+                  </button>
+                )}
               </div>
             ) : (
               /* Real Live RTC Feed Display */
@@ -746,7 +642,7 @@ export const ConsultationRoomPage: React.FC = () => {
                 {commServiceRef.current?.isAudioFallbackActive() && (
                   <div className="absolute top-3 left-3 z-20 bg-amber-950/80 border border-amber-600/50 px-2.5 py-1 rounded-xl text-[11px] text-amber-200 flex items-center gap-1.5 shadow-sm">
                     <Headphones className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Audio-Only Mode (Camera in use or unavailable)</span>
+                    <span>{t('consult.audio_fallback', 'Audio-Only Mode (Camera in use or unavailable)')}</span>
                   </div>
                 )}
 
@@ -758,13 +654,13 @@ export const ConsultationRoomPage: React.FC = () => {
                     </div>
                     <p className="text-sm font-bold text-slate-200">
                       {connectionState === 'CONNECTING'
-                        ? 'Connecting to Room...'
-                        : 'Waiting for Other Participant to Connect...'}
+                        ? t('consult.connecting_room', 'Connecting to Room...')
+                        : t('consult.waiting_participant', 'Waiting for Other Participant to Connect...')}
                     </p>
                     <p className="text-xs text-slate-400 max-w-xs">
                       {isDoctor
                         ? 'Patient is joining the room. Bidirectional audio and video will establish automatically.'
-                        : 'Medical Officer is connecting to this session. Please keep your audio enabled.'}
+                        : t('consult.doctor_connecting_sub', 'Medical Officer is connecting to this session. Please keep your audio enabled.')}
                     </p>
                   </div>
                 )}
@@ -783,7 +679,7 @@ export const ConsultationRoomPage: React.FC = () => {
                     {isDoctor ? patientDisplayName : doctorDisplayName}
                   </p>
                   <p className="text-[10px] text-emerald-400">
-                    {isDoctor ? 'Patient Feed' : 'Medical Officer Feed'}
+                    {isDoctor ? 'Patient Feed' : t('consult.doctor_feed', 'Medical Officer Feed')}
                   </p>
                 </div>
 
@@ -797,7 +693,7 @@ export const ConsultationRoomPage: React.FC = () => {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute bottom-1 left-1.5 text-[9px] text-slate-300 font-semibold bg-slate-900/70 px-1.5 py-0.5 rounded">
-                    You {micMuted ? '(Muted)' : ''}
+                    {t('consult.you', 'You')} {micMuted ? t('consult.muted', '(Muted)') : ''}
                   </div>
                 </div>
               </div>
@@ -840,7 +736,7 @@ export const ConsultationRoomPage: React.FC = () => {
                 type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
-                placeholder="Type message or clinical advice..."
+                placeholder={t('consult.type_message_placeholder', 'Type message or clinical advice...')}
                 className="flex-1 bg-slate-900 border border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
               />
               <button
@@ -1054,7 +950,7 @@ export const ConsultationRoomPage: React.FC = () => {
                 ? 'bg-amber-600/30 border-amber-500 text-amber-300'
                 : 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
             }`}
-            title="Toggle Bandwidth Mode"
+            title={t('consult.audio_video_toggle', 'Toggle Bandwidth Mode')}
           >
             {callMode === 'AUDIO' ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
           </button>
@@ -1067,7 +963,7 @@ export const ConsultationRoomPage: React.FC = () => {
                 ? 'bg-red-900/40 border-red-500 text-red-400'
                 : 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
             }`}
-            title="Toggle Mic"
+            title={t('consult.mute_toggle', 'Toggle Microphone')}
           >
             {micMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
           </button>
@@ -1076,7 +972,7 @@ export const ConsultationRoomPage: React.FC = () => {
           <button
             onClick={handleEndCall}
             className="p-3 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-bold transition-all shadow-lg shadow-red-600/30"
-            title="End Call"
+            title={t('consult.end_call', 'End Call')}
           >
             <PhoneOff className="w-5 h-5" />
           </button>
@@ -1084,7 +980,7 @@ export const ConsultationRoomPage: React.FC = () => {
 
         {/* Section 11.6 Mandatory Telemedicine Statutory Advisory */}
         <p className="text-[9px] text-slate-500 text-center leading-tight">
-          Registered Medical Practitioner consultation pursuant to Telemedicine Practice Guidelines (2020).
+          {t('consult.guidelines_notice', 'Registered Medical Practitioner consultation pursuant to Telemedicine Practice Guidelines (2020).')}
         </p>
       </footer>
     </div>

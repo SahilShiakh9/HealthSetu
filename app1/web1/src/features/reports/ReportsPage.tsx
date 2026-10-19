@@ -46,7 +46,7 @@ export const ReportsPage: React.FC = () => {
         setReports(localList);
       }
 
-      // 2. Fetch from backend API: try /api/v1/reports first, fallback to user history
+      // 2. Fetch from backend API: try /reports first, fallback to user history
       try {
         const data = await apiClient<{ reports?: any[] }>('/reports');
         if (data.reports && data.reports.length > 0) {
@@ -64,9 +64,9 @@ export const ReportsPage: React.FC = () => {
         }
 
         // Fallback: check consultation history
-        const history = await apiClient<{ consultations?: any[] }>('/consultations/user/history');
-        if (history.consultations && history.consultations.length > 0) {
-          const apiList: ReportListItem[] = history.consultations.map((c: any) => ({
+        const consultData = await apiClient<{ consultations?: any[] }>('/consultations/user/history');
+        if (consultData.consultations && consultData.consultations.length > 0) {
+          const apiList: ReportListItem[] = consultData.consultations.map((c: any) => ({
             id: c._id,
             doctorName: c.doctorId?.name || 'Assigned Clinician',
             diagnosis: c.outcome?.diagnosisLabel || 'General Consultation',
@@ -112,22 +112,22 @@ export const ReportsPage: React.FC = () => {
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center space-x-2 text-xs font-bold text-slate-700 dark:text-slate-300">
             <FileText className="w-4 h-4 text-emerald-600" />
-            <span>Consultation History ({reports.length})</span>
+            <span>{t('reports.history', { count: reports.length, defaultValue: `Consultation History (${reports.length})` })}</span>
           </div>
-          <span className="text-[11px] text-slate-400">Available Offline</span>
+          <span className="text-[11px] text-slate-400">{t('reports.available_offline', 'Available Offline')}</span>
         </div>
 
         {loading && reports.length === 0 ? (
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center space-y-2">
             <div className="animate-spin rounded-full h-7 w-7 border-b-2 border-emerald-600 mx-auto" />
-            <p className="text-xs text-slate-500">Loading records...</p>
+            <p className="text-xs text-slate-500">{t('reports.loading', 'Loading records...')}</p>
           </div>
         ) : reports.length === 0 ? (
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center space-y-2">
             <FileText className="w-10 h-10 text-slate-400 mx-auto" />
-            <h3 className="font-bold text-sm text-slate-900 dark:text-white">No Medical Records Yet</h3>
+            <h3 className="font-bold text-sm text-slate-900 dark:text-white">{t('reports.no_records', 'No Medical Records Yet')}</h3>
             <p className="text-xs text-slate-500">
-              Prescriptions and doctor summaries will automatically appear here.
+              {t('reports.no_records_sub', 'Prescriptions and doctor summaries will automatically appear here.')}
             </p>
           </div>
         ) : (
@@ -161,7 +161,7 @@ export const ReportsPage: React.FC = () => {
                   </div>
 
                   <div className="flex items-center space-x-1 text-emerald-600 dark:text-emerald-400 font-semibold">
-                    <span>View Slip</span>
+                    <span>{t('reports.view_slip', 'View Slip')}</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </div>
                 </div>

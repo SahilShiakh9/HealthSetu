@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { io, Socket } from 'socket.io-client';
 import { useAuthStore } from '../auth/useAuthStore.js';
+import { apiClient } from '../../services/apiClient.js';
 import type {
   NgoOverviewMetrics,
   NgoActivityEvent,
@@ -160,36 +161,27 @@ export const NgoDashboardPage: React.FC = () => {
       if (selectedRiskTier !== 'all') params.append('riskTier', selectedRiskTier);
       if (selectedInputMethod !== 'all') params.append('inputMethod', selectedInputMethod);
 
-      const token = useAuthStore.getState().accessToken;
-      const headers: Record<string, string> = {};
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
+      try {
+        const [overviewData, activityData] = await Promise.all([
+          apiClient<any>(`/ngo/overview?${params.toString()}`),
+          apiClient<any>(`/ngo/activity?${params.toString()}`),
+        ]);
 
-      const [overviewRes, activityRes] = await Promise.all([
-        fetch(`/api/v1/ngo/overview?${params.toString()}`, { headers, credentials: 'include' }),
-        fetch(`/api/v1/ngo/activity?${params.toString()}`, { headers, credentials: 'include' }),
-      ]);
-
-      if (overviewRes.ok) {
-        const json = await overviewRes.json();
-        if (json.data && (json.data.totalScreenings > 0 || (json.data.regionalDistribution && json.data.regionalDistribution.length > 0))) {
-          setMetrics(json.data);
+        if (overviewData?.data && (overviewData.data.totalScreenings > 0 || (overviewData.data.regionalDistribution && overviewData.data.regionalDistribution.length > 0))) {
+          setMetrics(overviewData.data);
         } else {
           setMetrics(getFallbackMetrics(timeRange));
         }
-      } else {
-        setMetrics(getFallbackMetrics(timeRange));
-      }
 
-      if (activityRes.ok) {
-        const json = await activityRes.json();
-        if (json.data && json.data.length > 0) {
-          setActivities(json.data);
+        if (activityData?.data && Array.isArray(activityData.data) && activityData.data.length > 0) {
+          setActivities(activityData.data);
+        } else if (activityData?.data?.events && Array.isArray(activityData.data.events) && activityData.data.events.length > 0) {
+          setActivities(activityData.data.events);
         } else {
           setActivities(getFallbackActivities());
         }
-      } else {
+      } catch {
+        setMetrics(getFallbackMetrics(timeRange));
         setActivities(getFallbackActivities());
       }
     } catch (err) {

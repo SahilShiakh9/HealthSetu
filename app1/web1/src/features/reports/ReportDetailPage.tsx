@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   ArrowLeft,
   Printer,
@@ -13,8 +14,8 @@ import {
 } from 'lucide-react';
 import { db } from '../../offline/db.js';
 import { useAuthStore } from '../auth/useAuthStore.js';
-import { generateMedicalReportPdf } from '../../utils/pdfGenerator.js';
 import { apiClient } from '../../services/apiClient.js';
+import { generateMedicalReportPdf } from '../../utils/pdfGenerator.js';
 import type { PrescriptionMedication } from '../consultation/ConsultationRoomPage.js';
 
 interface EncounterDetail {
@@ -38,6 +39,7 @@ interface EncounterDetail {
 export const ReportDetailPage: React.FC = () => {
   const { consultationId } = useParams<{ consultationId: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, accessToken } = useAuthStore();
 
   const [encounter, setEncounter] = useState<EncounterDetail | null>(null);
@@ -82,10 +84,10 @@ export const ReportDetailPage: React.FC = () => {
         return;
       }
 
-      // 1. Try official Report endpoint first (/api/v1/reports/:id)
+      // 1. Try official Report endpoint first (/reports/:id)
       try {
         const data = await apiClient<{ report?: any }>(`/reports/${consultationId}`);
-        const r = data.report;
+        const r = data?.report;
         if (r) {
           setEncounter({
             id: r._id || r.reportNumber,
@@ -111,11 +113,12 @@ export const ReportDetailPage: React.FC = () => {
         // Fall through to consultation check
       }
 
-      // 2. Try consultation endpoint (/api/v1/consultations/:id)
+      // 2. Try consultation endpoint (/consultations/:id)
       try {
         const data = await apiClient<{ consultation?: any }>(`/consultations/${consultationId}`);
-        const consult = data.consultation;
+        const consult = data?.consultation;
         const outcome = consult?.outcome;
+
         if (outcome) {
           setEncounter({
             id: consult._id,
@@ -211,15 +214,15 @@ export const ReportDetailPage: React.FC = () => {
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex items-center justify-center p-4">
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-sm w-full text-center space-y-3">
           <AlertCircle className="w-10 h-10 text-amber-500 mx-auto" />
-          <h2 className="font-bold text-base text-slate-900 dark:text-white">Record Not Found</h2>
+          <h2 className="font-bold text-base text-slate-900 dark:text-white">{t('reports.record_not_found', 'Record Not Found')}</h2>
           <p className="text-xs text-slate-500">
-            This medical report is unavailable or you do not have permission to view it.
+            {t('reports.record_not_found_desc', 'This medical report is unavailable or you do not have permission to view it.')}
           </p>
           <button
             onClick={() => navigate('/reports')}
             className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition-colors"
           >
-            Back to Medical Records
+            {t('reports.back_to_reports', 'Back to Medical Records')}
           </button>
         </div>
       </div>
@@ -238,20 +241,20 @@ export const ReportDetailPage: React.FC = () => {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <h1 className="text-sm font-bold text-slate-900 dark:text-white">
-            Medical Prescription Slip
+            {t('reports.slip_title', 'Medical Prescription Slip')}
           </h1>
           <div className="flex items-center space-x-1">
             <button
               onClick={handleDownloadPdf}
               className="p-2 rounded-xl text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950 transition-colors"
-              title="Download Official PDF"
+              title={t('reports.download_pdf', 'Download Official PDF')}
             >
               <Download className="w-5 h-5" />
             </button>
             <button
               onClick={handlePrint}
               className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              title="Print Prescription Slip"
+              title={t('reports.print', 'Print Prescription Slip')}
             >
               <Printer className="w-5 h-5" />
             </button>
@@ -267,7 +270,7 @@ export const ReportDetailPage: React.FC = () => {
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block">
-                  MoHFW Telemedicine Record
+                  {t('reports.mohfw_banner', 'MoHFW Telemedicine Record')}
                 </span>
                 <h2 className="text-base font-extrabold text-slate-900 dark:text-white">
                   {encounter.facilityName}
@@ -288,11 +291,11 @@ export const ReportDetailPage: React.FC = () => {
 
             <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] bg-slate-50 dark:bg-slate-850 p-2.5 rounded-xl text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-800">
               <div>
-                <span className="text-slate-400 block text-[10px]">Patient Name</span>
+                <span className="text-slate-400 block text-[10px]">{t('reports.patient_name', 'Patient Name')}</span>
                 <strong className="text-slate-800 dark:text-slate-200">{encounter.patientName}</strong>
               </div>
               <div className="text-right">
-                <span className="text-slate-400 block text-[10px]">Date Issued</span>
+                <span className="text-slate-400 block text-[10px]">{t('reports.date', 'Date Issued')}</span>
                 <strong>{encounter.date}</strong>
               </div>
             </div>
@@ -301,7 +304,7 @@ export const ReportDetailPage: React.FC = () => {
           {/* Clinical Diagnosis Section */}
           <div className="space-y-1.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Primary Diagnosis
+              {t('reports.diagnosis', 'Primary Diagnosis')}
             </span>
             <div className="p-3 bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-500/20 rounded-2xl">
               <h3 className="font-bold text-sm text-emerald-900 dark:text-emerald-200">
@@ -318,7 +321,7 @@ export const ReportDetailPage: React.FC = () => {
             <div className="flex items-center space-x-1.5 text-slate-800 dark:text-slate-200">
               <Pill className="w-4 h-4 text-emerald-600" />
               <h4 className="text-xs font-bold uppercase tracking-wider">
-                Prescription (औषधे)
+                {t('reports.medications', 'Prescription (औषधे)')}
               </h4>
             </div>
 
@@ -339,7 +342,7 @@ export const ReportDetailPage: React.FC = () => {
                         {idx + 1}. {med.name}
                       </h5>
                       <p className="text-[11px] text-slate-500">
-                        {med.dosage} • {med.frequency} • {med.durationDays} Days
+                        {med.dosage} • {med.frequency} • {med.durationDays} {t('reports.days', 'Days')}
                       </p>
                     </div>
                   </div>
@@ -354,7 +357,7 @@ export const ReportDetailPage: React.FC = () => {
                       }`}
                     >
                       <Sun className="w-3 h-3" />
-                      <span>Morning</span>
+                      <span>{t('reports.morning', 'Morning')}</span>
                     </span>
 
                     <span
@@ -365,7 +368,7 @@ export const ReportDetailPage: React.FC = () => {
                       }`}
                     >
                       <CloudSun className="w-3 h-3" />
-                      <span>Noon</span>
+                      <span>{t('reports.noon', 'Noon')}</span>
                     </span>
 
                     <span
@@ -376,7 +379,7 @@ export const ReportDetailPage: React.FC = () => {
                       }`}
                     >
                       <Moon className="w-3 h-3" />
-                      <span>Night</span>
+                      <span>{t('reports.night', 'Night')}</span>
                     </span>
                   </div>
 
@@ -395,14 +398,14 @@ export const ReportDetailPage: React.FC = () => {
           <div className="border-t border-slate-200 dark:border-slate-800 pt-3 space-y-2 text-xs">
             {encounter.notes && (
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase">Advice:</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase">{t('reports.clinical_notes', 'Advice:')}</span>
                 <p className="text-slate-700 dark:text-slate-300 mt-0.5">{encounter.notes}</p>
               </div>
             )}
 
             <div className="flex items-center justify-between bg-emerald-50/50 dark:bg-emerald-950/30 p-2.5 rounded-xl border border-emerald-500/10">
               <span className="text-[11px] font-medium text-emerald-800 dark:text-emerald-300">
-                Recommended Follow-up:
+                {t('reports.follow_up', 'Recommended Follow-up:')}
               </span>
               <strong className="text-xs text-emerald-900 dark:text-emerald-200">
                 {encounter.followUpDate}
@@ -428,20 +431,20 @@ export const ReportDetailPage: React.FC = () => {
             className="w-full min-h-[50px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/20 flex items-center justify-center space-x-2 transition-all"
           >
             <Download className="w-4 h-4" />
-            <span>Download Official PDF Slip</span>
+            <span>{t('reports.download_pdf', 'Download Official PDF Slip')}</span>
           </button>
           <button
             onClick={handlePrint}
             className="w-full min-h-[46px] bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold rounded-2xl flex items-center justify-center space-x-2 transition-all"
           >
             <Printer className="w-4 h-4" />
-            <span>Print Prescription Slip</span>
+            <span>{t('reports.print', 'Print Prescription Slip')}</span>
           </button>
           <button
             onClick={() => navigate('/home')}
             className="w-full min-h-[44px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-2xl flex items-center justify-center transition-all"
           >
-            Return to Home
+            {t('common.returnHome', 'Return to Home')}
           </button>
         </div>
       </main>

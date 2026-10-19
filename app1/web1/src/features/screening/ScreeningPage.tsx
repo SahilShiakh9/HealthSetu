@@ -22,7 +22,8 @@ import {
 import { db } from '../../offline/db.js';
 import { queueOutboxEvent } from '../../offline/outbox.js';
 import { evaluateEmergencyRules } from '../../engine/emergency.js';
-import { API_BASE_URL } from '../../services/apiClient.js';
+import { setAppLanguage } from '../../i18n/index.js';
+import { apiClient } from '../../services/apiClient.js';
 import type { Language, RiskTier, CreateScreeningInput } from '@healthsetu/contracts';
 
 type LifecycleState =
@@ -196,7 +197,6 @@ export const ScreeningPage: React.FC = () => {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
 
-  // Language state (Marathi, Hindi, English)
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(() => {
     const lang = (i18n.language || 'en').toLowerCase();
     if (lang.startsWith('mr')) return 'mr';
@@ -204,7 +204,18 @@ export const ScreeningPage: React.FC = () => {
     return 'en';
   });
 
+  const prevI18nLangRef = useRef<string>(i18n.language);
+  useEffect(() => {
+    if (i18n.language && i18n.language !== prevI18nLangRef.current) {
+      prevI18nLangRef.current = i18n.language;
+      const lang = i18n.language.toLowerCase();
+      const target: Language = lang.startsWith('mr') ? 'mr' : lang.startsWith('hi') ? 'hi' : 'en';
+      setSelectedLanguage(target);
+    }
+  }, [i18n.language]);
+
   const S = UI_STRINGS[selectedLanguage] || UI_STRINGS.en;
+
 
   // Lifecycle state machine
   const [state, setState] = useState<LifecycleState>('idle');
@@ -248,9 +259,6 @@ export const ScreeningPage: React.FC = () => {
   const recognitionRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const silenceTimerRef = useRef<any>(null);
-  const voiceStopRequestedRef = useRef(false);
-  const userActivatedAudioRef = useRef(false);
-  const finalTranscriptRef = useRef('');
   const transcriptRef = useRef<string>('');
   const stateRef = useRef<LifecycleState>('idle');
 
@@ -312,7 +320,7 @@ export const ScreeningPage: React.FC = () => {
       try {
         handleStopSpeaking();
 
-        const audioUrl = `${API_BASE_URL}/screenings/tts?text=${encodeURIComponent(textToSpeak)}&language=${selectedLanguage}`;
+        const audioUrl = `/api/v1/screenings/tts?text=${encodeURIComponent(textToSpeak)}&language=${selectedLanguage}`;
         const audio = new Audio(audioUrl);
         activeAudioRef.current = audio;
 
@@ -338,14 +346,6 @@ export const ScreeningPage: React.FC = () => {
         if (playPromise !== undefined) {
           playPromise.catch((playErr: any) => {
             console.warn('Audio play prevented or interrupted:', playErr);
-            if (userActivatedAudioRef.current && window.speechSynthesis) {
-              const utterance = new SpeechSynthesisUtterance(textToSpeak);
-              utterance.lang =
-                selectedLanguage === 'mr' ? 'mr-IN' : selectedLanguage === 'hi' ? 'hi-IN' : 'en-IN';
-              utterance.rate = 0.9;
-              window.speechSynthesis.cancel();
-              window.speechSynthesis.speak(utterance);
-            }
             setIsSpeaking(false);
             setSpeakingMessageId(null);
             setState((prev) => (prev === 'speaking' ? 'idle' : prev));
@@ -375,7 +375,6 @@ export const ScreeningPage: React.FC = () => {
   // Replay speech for specific message
   const handleReplayAudio = useCallback(
     (explicitText?: string, msgId?: string) => {
-      userActivatedAudioRef.current = true;
       if (explicitText) {
         speakAssistantText(explicitText, msgId);
         return;
@@ -404,25 +403,16 @@ export const ScreeningPage: React.FC = () => {
     rec.lang = selectedLanguage === 'mr' ? 'mr-IN' : selectedLanguage === 'hi' ? 'hi-IN' : 'en-IN';
 
     rec.onresult = (event: any) => {
-      let interimText = '';
-      for (let i = event.resultIndex || 0; i < event.results.length; i++) {
-        const result = event.results[i];
-        const text = result[0]?.transcript || '';
-        if (result.isFinal) {
-          finalTranscriptRef.current = `${finalTranscriptRef.current} ${text}`.trim();
-        } else {
-          interimText += `${text} `;
-        }
+      let finalStr = '';
+      for (let i = 0; i < event.results.length; i++) {
+        finalStr += event.results[i][0].transcript + ' ';
       }
-      const cleaned = `${finalTranscriptRef.current} ${interimText}`.trim();
+      const cleaned = finalStr.trim();
       setTranscript(cleaned);
       setTextInput(cleaned);
-      // Interim recognition is only a visual preview. Never submit it or
-      // carry it into the next microphone session.
-      transcriptRef.current = finalTranscriptRef.current.trim();
+      transcriptRef.current = cleaned;
 
-      // Stop capture after a natural pause, but submit from onend only. This
-      // prevents early submission and duplicate requests on mobile browsers.
+      // Snappy silence detection: auto-submit statement 800ms after user pauses speaking
       if (silenceTimerRef.current) {
         clearTimeout(silenceTimerRef.current);
       }
@@ -432,8 +422,9 @@ export const ScreeningPage: React.FC = () => {
             try {
               recognitionRef.current?.stop();
             } catch {}
+            handleProcessSubmission(cleaned);
           }
-        }, 2200);
+        }, 800);
       }
     };
 
@@ -452,10 +443,6 @@ export const ScreeningPage: React.FC = () => {
 
     rec.onend = () => {
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-      if (voiceStopRequestedRef.current) {
-        voiceStopRequestedRef.current = false;
-        return;
-      }
       if (stateRef.current === 'listening') {
         const textToSubmit = transcriptRef.current.trim();
         if (textToSubmit) {
@@ -481,9 +468,7 @@ export const ScreeningPage: React.FC = () => {
     (['mr', 'hi', 'en'] as Language[]).forEach((l) => {
       const g = UI_STRINGS[l]?.greeting;
       if (g) {
-        const audio = new Audio(
-          `${API_BASE_URL}/screenings/tts?text=${encodeURIComponent(g)}&language=${l}`,
-        );
+        const audio = new Audio(`/api/v1/screenings/tts?text=${encodeURIComponent(g)}&language=${l}`);
         audio.preload = 'auto';
       }
     });
@@ -501,7 +486,6 @@ export const ScreeningPage: React.FC = () => {
     setTranscript('');
     setTextInput('');
     transcriptRef.current = '';
-    finalTranscriptRef.current = '';
     setState('idle');
     setErrorMessage(null);
 
@@ -518,10 +502,9 @@ export const ScreeningPage: React.FC = () => {
         recognitionRef.current.abort();
       } catch {}
     }
+    prevI18nLangRef.current = lang;
     setSelectedLanguage(lang);
-    if (typeof i18n?.changeLanguage === 'function') {
-      i18n.changeLanguage(lang);
-    }
+    setAppLanguage(lang);
   };
 
   // Start / Stop Microphone Recording with instant turnaround & zero lag
@@ -534,7 +517,6 @@ export const ScreeningPage: React.FC = () => {
         clearTimeout(silenceTimerRef.current);
       }
       try {
-        voiceStopRequestedRef.current = true;
         recognitionRef.current?.stop();
       } catch (err) {
         console.warn('Could not stop recognition:', err);
@@ -567,7 +549,6 @@ export const ScreeningPage: React.FC = () => {
     setTranscript('');
     setTextInput('');
     transcriptRef.current = '';
-    voiceStopRequestedRef.current = false;
     setIsEditingTranscript(false);
     setState('listening');
 
@@ -655,9 +636,8 @@ export const ScreeningPage: React.FC = () => {
     const startTime = performance.now();
 
     try {
-      const res = await fetch(`${API_BASE_URL}/screenings/dialogue`, {
+      const data = await apiClient<any>('/screenings/dialogue', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sessionId,
           text: textToSend,
@@ -676,12 +656,6 @@ export const ScreeningPage: React.FC = () => {
 
       const elapsed = Math.round(performance.now() - startTime);
       console.log(`[HealthSetu AI] Dialogue turnaround: ${elapsed}ms`);
-
-      if (!res.ok) {
-        throw new Error(`API status ${res.status}`);
-      }
-
-      const data = await res.json();
 
       // Urgent red flag check
       if (data.isEmergency) {

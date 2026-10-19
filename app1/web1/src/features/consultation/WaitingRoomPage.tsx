@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { db } from '../../offline/db.js';
 import { useAuthStore } from '../auth/useAuthStore.js';
-import { API_BASE_URL } from '../../services/apiClient.js';
+import { apiClient } from '../../services/apiClient.js';
 import { io } from 'socket.io-client';
 import { SOCKET_EVENTS } from '@healthsetu/contracts';
 
@@ -34,8 +34,6 @@ export const WaitingRoomPage: React.FC = () => {
   const [audioOnlyPreference, setAudioOnlyPreference] = useState<boolean>(false);
 
   const isAdmitted = status === 'IN_PROGRESS' || status === 'CALLED' || status === 'ACTIVE';
-  const isCompleted = status === 'COMPLETED' || status === 'DONE';
-  const isCancelled = status === 'CANCELLED' || status === 'MISSED';
 
   // Sync and poll queue status
   useEffect(() => {
@@ -62,38 +60,32 @@ export const WaitingRoomPage: React.FC = () => {
       if (!consultationId) return;
 
       try {
-        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-        if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
+        const data = await apiClient<{
+          positionInQueue: number;
+          estimatedWaitMinutes: number;
+          status: string;
+        }>(`/consultations/queue/${consultationId}`);
 
-        const res = await fetch(`${API_BASE_URL}/consultations/queue/${consultationId}`, { headers });
-        if (res.ok) {
-          const data = await res.json();
-          if (isMounted) {
-            setPosition(data.positionInQueue);
-            setEstWait(data.estimatedWaitMinutes);
-            setStatus(data.status);
-            setLoading(false);
+        if (isMounted) {
+          setPosition(data.positionInQueue);
+          setEstWait(data.estimatedWaitMinutes);
+          setStatus(data.status);
+          setLoading(false);
 
-            // Save to Dexie snapshot
-            await db.queueSnapshot.put({
-              consultationId,
-              doctorId: '',
-              positionInQueue: data.positionInQueue,
-              estimatedWaitMinutes: data.estimatedWaitMinutes,
-              status: data.status,
-              fetchedAt: Date.now(),
-            });
+          // Save to Dexie snapshot
+          await db.queueSnapshot.put({
+            consultationId,
+            doctorId: '',
+            positionInQueue: data.positionInQueue,
+            estimatedWaitMinutes: data.estimatedWaitMinutes,
+            status: data.status,
+            fetchedAt: Date.now(),
+          });
 
-            // If doctor has accepted (CALLED or IN_PROGRESS or ACTIVE), navigate automatically
-            if (data.status === 'IN_PROGRESS' || data.status === 'CALLED' || data.status === 'ACTIVE') {
-              setStatus('IN_PROGRESS');
-              navigate(`/consult/room/${consultationId}`);
-            }
-          }
-        } else {
-          // If 404/error, fallback demo values
-          if (isMounted) {
-            setLoading(false);
+          // If doctor has accepted (CALLED or IN_PROGRESS or ACTIVE), navigate automatically
+          if (data.status === 'IN_PROGRESS' || data.status === 'CALLED' || data.status === 'ACTIVE') {
+            setStatus('IN_PROGRESS');
+            navigate(`/consult/room/${consultationId}`);
           }
         }
       } catch (err) {
@@ -110,12 +102,13 @@ export const WaitingRoomPage: React.FC = () => {
     try {
       const socketUrl =
         (import.meta as any).env?.VITE_SOCKET_URL ||
-        API_BASE_URL.replace(/\/api\/v1\/?$/, '');
+        (typeof window !== 'undefined' && window.location.hostname === 'localhost'
+          ? 'http://localhost:4000'
+          : typeof window !== 'undefined'
+            ? window.location.origin
+            : '');
       if (socketUrl) {
-        socket = io(socketUrl, {
-          transports: ['websocket', 'polling'],
-          withCredentials: true,
-        });
+        socket = io(socketUrl, { transports: ['websocket', 'polling'] });
         socket.emit('join:room', { roomId: `consultation_${consultationId}` });
         socket.on(SOCKET_EVENTS.CONSULTATION_ASSIGNED, (payload: any) => {
           if (isMounted && (!payload || payload.consultationId === consultationId)) {
@@ -160,12 +153,12 @@ export const WaitingRoomPage: React.FC = () => {
             {isOnline ? (
               <>
                 <Wifi className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Connected</span>
+                <span>{t('common.connected', 'Connected')}</span>
               </>
             ) : (
               <>
                 <WifiOff className="w-3.5 h-3.5 text-amber-500" />
-                <span>Offline Cached</span>
+                <span>{t('common.offlineCached', 'Offline Cached')}</span>
               </>
             )}
           </div>
@@ -181,7 +174,7 @@ export const WaitingRoomPage: React.FC = () => {
 
           <div className="my-4 flex items-center justify-center">
             <div className="w-24 h-24 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border-4 border-emerald-500/20 flex flex-col items-center justify-center">
-              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Position</span>
+              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">{t('consult.position', 'Position')}</span>
               <span className="text-3xl font-extrabold text-emerald-700 dark:text-emerald-300">
                 #{loading ? '...' : position}
               </span>
@@ -193,7 +186,7 @@ export const WaitingRoomPage: React.FC = () => {
             <span>
               {t('consult.estWaitPrefix', 'Estimated wait')}:{' '}
               <strong className="text-slate-900 dark:text-white">
-                {estWait < 0 ? 'Estimating (Doctor check-in pending)' : `~${estWait} mins`}
+                {estWait < 0 ? t('consult.wait_estimating', 'Estimating (Doctor check-in pending)') : `~${estWait} ${t('common.min', 'mins')}`}
               </strong>
             </span>
           </div>
@@ -207,7 +200,7 @@ export const WaitingRoomPage: React.FC = () => {
                   : 'text-amber-500'
               }`}
             >
-              {status === 'IN_PROGRESS' ? 'ADMITTED BY DOCTOR' : status}
+              {status === 'IN_PROGRESS' ? t('consult.status_admitted', 'ADMITTED BY DOCTOR') : status}
             </span>
           </p>
         </div>
@@ -219,8 +212,8 @@ export const WaitingRoomPage: React.FC = () => {
               <Headphones className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-xs font-bold text-slate-900 dark:text-white">Low Bandwidth Mode</p>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Audio only for 2G / poor signal</p>
+              <p className="text-xs font-bold text-slate-900 dark:text-white">{t('consult.low_bandwidth_mode', 'Low Bandwidth Mode')}</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">{t('consult.low_bandwidth_sub', 'Audio only for 2G / poor signal')}</p>
             </div>
           </div>
           <button
@@ -232,7 +225,7 @@ export const WaitingRoomPage: React.FC = () => {
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
             }`}
           >
-            {audioOnlyPreference ? 'Enabled' : 'Disabled'}
+            {audioOnlyPreference ? t('consult.enabled', 'Enabled') : t('consult.disabled', 'Disabled')}
           </button>
         </div>
 
@@ -241,13 +234,13 @@ export const WaitingRoomPage: React.FC = () => {
           <div className="flex items-start space-x-2.5">
             <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              <strong>Stay on this screen.</strong> The phone will ring or alert you as soon as the Medical Officer admits your token.
+              {t('consult.stay_on_screen', 'Stay on this screen. The phone will ring or alert you as soon as the Medical Officer admits your token.')}
             </p>
           </div>
           <div className="flex items-start space-x-2.5">
             <Users className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              Keep your medicine bottles or previous slips ready next to you for the doctor to review.
+              {t('consult.prepare_medicines', 'Keep your medicine bottles or previous slips ready next to you for the doctor to review.')}
             </p>
           </div>
         </div>
@@ -258,55 +251,21 @@ export const WaitingRoomPage: React.FC = () => {
         {/* Statutory Clinical Disclaimer */}
         <div className="text-[10px] text-slate-400 dark:text-slate-500 text-center flex items-center justify-center space-x-1">
           <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-          <span>Teleconsultation is provided under Telemedicine Practice Guidelines (MoHFW India).</span>
+          <span>{t('consult.guidelines_notice', 'Teleconsultation is provided under Telemedicine Practice Guidelines (MoHFW India).')}</span>
         </div>
 
         {/* Waiting notice when not admitted yet */}
-        {!isAdmitted && !isCompleted && !isCancelled && (
+        {!isAdmitted && (
           <p className="text-[11px] text-amber-600 dark:text-amber-400 font-semibold text-center flex items-center justify-center space-x-1">
             <Clock className="w-3.5 h-3.5 animate-spin" />
-            <span>Waiting for Doctor to Admit You...</span>
+            <span>{t('consult.waiting_admission', 'Waiting for Doctor to Admit You...')}</span>
           </p>
-        )}
-
-        {isCompleted && (
-          <div className="mt-6 rounded-2xl border border-slate-700 bg-slate-900/70 p-4 text-center">
-            <CheckCircle2 className="mx-auto mb-2 h-7 w-7 text-emerald-400" />
-            <p className="font-semibold text-slate-100">This consultation has ended.</p>
-            <p className="mt-1 text-sm text-slate-400">
-              Open Reports to view the doctor&apos;s completed report.
-            </p>
-            <div className="mt-3 flex flex-wrap justify-center gap-2">
-              <button
-                type="button"
-                onClick={() => navigate('/screening')}
-                className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-700"
-              >
-                Start New Consultation
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate('/reports')}
-                className="rounded-xl bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-slate-700"
-              >
-                View Report
-              </button>
-            </div>
-          </div>
-        )}
-
-        {isCancelled && (
-          <div className="mt-6 rounded-2xl border border-amber-700/60 bg-amber-950/30 p-4 text-center">
-            <AlertCircle className="mx-auto mb-2 h-7 w-7 text-amber-400" />
-            <p className="font-semibold text-slate-100">This consultation is no longer active.</p>
-            <p className="mt-1 text-sm text-slate-400">Please start a new consultation if you still need help.</p>
-          </div>
         )}
 
         {isAdmitted && (
           <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold text-center flex items-center justify-center space-x-1 animate-pulse">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Doctor has admitted you! Entering consultation...</span>
+            <span>{t('consult.doctor_admitted', 'Doctor has admitted you! Entering consultation...')}</span>
           </p>
         )}
 
@@ -322,7 +281,7 @@ export const WaitingRoomPage: React.FC = () => {
         >
           {audioOnlyPreference ? <PhoneCall className="w-5 h-5" /> : <Video className="w-5 h-5" />}
           <span>
-            {isAdmitted ? 'Doctor Ready — Connect Now' : t('consult.enterCall', 'Connect to Doctor Now')}
+            {isAdmitted ? t('consult.doctor_ready', 'Doctor Ready — Connect Now') : t('consult.enterCall', 'Connect to Doctor Now')}
           </span>
           <ArrowRight className="w-4 h-4 ml-1" />
         </button>

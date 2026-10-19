@@ -81,34 +81,6 @@ export class QueueService {
       }
     }
 
-    // A patient may have only one active instant consultation. Mobile retries
-    // can generate a new idempotency key, so also deduplicate by patient and
-    // active status instead of creating duplicate queue tokens.
-    const activeConsultation = await Consultation.findOne({
-      patientId: new Types.ObjectId(patientId),
-      // DOCUMENTATION_PENDING belongs to the previous encounter. It must not
-      // be reused when the patient starts a new consultation.
-      status: { $in: ['QUEUED', 'IN_PROGRESS'] },
-    }).sort({ createdAt: -1 });
-    if (activeConsultation) {
-      const activeQueue = await QueueEntry.findOne({ consultationId: activeConsultation._id });
-      if (activeQueue) {
-        const pos = await this.getQueueStatus(activeConsultation._id.toString());
-        logger.info(
-          { patientId, consultationId: activeConsultation._id.toString() },
-          'Active consultation reused for repeated queue request',
-        );
-        return {
-          consultation: activeConsultation,
-          queueEntry: activeQueue,
-          positionInQueue: pos.positionInQueue,
-          estimatedWaitMinutes: pos.estimatedWaitMinutes,
-          overflow: pos.overflow,
-          suggestedAction: pos.overflow ? 'BOOK_LATER' : 'CONSULT_NOW',
-        };
-      }
-    }
-
     // 3. Determine poolKey and priority rank
     const specialty = input.requiredSpecialty || 'General Physician';
     const language = input.preferredLanguage || 'hi';
@@ -356,15 +328,16 @@ export class QueueService {
     // 1. Atomic claim via findOneAndUpdate
     const filter: Record<string, any> = {
       status: 'WAITING',
-      poolKey: { $in: doctorPoolKeys },
       $or: [{ preferredDoctorId: null }, { preferredDoctorId: new Types.ObjectId(doctorId) }],
     };
 
     if (specificConsultationId && Types.ObjectId.isValid(specificConsultationId)) {
       filter.consultationId = new Types.ObjectId(specificConsultationId);
+    } else {
+      filter.poolKey = { $in: doctorPoolKeys };
     }
 
-    const queueEntry = await QueueEntry.findOneAndUpdate(
+    let queueEntry = await QueueEntry.findOneAndUpdate(
       filter,
       {
         $set: {
@@ -378,6 +351,27 @@ export class QueueService {
         returnDocument: 'after',
       },
     );
+
+    // Fallback if no matching poolKey patient: claim next waiting patient in queue
+    if (!queueEntry && !specificConsultationId) {
+      queueEntry = await QueueEntry.findOneAndUpdate(
+        {
+          status: 'WAITING',
+          $or: [{ preferredDoctorId: null }, { preferredDoctorId: new Types.ObjectId(doctorId) }],
+        },
+        {
+          $set: {
+            status: 'CALLED',
+            doctorId: new Types.ObjectId(doctorId),
+            calledAt: now,
+          },
+        },
+        {
+          sort: { effectivePriority: 1, sequence: 1 },
+          returnDocument: 'after',
+        },
+      );
+    }
 
     if (!queueEntry) {
       return null;
@@ -457,28 +451,6 @@ export class QueueService {
         poolKey: '',
         overflow: false,
       };
-    }
-
-    const consult = await Consultation.findById(consultationId).select('status');
-    if (consult?.status === 'IN_PROGRESS') {
-      return {
-        consultationId,
-        positionInQueue: 0,
-        entriesAhead: 0,
-        estimatedWaitMinutes: 0,
-        status: 'IN_PROGRESS',
-        poolKey: entry.poolKey,
-        overflow: false,
-      };
-    }
-
-    // Recover records created before consultation and queue statuses were
-    // updated atomically. An active queued consultation must remain claimable.
-    if (consult?.status === 'QUEUED' && entry.status === 'DONE') {
-      entry.status = 'WAITING';
-      entry.calledAt = undefined;
-      entry.doctorId = undefined;
-      await entry.save();
     }
 
     if (entry.status !== 'WAITING') {

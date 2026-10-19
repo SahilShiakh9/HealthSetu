@@ -17,7 +17,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import { useAuthStore } from '../auth/useAuthStore.js';
-import { apiClient, ApiError } from '../../services/apiClient.js';
+import { apiClient } from '../../services/apiClient.js';
 import type { DoctorAvailability } from '@healthsetu/contracts';
 
 interface QueuedPatientItem {
@@ -104,7 +104,7 @@ export const DoctorDashboardPage: React.FC = () => {
   const fetchDoctorQueue = async () => {
     setLoading(true);
     try {
-      const data = await apiClient<{ queue?: QueuedPatientItem[] }>('/consultations/doctor/queue');
+      const data = await apiClient<{ queue: QueuedPatientItem[] }>('/consultations/doctor/queue');
       setQueue(data.queue || []);
     } catch {
       setQueue([]);
@@ -116,10 +116,9 @@ export const DoctorDashboardPage: React.FC = () => {
   const fetchAffiliations = async () => {
     if (!accessToken) return;
     try {
-      const data = await apiClient<{
-        affiliations?: DoctorAffiliationInfo[];
-        doctorProfile?: DoctorProfileInfo;
-      }>('/affiliations/doctor');
+      const data = await apiClient<{ affiliations: DoctorAffiliationInfo[]; doctorProfile?: DoctorProfileInfo }>(
+        '/affiliations/doctor',
+      );
       setAffiliations(data.affiliations || []);
       if (data.doctorProfile) {
         setDoctorProfile(data.doctorProfile);
@@ -191,12 +190,8 @@ export const DoctorDashboardPage: React.FC = () => {
       setCustomFacilityId('');
       setUseCustomFacility(false);
       fetchAffiliations();
-    } catch (error) {
-      setErrorMessage(
-        error instanceof ApiError
-          ? error.message
-          : 'Network error while requesting affiliation',
-      );
+    } catch (err: any) {
+      setErrorMessage(err?.message || 'Failed to submit affiliation request');
     } finally {
       setSubmittingRequest(false);
     }
@@ -225,20 +220,14 @@ export const DoctorDashboardPage: React.FC = () => {
     setAcceptingId(consultationId);
     setErrorMessage(null);
     try {
-      const data = await apiClient<{ consultation?: { _id?: string } }>(
-        `/consultations/${consultationId}/accept`,
-        {
+      const data: any = await apiClient(`/consultations/${consultationId}/accept`, {
         method: 'POST',
-        },
-      );
+      });
+
       const cid = data.consultation?._id || consultationId;
       navigate(`/consult/room/${cid}?role=doctor`);
-    } catch (error) {
-      if (error instanceof ApiError) {
-        setErrorMessage(error.message);
-      } else {
-        setErrorMessage('Failed to connect to consultation server. Please check your network connection.');
-      }
+    } catch (err: any) {
+      setErrorMessage(err?.message || 'No patients currently available to admit in your specialty pool.');
     } finally {
       setAcceptingId(null);
     }

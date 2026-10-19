@@ -18,7 +18,10 @@ export const apiClient = async <T>(
   path: string,
   options: RequestInit = {},
 ): Promise<T> => {
-  const url = path.startsWith('http') ? path : `${API_BASE_URL}${path}`;
+  const normalizedPath = path.startsWith('/api/v1') ? path.replace(/^\/api\/v1/, '') : path;
+  const url = normalizedPath.startsWith('http')
+    ? normalizedPath
+    : `${API_BASE_URL}${normalizedPath.startsWith('/') ? normalizedPath : `/${normalizedPath}`}`;
   const token = useAuthStore.getState().accessToken;
 
   const headers = new Headers(options.headers || {});
