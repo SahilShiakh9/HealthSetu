@@ -37,7 +37,7 @@ describe('Dynamic Conversational State Machine Regression Suite', () => {
 
     // Must greet warmly by name and ask for symptoms
     expect(response.guidanceText).toContain('निरंजन');
-    expect(response.guidanceText).toMatch(/लक्षणे|त्रास/i);
+    expect(response.guidanceText).toMatch(/लक्षणे|त्रास|तक्रार/i);
   });
 
   it('“I have a fever and a headache” collects both symptoms in one turn', async () => {
@@ -88,6 +88,25 @@ describe('Dynamic Conversational State Machine Regression Suite', () => {
     expect(response.extractedSymptoms).toContain('cough');
     expect(response.negatedSymptoms).toContain('fever');
     expect(response.isFinished).toBe(false);
+  });
+
+  it('uses structured quick answers instead of inferring polarity from translated text', async () => {
+    const response = await voiceScreeningService.handleDialogue({
+      text: 'नहीं',
+      language: 'hi',
+      currentSymptoms: ['fever'],
+      negatedSymptoms: [],
+      answeredQuestions: {},
+      questionHistory: ['fever'],
+      answerContext: {
+        questionId: 'fever',
+        symptomId: 'fever',
+        value: 'no',
+      },
+    });
+
+    expect(response.extractedSymptoms).not.toContain('fever');
+    expect(response.negatedSymptoms).toContain('fever');
   });
 
   it('a new emergency warning interrupts normal questioning immediately', async () => {

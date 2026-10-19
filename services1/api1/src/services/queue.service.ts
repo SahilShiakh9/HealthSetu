@@ -68,6 +68,32 @@ export class QueueService {
       }
     }
 
+    // A patient may have only one active instant consultation. Mobile retries
+    // can generate a new idempotency key, so also deduplicate by patient and
+    // active status instead of creating duplicate queue tokens.
+    const activeConsultation = await Consultation.findOne({
+      patientId: new Types.ObjectId(patientId),
+      status: { $in: ['QUEUED', 'IN_PROGRESS', 'DOCUMENTATION_PENDING'] },
+    }).sort({ createdAt: -1 });
+    if (activeConsultation) {
+      const activeQueue = await QueueEntry.findOne({ consultationId: activeConsultation._id });
+      if (activeQueue) {
+        const pos = await this.getQueueStatus(activeConsultation._id.toString());
+        logger.info(
+          { patientId, consultationId: activeConsultation._id.toString() },
+          'Active consultation reused for repeated queue request',
+        );
+        return {
+          consultation: activeConsultation,
+          queueEntry: activeQueue,
+          positionInQueue: pos.positionInQueue,
+          estimatedWaitMinutes: pos.estimatedWaitMinutes,
+          overflow: pos.overflow,
+          suggestedAction: pos.overflow ? 'BOOK_LATER' : 'CONSULT_NOW',
+        };
+      }
+    }
+
     // 2. Emergency Rule: Emergencies NEVER enter the teleconsultation queue
     if (input.screeningId && Types.ObjectId.isValid(input.screeningId)) {
       const screening = await Screening.findById(input.screeningId);

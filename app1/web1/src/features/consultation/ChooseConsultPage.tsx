@@ -44,16 +44,24 @@ export const ChooseConsultPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    setLoading(true);
-    apiClient<{ doctors?: RankedDoctorPreview[]; rankedDoctors?: RankedDoctorPreview[]; recommendedAction?: 'CONSULT_NOW' | 'BOOK_LATER'; maxWaitLimitMinutes?: number }>('/consultations/preview', {
-      method: 'POST',
-      body: JSON.stringify({
-        screeningId: screeningId || '000000000000000000000001',
-        preferredLanguage: preferredLang,
-        requiredSpecialty: selectedSpecialty === 'All' ? 'General Physician' : selectedSpecialty,
-      }),
-    })
-      .then((data) => {
+    let mounted = true;
+    const loadPreview = async (initial = false) => {
+      if (initial) setLoading(true);
+      try {
+        const data = await apiClient<{
+          doctors?: RankedDoctorPreview[];
+          rankedDoctors?: RankedDoctorPreview[];
+          recommendedAction?: 'CONSULT_NOW' | 'BOOK_LATER';
+          maxWaitLimitMinutes?: number;
+        }>('/consultations/preview', {
+          method: 'POST',
+          body: JSON.stringify({
+            screeningId: screeningId || '000000000000000000000001',
+            preferredLanguage: preferredLang,
+            requiredSpecialty: selectedSpecialty === 'All' ? 'General Physician' : selectedSpecialty,
+          }),
+        });
+        if (!mounted) return;
         let fetchedDocs: RankedDoctorPreview[] = data.doctors || data.rankedDoctors || [];
         // Strictly only show verified, approved medical doctors to patients
         fetchedDocs = fetchedDocs.filter(
@@ -67,14 +75,22 @@ export const ChooseConsultPage: React.FC = () => {
         setDoctors(fetchedDocs);
         if (data.recommendedAction) setRecommendedAction(data.recommendedAction);
         if (data.maxWaitLimitMinutes) setMaxWaitLimitMinutes(data.maxWaitLimitMinutes);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.warn('Failed to fetch doctor matching preview:', err);
-        setDoctors([]);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        if (initial && mounted) setDoctors([]);
+      } finally {
+        if (initial && mounted) setLoading(false);
+      }
+    };
+
+    void loadPreview(true);
+    const refreshInterval = window.setInterval(() => {
+      void loadPreview();
+    }, 10000);
+    return () => {
+      mounted = false;
+      window.clearInterval(refreshInterval);
+    };
   }, [screeningId, preferredLang, accessToken, selectedSpecialty]);
 
   const handleJoinQueue = async (type: 'NOW' | 'SCHEDULED' = 'NOW') => {

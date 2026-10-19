@@ -377,6 +377,16 @@ export class VoiceScreeningService {
       currentPositive.add(lastQuestionId);
     }
 
+    if (req.answerContext) {
+      if (req.answerContext.value === 'yes') {
+        currentPositive.add(req.answerContext.symptomId);
+        currentNegated.delete(req.answerContext.symptomId);
+      } else if (req.answerContext.value === 'no') {
+        currentNegated.add(req.answerContext.symptomId);
+        currentPositive.delete(req.answerContext.symptomId);
+      }
+    }
+
     let patientName = greetingInfo.name || req.patientName;
 
     // 3. Check for Groq LLM assistance for context-aware interpretation
@@ -619,18 +629,24 @@ export class VoiceScreeningService {
     if (lang === 'mr') {
       guidanceText =
         riskTier === 'HIGH'
-          ? 'तुमच्या लक्षणांनुसार डॉक्टरांचा त्वरित सल्ला घेणे आवश्यक आहे. तुम्ही खालील बटणावरून तात्काळ डॉक्टरांशी व्हिडिओ किंवा फोन सल्लामसलत सुरू करू शकता.'
-          : 'तपासणी पूर्ण झाली आहे. ही लक्षणे सामान्य प्राथमिक तपासणीवर आधारित आहेत. अचूक उपचारांसाठी डॉक्टरांशी संपर्क साधा.';
+          ? 'तुमच्या लक्षणांनुसार तातडीने डॉक्टरांचा सल्ला घेणे आवश्यक आहे. कृपया त्वरित डॉक्टरांशी संपर्क साधा किंवा जवळच्या रुग्णालयात जा.'
+          : riskTier === 'MEDIUM'
+          ? 'तुमच्या लक्षणांसाठी लवकरच डॉक्टरांचा सल्ला घ्या. लक्षणे वाढल्यास तात्काळ मदत घ्या.'
+          : 'तपासणी पूर्ण झाली आहे. सध्या नोंदवलेली लक्षणे कमी जोखमीची दिसत आहेत. विश्रांती घ्या, पुरेसे पाणी प्या आणि लक्षणांवर लक्ष ठेवा. लक्षणे वाढल्यास डॉक्टरांशी संपर्क साधा.';
     } else if (lang === 'hi') {
       guidanceText =
         riskTier === 'HIGH'
-          ? 'आपके लक्षणों के आधार पर तत्काल डॉक्टर की सलाह आवश्यक है। आप नीचे दिए गए बटन से तुरंत डॉक्टर से टेलीकंसल्टेशन शुरू कर सकते हैं।'
-          : 'स्क्रीनिंग पूरी हो गई है। यह प्रारंभिक स्वास्थ्य आकलन है। सटीक निदान व उपचार हेतु डॉक्टर से परामर्श करें।';
+          ? 'आपके लक्षणों के आधार पर तुरंत डॉक्टर की सलाह आवश्यक है। कृपया तुरंत डॉक्टर से संपर्क करें या नजदीकी अस्पताल जाएं।'
+          : riskTier === 'MEDIUM'
+          ? 'आपके लक्षणों के लिए जल्द डॉक्टर से परामर्श करें। लक्षण बढ़ने पर तुरंत चिकित्सा सहायता लें।'
+          : 'स्क्रीनिंग पूरी हो गई है। अभी बताए गए लक्षण कम जोखिम वाले लगते हैं। आराम करें, पर्याप्त पानी पिएं और लक्षणों पर नजर रखें। लक्षण बढ़ने पर डॉक्टर से संपर्क करें।';
     } else {
       guidanceText =
         riskTier === 'HIGH'
-          ? 'Based on your reported symptoms, urgent medical consultation is advised. You may connect with an on-duty doctor immediately or visit your nearest primary healthcare facility.'
-          : 'Screening complete. This is an early health guidance screening and not a confirmed clinical diagnosis. Please proceed to consult a doctor.';
+          ? 'Based on your symptoms, urgent medical attention is recommended. Please contact a doctor immediately or go to the nearest hospital.'
+          : riskTier === 'MEDIUM'
+          ? 'Your symptoms should be reviewed by a doctor soon. Seek urgent medical help if they become worse.'
+          : 'Screening is complete. The symptoms reported currently appear low risk. Rest, drink enough fluids, and monitor your symptoms. Contact a doctor if they worsen.';
     }
 
     void this.persistAndEmitScreeningActivity({

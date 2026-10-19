@@ -311,10 +311,21 @@ export class ConsultationService {
       ],
     };
 
-    return Consultation.find(filter)
-      .sort({ effectivePriority: -1, createdAt: 1 })
+    const consultations = await Consultation.find(filter)
+      .sort({ effectivePriority: 1, sequence: 1, createdAt: 1 })
       .populate('patientId', 'name phone language')
       .populate('screeningId') as any;
+
+    // Older clients could create duplicate requests with fresh idempotency
+    // keys. Show one authoritative active consultation per patient while the
+    // queue service prevents new duplicates.
+    const seenPatients = new Set<string>();
+    return consultations.filter((consultation: IConsultation) => {
+      const patientId = consultation.patientId?._id?.toString() || consultation.patientId?.toString();
+      if (!patientId || seenPatients.has(patientId)) return false;
+      seenPatients.add(patientId);
+      return true;
+    });
   }
 
   /**

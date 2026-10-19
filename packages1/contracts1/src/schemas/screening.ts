@@ -127,6 +127,13 @@ export const VoiceDialogueRequestSchema = z.object({
   sessionId: z.string().optional(),
   text: z.string().min(1),
   language: LanguageEnum.default('en'),
+  answerContext: z
+    .object({
+      questionId: z.string(),
+      symptomId: z.string(),
+      value: z.enum(['yes', 'no', 'unknown']),
+    })
+    .optional(),
   currentSymptoms: z.array(z.string()).optional().default([]),
   negatedSymptoms: z.array(z.string()).optional().default([]),
   answeredQuestions: z.record(z.string(), z.enum(['yes', 'no', 'unknown'])).optional().default({}),
@@ -178,4 +185,3 @@ export const VoiceDialogueResponseSchema = z.object({
   modelVersion: z.string(),
 });
 export type VoiceDialogueResponse = z.infer<typeof VoiceDialogueResponseSchema>;
-

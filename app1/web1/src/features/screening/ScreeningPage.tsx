@@ -253,6 +253,7 @@ export const ScreeningPage: React.FC = () => {
   const finalTranscriptRef = useRef('');
   const transcriptRef = useRef<string>('');
   const stateRef = useRef<LifecycleState>('idle');
+  const voiceSessionRef = useRef(0);
 
   useEffect(() => {
     stateRef.current = state;
@@ -467,7 +468,9 @@ export const ScreeningPage: React.FC = () => {
       const cleaned = normalizeRecognizedText(`${finalTranscriptRef.current} ${interimText}`);
       setTranscript(cleaned);
       setTextInput(cleaned);
-      transcriptRef.current = cleaned;
+      // Interim recognition is only a visual preview. Never submit it or
+      // carry it into the next microphone session.
+      transcriptRef.current = normalizeRecognizedText(finalTranscriptRef.current);
 
       // Stop capture after a natural pause, but submit from onend only. This
       // prevents early submission and duplicate requests on mobile browsers.
@@ -502,6 +505,12 @@ export const ScreeningPage: React.FC = () => {
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
       if (voiceStopRequestedRef.current) {
         voiceStopRequestedRef.current = false;
+        const textToSubmit = finalTranscriptRef.current.trim();
+        if (textToSubmit) {
+          handleProcessSubmission(textToSubmit);
+        } else {
+          setState('idle');
+        }
         return;
       }
       if (stateRef.current === 'listening') {
@@ -587,13 +596,7 @@ export const ScreeningPage: React.FC = () => {
       } catch (err) {
         console.warn('Could not stop recognition:', err);
       }
-      const textToSubmit = (transcriptRef.current || transcript || textInput).trim();
-      if (textToSubmit) {
-        handleProcessSubmission(textToSubmit);
-      } else {
-        setState('idle');
-      }
-      return;
+        return;
     }
 
     if (state === 'processing' || state === 'speaking') {
@@ -616,6 +619,8 @@ export const ScreeningPage: React.FC = () => {
     setTextInput('');
     transcriptRef.current = '';
     voiceStopRequestedRef.current = false;
+    finalTranscriptRef.current = '';
+    voiceSessionRef.current += 1;
     setIsEditingTranscript(false);
     setState('listening');
 
@@ -676,7 +681,10 @@ export const ScreeningPage: React.FC = () => {
   };
 
   // Submit patient statement to backend dialogue engine
-  const handleProcessSubmission = async (statementText: string) => {
+  const handleProcessSubmission = async (
+    statementText: string,
+    answerContext?: { questionId: string; symptomId: string; value: 'yes' | 'no' | 'unknown' },
+  ) => {
     const textToSend = statementText.trim();
     if (!textToSend || state === 'processing') return;
 
@@ -710,6 +718,7 @@ export const ScreeningPage: React.FC = () => {
           sessionId,
           text: textToSend,
           language: selectedLanguage,
+          answerContext,
           currentSymptoms,
           negatedSymptoms,
           answeredQuestions,
@@ -830,7 +839,11 @@ export const ScreeningPage: React.FC = () => {
 
     const valLabel = value === 'yes' ? S.yes : value === 'no' ? S.no : S.notSure;
     setCurrentFollowUp(null);
-    await handleProcessSubmission(`${valLabel} (${currentFollowUp.symptomId})`);
+    await handleProcessSubmission(`${valLabel}`, {
+      questionId: qId,
+      symptomId: currentFollowUp.symptomId,
+      value,
+    });
   };
 
   // Persist screening to Dexie and queue Outbox synchronization
@@ -1157,9 +1170,11 @@ export const ScreeningPage: React.FC = () => {
                     <span className="font-bold text-emerald-400 text-base">
                       {screeningResult.candidateCategory}
                     </span>
-                    <p className="text-[10px] text-slate-400 mt-0.5 italic">
-                      {S.disclaimer}
-                    </p>
+                    {screeningResult.riskTier !== 'LOW' && (
+                      <p className="text-[10px] text-slate-400 mt-0.5 italic">
+                        {S.disclaimer}
+                      </p>
+                    )}
                   </>
                 ) : (
                   <>
