@@ -251,7 +251,8 @@ export const NgoDashboardPage: React.FC = () => {
         const isHigh = event.riskTier === 'HIGH' || event.type === 'screening.urgent_flagged';
         const isMed = event.riskTier === 'MEDIUM';
         const isLow = event.riskTier === 'LOW';
-        const lang = event.language as 'en' | 'hi' | 'mr';
+        const lang = (event.language as 'en' | 'hi' | 'mr') || 'en';
+        const method = (event.inputMethod as 'voice' | 'text') || 'voice';
 
         return {
           ...prev,
@@ -270,7 +271,7 @@ export const NgoDashboardPage: React.FC = () => {
           },
           inputMethodDistribution: {
             ...prev.inputMethodDistribution,
-            [event.inputMethod]: (prev.inputMethodDistribution[event.inputMethod as 'voice' | 'text'] || 0) + 1,
+            [method]: (prev.inputMethodDistribution[method] || 0) + 1,
           },
           lastUpdated: new Date().toISOString(),
         };
