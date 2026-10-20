@@ -7,6 +7,62 @@ import { Screening } from '../models/Screening.js';
 import { User } from '../models/User.js';
 import { realtimeService } from './realtime.service.js';
 
+/**
+ * Deduplicates speech recognition transcripts to fix Android Chrome & WebKit mobile speech bugs.
+ * Removes:
+ * 1. Immediate consecutive repeated words: "hello hello hello" -> "hello", "मेरे मेरे" -> "मेरे"
+ * 2. Progressive prefix repetitions: "hello my hello my name hello my name is Akhil" -> "hello my name is Akhil"
+ * 3. Consecutive repeated phrases: "my name is my name is" -> "my name is"
+ */
+export function cleanAndroidSpeechRepetition(text: string): string {
+  if (!text) return '';
+  let str = text.trim();
+
+  // 1. Collapse adjacent identical words
+  const tokens = str.split(/\s+/).filter(Boolean);
+  const dedupedWords: string[] = [];
+  for (let i = 0; i < tokens.length; i++) {
+    if (i === 0 || tokens[i].toLowerCase() !== tokens[i - 1].toLowerCase()) {
+      dedupedWords.push(tokens[i]);
+    }
+  }
+  str = dedupedWords.join(' ');
+
+  // 2. Remove progressive prefix repetitions (interim phrases accumulating prefixes)
+  let words = str.split(/\s+/).filter(Boolean);
+  if (words.length <= 1) return str;
+
+  for (let i = 1; i < words.length; i++) {
+    if (words[i].toLowerCase() === words[0].toLowerCase()) {
+      let matchCount = 0;
+      while (
+        matchCount < i &&
+        i + matchCount < words.length &&
+        words[matchCount].toLowerCase() === words[i + matchCount].toLowerCase()
+      ) {
+        matchCount++;
+      }
+      if (matchCount === i || (matchCount >= 2 && i + matchCount <= words.length)) {
+        return cleanAndroidSpeechRepetition(words.slice(i).join(' '));
+      }
+    }
+  }
+
+  // 3. Remove consecutive repeated phrases
+  for (let n = Math.floor(words.length / 2); n >= 2; n--) {
+    for (let i = 0; i <= words.length - 2 * n; i++) {
+      const p1 = words.slice(i, i + n).map((w) => w.toLowerCase()).join(' ');
+      const p2 = words.slice(i + n, i + 2 * n).map((w) => w.toLowerCase()).join(' ');
+      if (p1 === p2) {
+        words.splice(i, n);
+        return cleanAndroidSpeechRepetition(words.join(' '));
+      }
+    }
+  }
+
+  return words.join(' ');
+}
+
 interface EmergencyRuleDefinition {
   sign: string;
   en: string[];
@@ -373,7 +429,10 @@ export class VoiceScreeningService {
    *   Stage 4: Risk Outcome & Low-Risk Prevention Tips
    */
   public async handleDialogue(req: VoiceDialogueRequest): Promise<VoiceDialogueResponse> {
-    const text = req.text.trim();
+    const rawText = (req.text || '').trim();
+    // Strip trailing parenthesized symptomId e.g. "No (fever)" -> "No" or "1-2 days (fever)" -> "1-2 days"
+    const unparenthesized = rawText.replace(/\s*\([a-zA-Z0-9_\-]+\)\s*$/, '').trim();
+    const text = cleanAndroidSpeechRepetition(unparenthesized);
     const lang = req.language || 'en';
     const sessionId = req.sessionId || `sess-${Date.now()}`;
 
@@ -416,32 +475,44 @@ export class VoiceScreeningService {
 
     // 2. Extract deterministic linguistic cues
     const greetingInfo = this.extractGreetingAndName(text, lang);
-    const polarity = this.extractSymptomsWithPolarity(text, lang);
     const currentPositive = new Set(req.currentSymptoms || []);
     const currentNegated = new Set(req.negatedSymptoms || []);
 
-    polarity.positive.forEach((s) => {
-      currentPositive.add(s);
-      currentNegated.delete(s);
-    });
-
-    polarity.negated.forEach((s) => {
-      currentNegated.add(s);
-      currentPositive.delete(s);
-    });
-
-    const isDirectNegationAnswer = /^(?:no|nope|नाही|नाहीये|नहीं)[!.\s]*$/i.test(text);
-    const isDirectAffirmationAnswer = /^(?:yes|yeah|होय|हो|हाँ|हां)[!.\s]*$/i.test(text);
+    const isDirectNegationAnswer = /^(?:no|nope|not\s*really|नाही|नाहीये|नहीं|ना)[!.\s]*$/i.test(text);
+    const isDirectAffirmationAnswer = /^(?:yes|yeah|yep|sure|होय|हो|हाँ|हां)[!.\s]*$/i.test(text);
 
     const lastQuestionId =
       req.questionHistory && req.questionHistory.length > 0
         ? req.questionHistory[req.questionHistory.length - 1]
         : null;
 
-    if (isDirectNegationAnswer && lastQuestionId) {
-      currentNegated.add(lastQuestionId);
-    } else if (isDirectAffirmationAnswer && lastQuestionId) {
-      currentPositive.add(lastQuestionId);
+    const isAnsweringFollowUp = Boolean(
+      lastQuestionId && (lastQuestionId.endsWith('_redflag') || lastQuestionId.endsWith('_duration'))
+    );
+
+    if (isAnsweringFollowUp && (isDirectNegationAnswer || isDirectAffirmationAnswer)) {
+      // Patient is answering a follow-up question (e.g. "No" to red-flag or "Yes").
+      // Do NOT allow "No" to wipe out the primary confirmed symptoms!
+      if (isDirectNegationAnswer) {
+        currentNegated.add(lastQuestionId!);
+      } else {
+        currentPositive.add(lastQuestionId!);
+      }
+    } else {
+      const polarity = this.extractSymptomsWithPolarity(text, lang);
+      polarity.positive.forEach((s) => {
+        currentPositive.add(s);
+        currentNegated.delete(s);
+      });
+      polarity.negated.forEach((s) => {
+        currentNegated.add(s);
+        currentPositive.delete(s);
+      });
+      if (isDirectNegationAnswer && lastQuestionId) {
+        currentNegated.add(lastQuestionId);
+      } else if (isDirectAffirmationAnswer && lastQuestionId) {
+        currentPositive.add(lastQuestionId);
+      }
     }
 
     let patientName = greetingInfo.name || req.patientName;
@@ -501,6 +572,9 @@ export class VoiceScreeningService {
         }
         if (groqResult.new_negated_symptoms && groqResult.new_negated_symptoms.length > 0) {
           groqResult.new_negated_symptoms.forEach((s) => {
+            if (isAnsweringFollowUp && isDirectNegationAnswer && (req.currentSymptoms || []).includes(s)) {
+              return;
+            }
             currentNegated.add(s);
             currentPositive.delete(s);
           });
@@ -967,7 +1041,9 @@ Analyze the patient statement in context of conversation history:
 6. In ${currentStage}:
    - If STAGE_2_DURATION: set "question_type" to "duration" and formulate a clear duration question in ${lang}.
    - If STAGE_3_REDFLAG: set "question_type" to "yes_no" and formulate an associated red-flag question in ${lang}.
-7. Set "is_ready_for_assessment" to true ONLY if both duration and red-flag checks have been addressed!
+7. Follow-Up Question Interpretation:
+   - If patient answers "No" / "नाही" / "नहीं" to a red-flag question, do NOT put their active confirmed symptoms in "new_negated_symptoms"! They are denying the red flag, not their primary symptoms. Set "intent" to "answering_question".
+8. Set "is_ready_for_assessment" to true if both duration and red-flag checks have been addressed!
 
 Respond STRICTLY in JSON format:
 {

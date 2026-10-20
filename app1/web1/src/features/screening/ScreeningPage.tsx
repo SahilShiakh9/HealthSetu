@@ -43,6 +43,62 @@ interface Message {
   questionId?: string;
 }
 
+/**
+ * Deduplicates speech recognition transcripts to fix Android Chrome & WebKit mobile speech bugs.
+ * Removes:
+ * 1. Immediate consecutive repeated words: "hello hello hello" -> "hello", "मेरे मेरे" -> "मेरे"
+ * 2. Progressive prefix repetitions: "hello my hello my name hello my name is Akhil" -> "hello my name is Akhil"
+ * 3. Consecutive repeated phrases: "my name is my name is" -> "my name is"
+ */
+export function cleanAndroidSpeechRepetition(text: string): string {
+  if (!text) return '';
+  let str = text.trim();
+
+  // 1. Collapse adjacent identical words
+  const tokens = str.split(/\s+/).filter(Boolean);
+  const dedupedWords: string[] = [];
+  for (let i = 0; i < tokens.length; i++) {
+    if (i === 0 || tokens[i].toLowerCase() !== tokens[i - 1].toLowerCase()) {
+      dedupedWords.push(tokens[i]);
+    }
+  }
+  str = dedupedWords.join(' ');
+
+  // 2. Remove progressive prefix repetitions (interim phrases accumulating prefixes)
+  let words = str.split(/\s+/).filter(Boolean);
+  if (words.length <= 1) return str;
+
+  for (let i = 1; i < words.length; i++) {
+    if (words[i].toLowerCase() === words[0].toLowerCase()) {
+      let matchCount = 0;
+      while (
+        matchCount < i &&
+        i + matchCount < words.length &&
+        words[matchCount].toLowerCase() === words[i + matchCount].toLowerCase()
+      ) {
+        matchCount++;
+      }
+      if (matchCount === i || (matchCount >= 2 && i + matchCount <= words.length)) {
+        return cleanAndroidSpeechRepetition(words.slice(i).join(' '));
+      }
+    }
+  }
+
+  // 3. Remove consecutive repeated phrases
+  for (let n = Math.floor(words.length / 2); n >= 2; n--) {
+    for (let i = 0; i <= words.length - 2 * n; i++) {
+      const p1 = words.slice(i, i + n).map((w) => w.toLowerCase()).join(' ');
+      const p2 = words.slice(i + n, i + 2 * n).map((w) => w.toLowerCase()).join(' ');
+      if (p1 === p2) {
+        words.splice(i, n);
+        return cleanAndroidSpeechRepetition(words.join(' '));
+      }
+    }
+  }
+
+  return words.join(' ');
+}
+
 // Localized UI Dictionary for all patient-facing texts
 const UI_STRINGS: Record<
   Language,
@@ -430,19 +486,22 @@ export const ScreeningPage: React.FC = () => {
     rec.lang = selectedLanguage === 'mr' ? 'mr-IN' : selectedLanguage === 'hi' ? 'hi-IN' : 'en-IN';
 
     rec.onresult = (event: any) => {
+      let finalStr = '';
       let interimStr = '';
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcriptPiece = event.results[i][0]?.transcript || '';
-        if (event.results[i].isFinal) {
-          sessionFinalTranscriptRef.current = (sessionFinalTranscriptRef.current + ' ' + transcriptPiece).trim();
+      for (let i = 0; i < event.results.length; i++) {
+        const item = event.results[i];
+        const transcriptPiece = item[0]?.transcript || '';
+        if (item.isFinal) {
+          finalStr += transcriptPiece + ' ';
         } else {
           interimStr += transcriptPiece + ' ';
         }
       }
 
-      const fullTranscript = (sessionFinalTranscriptRef.current + ' ' + interimStr).trim();
-      if (!fullTranscript) return;
+      const rawTranscript = (finalStr + ' ' + interimStr).trim();
+      if (!rawTranscript) return;
 
+      const fullTranscript = cleanAndroidSpeechRepetition(rawTranscript);
       setTranscript(fullTranscript);
       setTextInput(fullTranscript);
       transcriptRef.current = fullTranscript;
@@ -453,7 +512,7 @@ export const ScreeningPage: React.FC = () => {
       }
       silenceTimerRef.current = setTimeout(() => {
         if (stateRef.current === 'listening') {
-          const textToSubmit = transcriptRef.current.trim();
+          const textToSubmit = cleanAndroidSpeechRepetition(transcriptRef.current.trim());
           setState('processing');
           try {
             recognitionRef.current?.stop();
@@ -662,7 +721,7 @@ export const ScreeningPage: React.FC = () => {
 
   // Submit patient statement to backend dialogue engine
   const handleProcessSubmission = async (statementText: string) => {
-    const textToSend = statementText.trim();
+    const textToSend = cleanAndroidSpeechRepetition(statementText.trim());
     if (!textToSend || isSubmittingRef.current) return;
 
     isSubmittingRef.current = true;
@@ -813,9 +872,8 @@ export const ScreeningPage: React.FC = () => {
     const updated = { ...answeredQuestions, [qId]: value };
     setAnsweredQuestions(updated);
 
-    const followUpCopy = currentFollowUp;
     setCurrentFollowUp(null);
-    await handleProcessSubmission(`${label} (${followUpCopy.symptomId})`);
+    await handleProcessSubmission(label);
   };
 
   // Persist screening to Dexie and queue Outbox synchronization
