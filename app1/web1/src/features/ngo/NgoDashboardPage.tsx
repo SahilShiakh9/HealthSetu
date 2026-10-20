@@ -175,11 +175,26 @@ export const NgoDashboardPage: React.FC = () => {
         }
 
         if (activityData?.data && Array.isArray(activityData.data) && activityData.data.length > 0) {
-          setActivities(activityData.data);
+          setActivities((prev) => {
+            const recentLive = prev.filter((p) => p.id.startsWith('act-') && Date.now() - p.timestamp < 300000);
+            const merged = [...recentLive, ...activityData.data.filter((d: any) => !recentLive.some((r) => r.sessionRef === d.sessionRef))];
+            return merged.slice(0, 30);
+          });
         } else if (activityData?.data?.events && Array.isArray(activityData.data.events) && activityData.data.events.length > 0) {
-          setActivities(activityData.data.events);
+          setActivities((prev) => {
+            const recentLive = prev.filter((p) => p.id.startsWith('act-') && Date.now() - p.timestamp < 300000);
+            const merged = [...recentLive, ...activityData.data.events.filter((d: any) => !recentLive.some((r) => r.sessionRef === d.sessionRef))];
+            return merged.slice(0, 30);
+          });
         } else {
-          setActivities(getFallbackActivities());
+          setActivities((prev) => {
+            const recentLive = prev.filter((p) => p.id.startsWith('act-'));
+            if (recentLive.length > 0) {
+              const fallback = getFallbackActivities().filter((f) => !recentLive.some((r) => r.sessionRef === f.sessionRef));
+              return [...recentLive, ...fallback].slice(0, 30);
+            }
+            return getFallbackActivities();
+          });
         }
       } catch {
         setMetrics(getFallbackMetrics(timeRange));
@@ -224,11 +239,47 @@ export const NgoDashboardPage: React.FC = () => {
 
     // Real-time screening lifecycle event received
     socket.on('screening:activity', (event: NgoActivityEvent) => {
-      // Prepend event to activity feed
-      setActivities((prev) => [event, ...prev.slice(0, 29)]);
+      // 1. Immediately update activities feed by prepending the event
+      setActivities((prev) => {
+        const filtered = prev.filter((a) => a.id !== event.id && a.sessionRef !== event.sessionRef);
+        return [event, ...filtered.slice(0, 29)];
+      });
 
-      // Refresh aggregate KPIs silently in the background
-      fetchData(true);
+      // 2. Optimistically update aggregate KPIs in real time
+      setMetrics((prev) => {
+        if (!prev) return prev;
+        const isHigh = event.riskTier === 'HIGH' || event.type === 'screening.urgent_flagged';
+        const isMed = event.riskTier === 'MEDIUM';
+        const isLow = event.riskTier === 'LOW';
+        const lang = event.language as 'en' | 'hi' | 'mr';
+
+        return {
+          ...prev,
+          totalScreenings: prev.totalScreenings + 1,
+          completedToday: prev.completedToday + 1,
+          highPriorityFlags: isHigh ? prev.highPriorityFlags + 1 : prev.highPriorityFlags,
+          riskDistribution: {
+            ...prev.riskDistribution,
+            high: isHigh ? prev.riskDistribution.high + 1 : prev.riskDistribution.high,
+            medium: isMed ? prev.riskDistribution.medium + 1 : prev.riskDistribution.medium,
+            low: isLow ? prev.riskDistribution.low + 1 : prev.riskDistribution.low,
+          },
+          languageDistribution: {
+            ...prev.languageDistribution,
+            [lang]: (prev.languageDistribution[lang] || 0) + 1,
+          },
+          inputMethodDistribution: {
+            ...prev.inputMethodDistribution,
+            [event.inputMethod]: (prev.inputMethodDistribution[event.inputMethod as 'voice' | 'text'] || 0) + 1,
+          },
+          lastUpdated: new Date().toISOString(),
+        };
+      });
+
+      // 3. Refresh aggregate KPIs silently in the background
+      setTimeout(() => {
+        fetchData(true);
+      }, 350);
     });
 
     return () => {

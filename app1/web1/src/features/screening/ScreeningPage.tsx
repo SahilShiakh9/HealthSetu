@@ -285,14 +285,6 @@ export const ScreeningPage: React.FC = () => {
   });
 
   const prevI18nLangRef = useRef<string>(i18n.language);
-  useEffect(() => {
-    if (i18n.language && i18n.language !== prevI18nLangRef.current) {
-      prevI18nLangRef.current = i18n.language;
-      const lang = i18n.language.toLowerCase();
-      const target: Language = lang.startsWith('mr') ? 'mr' : lang.startsWith('hi') ? 'hi' : 'en';
-      setSelectedLanguage(target);
-    }
-  }, [i18n.language]);
 
   const S = UI_STRINGS[selectedLanguage] || UI_STRINGS.en;
 
@@ -328,8 +320,8 @@ export const ScreeningPage: React.FC = () => {
     modelVersion: string;
   } | null>(null);
 
-  const [localScreeningId] = useState<string>(() => crypto.randomUUID());
-  const [sessionId] = useState<string>(() => `sess-${crypto.randomUUID()}`);
+  const [localScreeningId, setLocalScreeningId] = useState<string>(() => crypto.randomUUID());
+  const [sessionId, setSessionId] = useState<string>(() => `sess-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`);
   const [patientName, setPatientName] = useState<string | null>(null);
   const [negatedSymptoms, setNegatedSymptoms] = useState<string[]>([]);
 
@@ -582,38 +574,100 @@ export const ScreeningPage: React.FC = () => {
     });
   }, []);
 
-  // Initial greeting when language changes or first load - automatically speaks greeting without delay
+  // Clean Session Reset on Language Switch & New Screening
+  // Completely wipes previous symptoms, questions, session IDs, and history so past conversations never leak!
+  const cleanSessionReset = useCallback(
+    (targetLang: Language, autoSpeakGreeting = true) => {
+      // 1. Immediately abort active speech synthesis and audio playback
+      handleStopSpeaking();
+
+      // 2. Abort any running SpeechRecognition
+      if (recognitionRef.current) {
+        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+        try {
+          recognitionRef.current.abort();
+        } catch {}
+      }
+
+      // 3. Reset all submission and transcript refs
+      isSubmittingRef.current = false;
+      transcriptRef.current = '';
+      sessionFinalTranscriptRef.current = '';
+
+      // 4. Wipe all clinical dialogue state completely
+      setCurrentSymptoms([]);
+      setNegatedSymptoms([]);
+      setAnsweredQuestions({});
+      setQuestionHistory([]);
+      setCurrentFollowUp(null);
+      setScreeningResult(null);
+      setPatientName(null);
+
+      // 5. Generate fresh new session and screening IDs
+      const newSessionId = `sess-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
+      const newScreeningId = crypto.randomUUID();
+      setSessionId(newSessionId);
+      setLocalScreeningId(newScreeningId);
+
+      // 6. Reset UI inputs and status
+      setTranscript('');
+      setTextInput('');
+      setIsEditingTranscript(false);
+      setErrorMessage(null);
+      setState('idle');
+
+      // 7. Update language if changed
+      prevI18nLangRef.current = targetLang;
+      setSelectedLanguage(targetLang);
+      setAppLanguage(targetLang);
+
+      // 8. Set initial greeting message for the chosen language
+      const targetStrings = UI_STRINGS[targetLang] || UI_STRINGS.en;
+      const initialGreeting: Message = {
+        id: `greeting-${Date.now()}`,
+        sender: 'assistant',
+        text: targetStrings.greeting,
+        timestamp: Date.now(),
+      };
+      setMessages([initialGreeting]);
+
+      // 9. Speak greeting in target language if desired
+      if (autoSpeakGreeting) {
+        speakAssistantText(targetStrings.greeting, initialGreeting.id);
+      }
+    },
+    [handleStopSpeaking, speakAssistantText]
+  );
+
+  // Synchronize language if changed externally via i18n
   useEffect(() => {
-    const greetingMsg: Message = {
-      id: 'greeting-init',
-      sender: 'assistant',
-      text: S.greeting,
-      timestamp: Date.now(),
-    };
-    setMessages([greetingMsg]);
-    setTranscript('');
-    setTextInput('');
-    transcriptRef.current = '';
-    sessionFinalTranscriptRef.current = '';
-    setState('idle');
-    setErrorMessage(null);
-
-    // Auto-speak greeting immediately
-    speakAssistantText(S.greeting, 'greeting-init');
-  }, [selectedLanguage]);
-
-  // Language switch handler - stops all prior audio immediately
-  const handleLanguageSwitch = (lang: Language) => {
-    handleStopSpeaking();
-    if (state === 'listening' && recognitionRef.current) {
-      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-      try {
-        recognitionRef.current.abort();
-      } catch {}
+    if (i18n.language && i18n.language !== prevI18nLangRef.current) {
+      prevI18nLangRef.current = i18n.language;
+      const lang = i18n.language.toLowerCase();
+      const target: Language = lang.startsWith('mr') ? 'mr' : lang.startsWith('hi') ? 'hi' : 'en';
+      cleanSessionReset(target, true);
     }
-    prevI18nLangRef.current = lang;
-    setSelectedLanguage(lang);
-    setAppLanguage(lang);
+  }, [i18n.language, cleanSessionReset]);
+
+  // Initial mount greeting
+  const isInitialMount = useRef(true);
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      const greetingMsg: Message = {
+        id: 'greeting-init',
+        sender: 'assistant',
+        text: S.greeting,
+        timestamp: Date.now(),
+      };
+      setMessages([greetingMsg]);
+      speakAssistantText(S.greeting, 'greeting-init');
+    }
+  }, [S.greeting, speakAssistantText]);
+
+  // Language switch handler - completely wipes previous symptoms and session
+  const handleLanguageSwitch = (lang: Language) => {
+    cleanSessionReset(lang, true);
   };
 
   // Start / Stop Microphone Recording with instant turnaround & zero lag
@@ -825,7 +879,12 @@ export const ScreeningPage: React.FC = () => {
           transcriptRef.current = '';
           setState('idle');
 
-          const replyText = data.followUpQuestion ? data.followUpQuestion.text : data.guidanceText;
+          const replyText =
+            data.guidanceText && data.followUpQuestion
+              ? `${data.guidanceText}\n\n${data.followUpQuestion.text}`
+              : data.followUpQuestion
+              ? data.followUpQuestion.text
+              : data.guidanceText;
           if (replyText) {
             const asstMsg: Message = {
               id: `msg-asst-${Date.now()}`,
@@ -940,27 +999,9 @@ export const ScreeningPage: React.FC = () => {
     }
   };
 
-  // Reset to start a new screening
+  // Reset to start a new screening - completely wipes previous symptoms and session
   const handleResetScreening = () => {
-    if (isSpeaking) handleStopSpeaking();
-    setMessages([]);
-    setCurrentSymptoms([]);
-    setAnsweredQuestions({});
-    setQuestionHistory([]);
-    setCurrentFollowUp(null);
-    setScreeningResult(null);
-    setTranscript('');
-    setTextInput('');
-    setState('idle');
-    setErrorMessage(null);
-
-    const greetingMsg: Message = {
-      id: 'greeting-reset',
-      sender: 'assistant',
-      text: S.greeting,
-      timestamp: Date.now(),
-    };
-    setMessages([greetingMsg]);
+    cleanSessionReset(selectedLanguage, true);
   };
 
   return (
