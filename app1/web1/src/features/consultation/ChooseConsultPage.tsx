@@ -122,23 +122,23 @@ export const ChooseConsultPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pb-20">
       {/* Header */}
-      <header className="sticky top-0 z-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3">
-        <div className="max-w-md mx-auto flex items-center justify-between">
+      <header className="sticky top-0 z-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 py-3">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
           <button
             onClick={() => navigate('/home')}
-            className="p-2 -ml-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-2 -ml-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center"
             aria-label="Back"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-base font-bold text-slate-900 dark:text-white">
+          <h1 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
             {t('consult.chooseTitle', 'Doctor Consultation')}
           </h1>
           <div className="w-8" />
         </div>
       </header>
 
-      <main className="max-w-md mx-auto px-4 py-5 space-y-5">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-5 sm:py-7 space-y-6">
         {/* Banner */}
         <div className="bg-gradient-to-br from-indigo-700 to-indigo-900 text-white rounded-3xl p-5 shadow-sm space-y-2">
           <div className="flex items-center gap-2">
@@ -364,133 +364,137 @@ export const ChooseConsultPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            doctors.map((doc) => {
-              const isSelected = selectedDoctorId === doc.doctorId;
-              const isExpanded = expandedDoctorId === doc.doctorId;
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {doctors.map((doc) => {
+                const isSelected = selectedDoctorId === doc.doctorId;
+                const isExpanded = expandedDoctorId === doc.doctorId;
 
-              return (
-                <div
-                  key={doc.doctorId}
-                  className={`bg-white dark:bg-slate-900 border rounded-2xl p-4 shadow-xs space-y-3 transition-all ${
-                    isSelected
-                      ? 'border-emerald-600 ring-2 ring-emerald-600/20'
-                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold text-base shrink-0">
-                        {doc.name.replace('Dr. ', '').slice(0, 2).toUpperCase()}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <h4 className="font-bold text-sm text-slate-900 dark:text-white">
-                            {doc.name}
-                          </h4>
-                          <span
-                            className={`w-2 h-2 rounded-full shrink-0 ${
-                              doc.availability === 'AVAILABLE' ? 'bg-emerald-500' : 'bg-amber-500'
-                            }`}
-                          />
+                return (
+                  <div
+                    key={doc.doctorId}
+                    className={`bg-white dark:bg-slate-900 border rounded-2xl p-4 shadow-xs space-y-3 transition-all flex flex-col justify-between ${
+                      isSelected
+                        ? 'border-emerald-600 ring-2 ring-emerald-600/20'
+                        : 'border-slate-200 dark:border-slate-800 hover:border-slate-300'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-11 h-11 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold text-base shrink-0">
+                            {doc.name.replace('Dr. ', '').slice(0, 2).toUpperCase()}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+                                {doc.name}
+                              </h4>
+                              <span
+                                className={`w-2 h-2 rounded-full shrink-0 ${
+                                  doc.availability === 'AVAILABLE' ? 'bg-emerald-500' : 'bg-amber-500'
+                                }`}
+                              />
+                            </div>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                              {doc.qualification || 'MBBS'} • {doc.experienceYears}y exp • {doc.specialties.join(', ')}
+                            </p>
+                            {doc.facilityName && (
+                              <p className="text-[11px] text-emerald-700 dark:text-emerald-400 flex items-center gap-1 mt-0.5">
+                                <Building2 className="w-3 h-3" />
+                                <span className="truncate">{doc.facilityName}</span>
+                              </p>
+                            )}
+                          </div>
                         </div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
-                          {doc.qualification || 'MBBS'} • {doc.experienceYears}y exp • {doc.specialties.join(', ')}
-                        </p>
-                        {doc.facilityName && (
-                          <p className="text-[11px] text-emerald-700 dark:text-emerald-400 flex items-center gap-1 mt-0.5">
-                            <Building2 className="w-3 h-3" />
-                            <span className="truncate">{doc.facilityName}</span>
+
+                        <div className="text-right shrink-0">
+                          <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                            {doc.availability}
+                          </span>
+                          <p className="text-[10px] text-slate-400 mt-1">
+                            ~{doc.estimatedWaitMinutes}m (estimate)
                           </p>
-                        )}
+                        </div>
+                      </div>
+
+                      {/* Actions Strip: View Profile & Select Doctor */}
+                      <div className="flex items-center justify-between gap-2 border-t border-slate-100 dark:border-slate-800/80 pt-2 text-xs mt-3">
+                        <button
+                          type="button"
+                          onClick={() => setModalDoctor(doc)}
+                          className="font-bold text-slate-600 dark:text-slate-300 hover:text-emerald-600 flex items-center gap-1 py-1 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                        >
+                          <UserCheck className="w-3.5 h-3.5" />
+                          <span>View Full Profile</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setSelectedDoctorId(isSelected ? undefined : doc.doctorId)}
+                          className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-emerald-600 text-white shadow-xs'
+                              : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700'
+                          }`}
+                        >
+                          {isSelected ? '✓ Selected' : 'Select Doctor'}
+                        </button>
+                      </div>
+
+                      {/* Match Score Breakdown Toggle */}
+                      <div className="flex items-center justify-between text-[11px] text-slate-500 border-t border-slate-100 dark:border-slate-800/80 pt-2 mt-2">
+                        <span className="flex items-center gap-1">
+                          <Languages className="w-3.5 h-3.5 text-slate-400" />
+                          {doc.languages.join(', ').toUpperCase()}
+                        </span>
+
+                        <button
+                          type="button"
+                          onClick={() => setExpandedDoctorId(isExpanded ? undefined : doc.doctorId)}
+                          className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1 hover:text-emerald-600 transition-colors cursor-pointer"
+                        >
+                          <span>Match score: {doc.score}%</span>
+                          {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                        </button>
                       </div>
                     </div>
 
-                    <div className="text-right shrink-0">
-                      <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
-                        {doc.availability}
-                      </span>
-                      <p className="text-[10px] text-slate-400 mt-1">
-                        ~{doc.estimatedWaitMinutes}m (estimate)
-                      </p>
-                    </div>
+                    {/* Expanded Pure Score Breakdown on Tap */}
+                    {isExpanded && doc.breakdown && (
+                      <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 p-2.5 rounded-xl space-y-1.5 text-[11px]">
+                        <div className="font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                          Match Score Breakdown (0–100%)
+                        </div>
+                        <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                          <span>Specialty Match (30%)</span>
+                          <span className="font-medium text-slate-800 dark:text-slate-200">{doc.breakdown.specialty}%</span>
+                        </div>
+                        <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                          <span>Availability (25%)</span>
+                          <span className="font-medium text-slate-800 dark:text-slate-200">{doc.breakdown.availability}%</span>
+                        </div>
+                        <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                          <span>Queue Length (20%)</span>
+                          <span className="font-medium text-slate-800 dark:text-slate-200">{doc.breakdown.queue}%</span>
+                        </div>
+                        <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                          <span>Language Match (15%)</span>
+                          <span className="font-medium text-slate-800 dark:text-slate-200">{doc.breakdown.language}%</span>
+                        </div>
+                        <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                          <span>Previous Doctor (5%)</span>
+                          <span className="font-medium text-slate-800 dark:text-slate-200">{doc.breakdown.previousDoctor}%</span>
+                        </div>
+                        <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                          <span>Location Proximity (5%)</span>
+                          <span className="font-medium text-slate-800 dark:text-slate-200">{doc.breakdown.location}%</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
-
-                  {/* Actions Strip: View Profile & Select Doctor */}
-                  <div className="flex items-center justify-between gap-2 border-t border-slate-100 dark:border-slate-800/80 pt-2 text-xs">
-                    <button
-                      type="button"
-                      onClick={() => setModalDoctor(doc)}
-                      className="font-bold text-slate-600 dark:text-slate-300 hover:text-emerald-600 flex items-center gap-1 py-1 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                    >
-                      <UserCheck className="w-3.5 h-3.5" />
-                      <span>View Full Profile</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setSelectedDoctorId(isSelected ? undefined : doc.doctorId)}
-                      className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
-                        isSelected
-                          ? 'bg-emerald-600 text-white shadow-xs'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-emerald-50 hover:text-emerald-700'
-                      }`}
-                    >
-                      {isSelected ? '✓ Selected' : 'Select Doctor'}
-                    </button>
-                  </div>
-
-                  {/* Match Score Breakdown Toggle */}
-                  <div className="flex items-center justify-between text-[11px] text-slate-500 border-t border-slate-100 dark:border-slate-800/80 pt-2">
-                    <span className="flex items-center gap-1">
-                      <Languages className="w-3.5 h-3.5 text-slate-400" />
-                      {doc.languages.join(', ').toUpperCase()}
-                    </span>
-
-                    <button
-                      type="button"
-                      onClick={() => setExpandedDoctorId(isExpanded ? undefined : doc.doctorId)}
-                      className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1 hover:text-emerald-600 transition-colors cursor-pointer"
-                    >
-                      <span>Match score: {doc.score}%</span>
-                      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                    </button>
-                  </div>
-
-                  {/* Expanded Pure Score Breakdown on Tap */}
-                  {isExpanded && doc.breakdown && (
-                    <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 p-2.5 rounded-xl space-y-1.5 text-[11px]">
-                      <div className="font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Match Score Breakdown (0–100%)
-                      </div>
-                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                        <span>Specialty Match (30%)</span>
-                        <span className="font-medium text-slate-800 dark:text-slate-200">{doc.breakdown.specialty}%</span>
-                      </div>
-                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                        <span>Availability (25%)</span>
-                        <span className="font-medium text-slate-800 dark:text-slate-200">{doc.breakdown.availability}%</span>
-                      </div>
-                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                        <span>Queue Length (20%)</span>
-                        <span className="font-medium text-slate-800 dark:text-slate-200">{doc.breakdown.queue}%</span>
-                      </div>
-                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                        <span>Language Match (15%)</span>
-                        <span className="font-medium text-slate-800 dark:text-slate-200">{doc.breakdown.language}%</span>
-                      </div>
-                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                        <span>Previous Doctor (5%)</span>
-                        <span className="font-medium text-slate-800 dark:text-slate-200">{doc.breakdown.previousDoctor}%</span>
-                      </div>
-                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                        <span>Location Proximity (5%)</span>
-                        <span className="font-medium text-slate-800 dark:text-slate-200">{doc.breakdown.location}%</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })
+                );
+              })}
+            </div>
           )}
         </div>
 

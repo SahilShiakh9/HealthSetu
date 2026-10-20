@@ -39,8 +39,8 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-30 px-3.5 py-2.5 shadow-sm">
-      <div className="max-w-2xl mx-auto flex items-center justify-between gap-2">
+    <header className="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 px-3 sm:px-6 py-2.5 sm:py-3 shadow-xs">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
         {/* Brand */}
         <div
           role="button"
@@ -49,40 +49,40 @@ export const Header: React.FC = () => {
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') handleBrandClick();
           }}
-          className="flex items-center gap-2 cursor-pointer select-none group"
+          className="flex items-center gap-2 sm:gap-2.5 cursor-pointer select-none group min-w-0"
           title="Go to Workspace"
         >
-          <div className="p-2 bg-emerald-100 text-emerald-800 rounded-xl shadow-xs group-hover:scale-105 transition-transform">
+          <div className="p-2 sm:p-2.5 bg-emerald-100 text-emerald-800 rounded-xl shadow-xs group-hover:scale-105 group-active:scale-95 transition-transform shrink-0">
             <HeartPulse className="w-5 h-5 text-emerald-600" />
           </div>
-          <div>
-            <span className="font-extrabold text-base tracking-tight text-slate-900 block leading-tight group-hover:text-emerald-700 transition-colors">
+          <div className="min-w-0">
+            <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 block leading-tight group-hover:text-emerald-700 transition-colors truncate">
               {t('app.name')}
             </span>
-            <span className="text-[11px] text-slate-500 font-medium block truncate max-w-[150px] sm:max-w-xs">
+            <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium block truncate max-w-[120px] xs:max-w-[160px] sm:max-w-xs md:max-w-md">
               {t('app.subtitle')}
             </span>
           </div>
         </div>
 
         {/* Status Indicators & Language */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Sync status pill */}
           <button
             onClick={() => syncWorker.syncPending()}
             title={t('app.sync_now')}
-            className={`flex items-center gap-1 text-[11px] font-semibold px-2 py-1 rounded-full border transition-all ${
+            className={`flex items-center gap-1 text-[11px] font-semibold px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-full border transition-all min-h-[34px] active:scale-95 cursor-pointer ${
               syncStatus === 'syncing'
-                ? 'bg-blue-50 text-blue-700 border-blue-200'
+                ? 'bg-blue-50 text-blue-700 border-blue-200 ring-2 ring-blue-100'
                 : syncStatus === 'saved_on_phone'
-                  ? 'bg-amber-50 text-amber-700 border-amber-200'
+                  ? 'bg-amber-50 text-amber-700 border-amber-200 ring-2 ring-amber-100'
                   : syncStatus === 'needs_attention'
                     ? 'bg-rose-50 text-rose-700 border-rose-200'
-                    : 'bg-slate-50 text-slate-600 border-slate-200'
+                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
             }`}
           >
-            <RefreshCw className={`w-3 h-3 ${syncStatus === 'syncing' ? 'animate-spin' : ''}`} />
-            <span className="hidden sm:inline">
+            <RefreshCw className={`w-3.5 h-3.5 shrink-0 ${syncStatus === 'syncing' ? 'animate-spin' : ''}`} />
+            <span className="hidden md:inline">
               {syncStatus === 'syncing'
                 ? t('app.syncing')
                 : syncStatus === 'saved_on_phone'
@@ -91,18 +91,18 @@ export const Header: React.FC = () => {
                     ? t('app.needs_attention')
                     : t('app.synced')}
             </span>
-            {pendingCount > 0 && <span className="sm:hidden">({pendingCount})</span>}
+            {pendingCount > 0 && <span className="md:hidden font-bold">({pendingCount})</span>}
           </button>
 
           {/* Online/Offline status */}
           <div
-            className={`flex items-center gap-1 text-[11px] font-semibold px-2 py-1 rounded-full border ${
+            className={`flex items-center gap-1 text-[11px] font-semibold px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-full border min-h-[34px] ${
               isOnline
                 ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                : 'bg-rose-50 text-rose-700 border-rose-200'
+                : 'bg-rose-50 text-rose-700 border-rose-200 animate-pulse'
             }`}
           >
-            {isOnline ? <Wifi className="w-3 h-3 text-emerald-600" /> : <WifiOff className="w-3 h-3 text-rose-600" />}
+            {isOnline ? <Wifi className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> : <WifiOff className="w-3.5 h-3.5 text-rose-600 shrink-0" />}
             <span className="hidden sm:inline">{isOnline ? t('app.offline_ready') : 'Offline'}</span>
           </div>
 
@@ -110,24 +110,25 @@ export const Header: React.FC = () => {
           <div className="relative">
             <button
               onClick={() => setLangMenuOpen(!langMenuOpen)}
-              className="flex items-center gap-1 text-[11px] font-bold px-2 py-1 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200"
+              className="flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 sm:py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition-colors min-h-[34px] active:scale-95 cursor-pointer"
               aria-label="Select Language"
             >
-              <Globe className="w-3 h-3 text-slate-600" />
-              <span>{SUPPORTED_LANGUAGES.find((l) => l.code === i18n.language)?.scriptLabel || 'English'}</span>
+              <Globe className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+              <span className="max-w-[70px] truncate">{SUPPORTED_LANGUAGES.find((l) => l.code === i18n.language)?.scriptLabel || 'English'}</span>
             </button>
 
             {langMenuOpen && (
-              <div className="absolute right-0 mt-1.5 w-32 bg-white rounded-xl shadow-lg border border-slate-200 py-1 z-50 animate-in fade-in zoom-in-95">
+              <div className="absolute right-0 mt-2 w-36 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95">
                 {SUPPORTED_LANGUAGES.map((l) => (
                   <button
                     key={l.code}
                     onClick={() => handleLanguageChange(l.code)}
-                    className={`w-full text-left px-3 py-1.5 text-xs font-semibold hover:bg-emerald-50 ${
-                      i18n.language === l.code ? 'text-emerald-700 bg-emerald-50/60 font-bold' : 'text-slate-700'
+                    className={`w-full text-left px-3.5 py-2 text-xs font-semibold hover:bg-emerald-50 transition-colors cursor-pointer flex items-center justify-between ${
+                      i18n.language === l.code ? 'text-emerald-700 bg-emerald-50/80 font-bold' : 'text-slate-700'
                     }`}
                   >
-                    {l.scriptLabel}
+                    <span>{l.scriptLabel}</span>
+                    <span className="text-[10px] text-slate-400 uppercase font-normal">{l.code}</span>
                   </button>
                 ))}
               </div>

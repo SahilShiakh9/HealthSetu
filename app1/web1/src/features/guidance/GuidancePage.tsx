@@ -121,8 +121,8 @@ export const GuidancePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 p-4 md:p-6 pb-24">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="min-h-screen bg-slate-900 text-slate-100 p-4 sm:p-6 lg:p-8 pb-24">
+      <div className="max-w-6xl mx-auto space-y-6">
         {/* Navigation & Header */}
         <div className="flex items-center justify-between">
           <button
@@ -545,7 +545,7 @@ export const GuidancePage: React.FC = () => {
             </div>
           ) : (
             // Grid of Topics
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {topics.map((topic) => (
                 <div
                   key={topic.id}
@@ -587,7 +587,7 @@ export const GuidancePage: React.FC = () => {
                         e.stopPropagation();
                         handleToggleSpeak(topic);
                       }}
-                      className="p-1.5 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-white"
+                      className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
                       title="Audio playback"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -551,9 +551,9 @@ export const ConsultationRoomPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between max-w-md mx-auto">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between max-w-5xl mx-auto w-full">
       {/* Top Header */}
-      <header className="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between z-10">
+      <header className="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between z-10 sticky top-0">
         <div className="flex items-center space-x-2">
           {!callEnded && isConfigured && (
             <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />

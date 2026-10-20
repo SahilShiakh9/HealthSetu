@@ -1006,23 +1006,23 @@ export const ScreeningPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
-      {/* Top Mobile-First Header */}
-      <header className="bg-slate-950/80 backdrop-blur-md border-b border-slate-800 px-4 py-3 sticky top-0 z-30">
-        <div className="max-w-md mx-auto flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+      {/* Top Responsive Header */}
+      <header className="bg-slate-950/80 backdrop-blur-md border-b border-slate-800 px-3.5 sm:px-6 py-3 sticky top-0 z-30">
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold shrink-0">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h1 className="text-sm font-bold text-white leading-tight">{S.title}</h1>
-              <p className="text-[10px] text-slate-400">{S.subtitle}</p>
+              <h1 className="text-sm sm:text-base font-bold text-white leading-tight">{S.title}</h1>
+              <p className="text-[10px] sm:text-[11px] text-slate-400">{S.subtitle}</p>
             </div>
           </div>
 
           {/* Emergency 108 Direct Access Badge */}
           <a
             href="tel:108"
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-rose-600/20 border border-rose-500/40 text-rose-300 text-[11px] font-bold hover:bg-rose-600/30 transition-all shrink-0"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600/20 border border-rose-500/40 text-rose-300 text-xs font-bold hover:bg-rose-600/30 transition-all shrink-0 min-h-[38px]"
             title={S.emergencyBanner}
           >
             <PhoneCall className="w-3.5 h-3.5 text-rose-400" />
@@ -1031,8 +1031,8 @@ export const ScreeningPage: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Container: Mobile-First Constrained Width */}
-      <main className="flex-1 max-w-md w-full mx-auto px-4 py-3 flex flex-col gap-3">
+      {/* Main Container: Mobile + Tablet + Desktop Responsive Width */}
+      <main className="flex-1 max-w-4xl w-full mx-auto px-3.5 sm:px-6 py-3.5 sm:py-5 flex flex-col gap-3.5">
         {/* Three Large, Clearly Labelled Language Options */}
         <div className="grid grid-cols-3 gap-2">
           <button

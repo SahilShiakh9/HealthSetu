@@ -99,7 +99,7 @@ export const HospitalRegisterPage: React.FC = () => {
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <Header />
 
-      <main className="flex-1 max-w-xl w-full mx-auto p-4 flex flex-col justify-center">
+      <main className="flex-1 max-w-xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
         <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
           <div className="text-center space-y-1">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-800 mb-1">
@@ -172,7 +172,7 @@ export const HospitalRegisterPage: React.FC = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-700 block">District</label>
                   <input

@@ -236,22 +236,22 @@ export const DoctorDashboardPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pb-16">
       {/* Header */}
-      <header className="sticky top-0 z-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3.5">
-        <div className="max-w-md mx-auto flex items-center justify-between">
+      <header className="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 py-3.5 shadow-xs">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-2.5">
-            <div className="p-2 bg-emerald-600 rounded-xl text-white">
+            <div className="p-2.5 bg-emerald-600 rounded-xl text-white shadow-xs">
               <Stethoscope className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-sm font-bold text-slate-900 dark:text-white">Doctor Portal</h1>
+              <h1 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Doctor Portal</h1>
               <p className="text-[11px] text-slate-500">Clinical Tele-Triage & Consultations</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <button
               onClick={() => setShowRequestModal(true)}
-              className="p-1.5 rounded-xl text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-1 text-xs font-bold"
+              className="px-2.5 py-1.5 rounded-xl text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-1 text-xs font-bold min-h-[36px] cursor-pointer"
               title="Add Facility Affiliation"
             >
               <Plus className="w-4 h-4" />
@@ -262,7 +262,7 @@ export const DoctorDashboardPage: React.FC = () => {
                 fetchDoctorQueue();
                 fetchAffiliations();
               }}
-              className="p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer"
               title="Refresh Queue"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -272,7 +272,7 @@ export const DoctorDashboardPage: React.FC = () => {
                 await logout();
                 navigate('/staff/login', { replace: true });
               }}
-              className="p-2 rounded-xl text-slate-500 hover:text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-xl text-slate-500 hover:text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer"
               title="Sign Out"
             >
               <LogOut className="w-4 h-4" />
@@ -281,304 +281,312 @@ export const DoctorDashboardPage: React.FC = () => {
         </div>
       </header>
 
-      <main className="max-w-md mx-auto p-4 space-y-4">
-        {/* Professional Registration & Verification Status Card */}
-        {doctorProfile && (
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 shadow-xs space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <div className="flex items-center gap-1.5 font-bold text-slate-700 dark:text-slate-200">
-                {doctorProfile.verificationStatus === 'APPROVED' ? (
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                ) : (
-                  <ShieldAlert className="w-4 h-4 text-amber-500" />
-                )}
-                <span>Professional Verification</span>
-              </div>
-              <span
-                className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
-                  doctorProfile.verificationStatus === 'APPROVED'
-                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                    : doctorProfile.verificationStatus === 'PENDING'
-                    ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
-                    : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
-                }`}
-              >
-                {doctorProfile.verificationStatus}
-              </span>
-            </div>
-
-            <div className="text-xs text-slate-600 dark:text-slate-400 space-y-0.5">
-              <p>
-                <span className="font-semibold text-slate-700 dark:text-slate-300">Reg No:</span>{' '}
-                <span className="font-mono">{doctorProfile.registrationNumber || 'Not submitted'}</span>
-              </p>
-              {doctorProfile.qualification && (
-                <p>
-                  <span className="font-semibold text-slate-700 dark:text-slate-300">Qualification:</span>{' '}
-                  {doctorProfile.qualification}
-                </p>
-              )}
-            </div>
-
-            {doctorProfile.verificationStatus === 'PENDING' && (
-              <div className="p-2 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl text-[11px] text-amber-800 dark:text-amber-300 flex items-start gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
-                <span>
-                  Your medical council credentials are under review by the verification team. Clinical consultations cannot be accepted until approved.
-                </span>
-              </div>
-            )}
-            {doctorProfile.verificationStatus === 'REJECTED' && (
-              <div className="p-2 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl text-[11px] text-rose-800 dark:text-rose-300 flex items-start gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-rose-600 shrink-0 mt-0.5" />
-                <span>
-                  Verification was rejected. Please contact support or hospital administrators with valid registration documents.
-                </span>
-              </div>
-            )}
-
-            <div className="pt-1 flex justify-end">
-              <Link
-                to="/doctor/registration-status"
-                className="text-[11px] font-bold text-emerald-600 hover:underline inline-flex items-center gap-1"
-              >
-                <span>View Full Verification Status</span>
-                <ArrowRight className="w-3 h-3" />
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {/* Hospital Affiliations Bar */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 shadow-xs space-y-2">
-          <div className="flex items-center justify-between text-xs">
-            <div className="flex items-center gap-1.5 font-bold text-slate-700 dark:text-slate-200">
-              <Building2 className="w-4 h-4 text-indigo-600" />
-              <span>Hospital Affiliations</span>
-            </div>
-            <span className="text-[11px] text-slate-400">
-              {activeAffiliations.length} Approved
-            </span>
-          </div>
-
-          {activeAffiliations.length > 0 ? (
-            <div className="flex flex-wrap gap-1.5">
-              {activeAffiliations.map((aff) => (
-                <span
-                  key={aff._id}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-50 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
-                >
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  {aff.facilityId?.name || aff.facilityId?.facilityId || 'PHC'}
-                  <span className="text-[10px] text-indigo-600/70 font-normal">
-                    ({aff.roleInFacility})
-                  </span>
-                </span>
-              ))}
-            </div>
-          ) : (
-            <div className="p-2.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-              <div className="space-y-1">
-                <p className="font-bold">No Active Facility Affiliations</p>
-                <p className="text-[11px] text-amber-700 dark:text-amber-300">
-                  {pendingAffiliations.length > 0
-                    ? 'Your affiliation request is pending hospital admin approval.'
-                    : 'Request an affiliation to accept consultations for a hospital or PHC.'}
-                </p>
-                <button
-                  onClick={() => setShowRequestModal(true)}
-                  className="text-xs font-bold text-indigo-700 dark:text-indigo-400 underline"
-                >
-                  Request Affiliation Now
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {errorMessage && (
-          <div className="bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800 rounded-2xl p-3.5 text-xs text-rose-800 dark:text-rose-200">
-            {errorMessage}
-          </div>
-        )}
-
-        {/* Availability Toggle Bar */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
-          <div className="flex items-center space-x-2">
-            <span
-              className={`w-3 h-3 rounded-full ${
-                availability === 'AVAILABLE'
-                  ? 'bg-emerald-500'
-                  : availability === 'BREAK'
-                  ? 'bg-amber-500'
-                  : 'bg-slate-400'
-              }`}
-            />
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-              {availability}
-            </span>
-          </div>
-
-          <div className="flex items-center space-x-1.5 text-xs">
-            <button
-              onClick={() => handleUpdateAvailability('AVAILABLE')}
-              className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
-                availability === 'AVAILABLE'
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-              }`}
-            >
-              Ready
-            </button>
-            <button
-              onClick={() => handleUpdateAvailability('BREAK')}
-              className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
-                availability === 'BREAK'
-                  ? 'bg-amber-500 text-white'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-              }`}
-            >
-              Break
-            </button>
-            <button
-              onClick={() => handleUpdateAvailability('OFFLINE')}
-              className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
-                availability === 'OFFLINE'
-                  ? 'bg-slate-700 text-white'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-              }`}
-            >
-              Offline
-            </button>
-          </div>
-        </div>
-
-        {/* Priority "Accept Next" Action Button */}
-        <button
-          onClick={() => handleAcceptPatient('next')}
-          disabled={
-            acceptingId !== null ||
-            availability !== 'AVAILABLE' ||
-            !isDoctorApproved ||
-            (affiliations.length > 0 && !hasActiveAffiliation)
-          }
-          className="w-full min-h-[54px] bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/20 flex items-center justify-between px-5 transition-all disabled:opacity-50"
-        >
-          <div className="flex items-center space-x-2">
-            <Play className="w-5 h-5 fill-current" />
-            <div className="text-left">
-              <p className="text-sm">Accept Next Patient</p>
-              <p className="text-[10px] text-emerald-100 font-normal">
-                {queue.length > 0
-                  ? 'Highest priority in triage queue'
-                  : 'Check live pooled specialty queue'}
-              </p>
-            </div>
-          </div>
-          <ArrowRight className="w-5 h-5" />
-        </button>
-
-        {/* Queue Stats Banner */}
-        <div className="flex items-center justify-between px-1">
-          <div className="flex items-center space-x-2 text-xs font-bold text-slate-700 dark:text-slate-300">
-            <Users className="w-4 h-4 text-emerald-600" />
-            <span>Waiting Patients ({queue.length})</span>
-          </div>
-          <span className="text-[11px] text-slate-400">Auto-prioritized by Risk Tier</span>
-        </div>
-
-        {/* Patient Queue List */}
-        <div className="space-y-3">
-          {queue.length === 0 ? (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center space-y-2">
-              <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto" />
-              <h3 className="font-bold text-sm text-slate-900 dark:text-white">All Caught Up!</h3>
-              <p className="text-xs text-slate-500">No patients currently waiting in queue.</p>
-            </div>
-          ) : (
-            queue.map((item) => {
-              const risk = item.screeningId?.riskTier || 'LOW';
-              const riskBadgeClass =
-                risk === 'HIGH'
-                  ? 'bg-red-500 text-white ring-2 ring-red-400/30'
-                  : risk === 'MEDIUM'
-                  ? 'bg-amber-500 text-white'
-                  : 'bg-emerald-600 text-white';
-
-              return (
-                <div
-                  key={item._id}
-                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm hover:border-emerald-500/40 transition-all space-y-3"
-                >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-bold text-slate-900 dark:text-white">
-                          {item.patientId?.name || 'Patient'}
-                        </span>
-                        <span
-                          className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${riskBadgeClass}`}
-                        >
-                          {risk} RISK
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        {item.patientId?.phone || 'Mobile not provided'} • Lang:{' '}
-                        {item.preferredLanguage.toUpperCase()}
-                      </p>
-                    </div>
-
-                    <div className="text-right">
-                      <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                        Token #{item.positionInQueue}
-                      </span>
-                      <p className="text-[10px] text-slate-400">
-                        ~{item.estimatedWaitMinutes}m wait
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Primary Symptoms */}
-                  {item.screeningId?.primarySymptoms &&
-                    item.screeningId.primarySymptoms.length > 0 && (
-                      <div className="bg-slate-50 dark:bg-slate-850 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
-                        <p className="text-[10px] text-slate-400 font-semibold mb-1 uppercase tracking-wider">
-                          Reported Symptoms
-                        </p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {item.screeningId.primarySymptoms.map((sym, sIdx) => (
-                            <span
-                              key={sIdx}
-                              className="text-[11px] bg-slate-200 dark:bg-slate-750 px-2 py-0.5 rounded-lg text-slate-700 dark:text-slate-300"
-                            >
-                              {sym}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+      <main className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Left Column: Doctor Profile, Status, Affiliations & Quick Actions */}
+          <div className="lg:col-span-5 xl:col-span-4 space-y-4">
+            {/* Professional Registration & Verification Status Card */}
+            {doctorProfile && (
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs space-y-2.5">
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5 font-bold text-slate-700 dark:text-slate-200">
+                    {doctorProfile.verificationStatus === 'APPROVED' ? (
+                      <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                    ) : (
+                      <ShieldAlert className="w-4 h-4 text-amber-500" />
                     )}
+                    <span>Professional Verification</span>
+                  </div>
+                  <span
+                    className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full ${
+                      doctorProfile.verificationStatus === 'APPROVED'
+                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                        : doctorProfile.verificationStatus === 'PENDING'
+                        ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                        : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
+                    }`}
+                  >
+                    {doctorProfile.verificationStatus}
+                  </span>
+                </div>
 
-                  {/* Action Button */}
-                  <div className="pt-1 flex items-center justify-end">
-                    <button
-                      onClick={() => handleAcceptPatient(item._id)}
-                      disabled={
-                        acceptingId !== null ||
-                        availability !== 'AVAILABLE' ||
-                        !isDoctorApproved ||
-                        (affiliations.length > 0 && !hasActiveAffiliation)
-                      }
-                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center space-x-1.5 transition-all shadow-sm disabled:opacity-50"
+                <div className="text-xs text-slate-600 dark:text-slate-400 space-y-1">
+                  <p>
+                    <span className="font-semibold text-slate-700 dark:text-slate-300">Reg No:</span>{' '}
+                    <span className="font-mono">{doctorProfile.registrationNumber || 'Not submitted'}</span>
+                  </p>
+                  {doctorProfile.qualification && (
+                    <p>
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">Qualification:</span>{' '}
+                      {doctorProfile.qualification}
+                    </p>
+                  )}
+                </div>
+
+                {doctorProfile.verificationStatus === 'PENDING' && (
+                  <div className="p-2.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl text-[11px] text-amber-800 dark:text-amber-300 flex items-start gap-1.5 leading-snug">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                    <span>
+                      Your medical council credentials are under review by the verification team. Clinical consultations cannot be accepted until approved.
+                    </span>
+                  </div>
+                )}
+                {doctorProfile.verificationStatus === 'REJECTED' && (
+                  <div className="p-2.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl text-[11px] text-rose-800 dark:text-rose-300 flex items-start gap-1.5 leading-snug">
+                    <AlertTriangle className="w-3.5 h-3.5 text-rose-600 shrink-0 mt-0.5" />
+                    <span>
+                      Verification was rejected. Please contact support or hospital administrators with valid registration documents.
+                    </span>
+                  </div>
+                )}
+
+                <div className="pt-1 flex justify-end">
+                  <Link
+                    to="/doctor/registration-status"
+                    className="text-[11px] font-bold text-emerald-600 hover:underline inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>View Full Verification Status</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* Hospital Affiliations Bar */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs space-y-2.5">
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5 font-bold text-slate-700 dark:text-slate-200">
+                  <Building2 className="w-4 h-4 text-indigo-600" />
+                  <span>Hospital Affiliations</span>
+                </div>
+                <span className="text-[11px] text-slate-400">
+                  {activeAffiliations.length} Approved
+                </span>
+              </div>
+
+              {activeAffiliations.length > 0 ? (
+                <div className="flex flex-wrap gap-1.5">
+                  {activeAffiliations.map((aff) => (
+                    <span
+                      key={aff._id}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-50 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
                     >
-                      <span>Admit Patient</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
+                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                      {aff.facilityId?.name || aff.facilityId?.facilityId || 'PHC'}
+                      <span className="text-[10px] text-indigo-600/70 font-normal">
+                        ({aff.roleInFacility})
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <p className="font-bold">No Active Facility Affiliations</p>
+                    <p className="text-[11px] text-amber-700 dark:text-amber-300">
+                      {pendingAffiliations.length > 0
+                        ? 'Your affiliation request is pending hospital admin approval.'
+                        : 'Request an affiliation to accept consultations for a hospital or PHC.'}
+                    </p>
+                    <button
+                      onClick={() => setShowRequestModal(true)}
+                      className="text-xs font-bold text-indigo-700 dark:text-indigo-400 underline cursor-pointer"
+                    >
+                      Request Affiliation Now
                     </button>
                   </div>
                 </div>
-              );
-            })
-          )}
+              )}
+            </div>
+
+            {/* Availability Toggle Bar */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 flex items-center justify-between shadow-xs">
+              <div className="flex items-center space-x-2">
+                <span
+                  className={`w-3 h-3 rounded-full ${
+                    availability === 'AVAILABLE'
+                      ? 'bg-emerald-500'
+                      : availability === 'BREAK'
+                      ? 'bg-amber-500'
+                      : 'bg-slate-400'
+                  }`}
+                />
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                  {availability}
+                </span>
+              </div>
+
+              <div className="flex items-center space-x-1.5 text-xs">
+                <button
+                  onClick={() => handleUpdateAvailability('AVAILABLE')}
+                  className={`px-3 py-1.5 rounded-xl font-bold transition-all min-h-[36px] cursor-pointer ${
+                    availability === 'AVAILABLE'
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+                  }`}
+                >
+                  Ready
+                </button>
+                <button
+                  onClick={() => handleUpdateAvailability('BREAK')}
+                  className={`px-3 py-1.5 rounded-xl font-bold transition-all min-h-[36px] cursor-pointer ${
+                    availability === 'BREAK'
+                      ? 'bg-amber-500 text-white'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+                  }`}
+                >
+                  Break
+                </button>
+                <button
+                  onClick={() => handleUpdateAvailability('OFFLINE')}
+                  className={`px-3 py-1.5 rounded-xl font-bold transition-all min-h-[36px] cursor-pointer ${
+                    availability === 'OFFLINE'
+                      ? 'bg-slate-700 text-white'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+                  }`}
+                >
+                  Offline
+                </button>
+              </div>
+            </div>
+
+            {/* Priority "Accept Next" Action Button */}
+            <button
+              onClick={() => handleAcceptPatient('next')}
+              disabled={
+                acceptingId !== null ||
+                availability !== 'AVAILABLE' ||
+                !isDoctorApproved ||
+                (affiliations.length > 0 && !hasActiveAffiliation)
+              }
+              className="w-full min-h-[56px] bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/20 flex items-center justify-between px-5 transition-all disabled:opacity-50 cursor-pointer"
+            >
+              <div className="flex items-center space-x-2">
+                <Play className="w-5 h-5 fill-current" />
+                <div className="text-left">
+                  <p className="text-sm">Accept Next Patient</p>
+                  <p className="text-[10px] text-emerald-100 font-normal">
+                    {queue.length > 0
+                      ? 'Highest priority in triage queue'
+                      : 'Check live pooled specialty queue'}
+                  </p>
+                </div>
+              </div>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+
+            {errorMessage && (
+              <div className="bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800 rounded-2xl p-3.5 text-xs text-rose-800 dark:text-rose-200">
+                {errorMessage}
+              </div>
+            )}
+          </div>
+
+          {/* Right Column: Waiting Patient Queue */}
+          <div className="lg:col-span-7 xl:col-span-8 space-y-4">
+            {/* Queue Stats Banner */}
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center space-x-2 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
+                <Users className="w-4 h-4 text-emerald-600" />
+                <span>Waiting Patients ({queue.length})</span>
+              </div>
+              <span className="text-[11px] text-slate-400 font-medium">Auto-prioritized by Clinical Risk Tier</span>
+            </div>
+
+            {/* Patient Queue List */}
+            <div className="space-y-3">
+              {queue.length === 0 ? (
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-10 text-center space-y-2 shadow-xs">
+                  <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto" />
+                  <h3 className="font-bold text-base text-slate-900 dark:text-white">All Caught Up!</h3>
+                  <p className="text-xs text-slate-500">No patients currently waiting in queue for your specialty pool.</p>
+                </div>
+              ) : (
+                queue.map((item) => {
+                  const risk = item.screeningId?.riskTier || 'LOW';
+                  const riskBadgeClass =
+                    risk === 'HIGH'
+                      ? 'bg-red-500 text-white ring-2 ring-red-400/30'
+                      : risk === 'MEDIUM'
+                      ? 'bg-amber-500 text-white'
+                      : 'bg-emerald-600 text-white';
+
+                  return (
+                    <div
+                      key={item._id}
+                      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs hover:border-emerald-500/40 transition-all space-y-3"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="flex items-center space-x-2 flex-wrap gap-y-1">
+                            <span className="text-sm sm:text-base font-bold text-slate-900 dark:text-white truncate">
+                              {item.patientId?.name || 'Patient'}
+                            </span>
+                            <span
+                              className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${riskBadgeClass}`}
+                            >
+                              {risk} RISK
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-500 mt-0.5">
+                            {item.patientId?.phone || 'Mobile not provided'} • Lang:{' '}
+                            {item.preferredLanguage.toUpperCase()}
+                          </p>
+                        </div>
+
+                        <div className="text-right shrink-0">
+                          <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 block">
+                            Token #{item.positionInQueue}
+                          </span>
+                          <p className="text-[10px] text-slate-400">
+                            ~{item.estimatedWaitMinutes}m wait
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Primary Symptoms */}
+                      {item.screeningId?.primarySymptoms &&
+                        item.screeningId.primarySymptoms.length > 0 && (
+                          <div className="bg-slate-50 dark:bg-slate-850 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+                            <p className="text-[10px] text-slate-400 font-semibold mb-1 uppercase tracking-wider">
+                              Reported Symptoms
+                            </p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {item.screeningId.primarySymptoms.map((sym, sIdx) => (
+                                <span
+                                  key={sIdx}
+                                  className="text-[11px] bg-slate-200 dark:bg-slate-750 px-2.5 py-0.5 rounded-lg text-slate-700 dark:text-slate-300 font-medium"
+                                >
+                                  {sym}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                      {/* Action Button */}
+                      <div className="pt-1 flex items-center justify-end">
+                        <button
+                          onClick={() => handleAcceptPatient(item._id)}
+                          disabled={
+                            acceptingId !== null ||
+                            availability !== 'AVAILABLE' ||
+                            !isDoctorApproved ||
+                            (affiliations.length > 0 && !hasActiveAffiliation)
+                          }
+                          className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold rounded-xl flex items-center space-x-1.5 transition-all shadow-sm disabled:opacity-50 min-h-[40px] cursor-pointer"
+                        >
+                          <span>Admit Patient</span>
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
         </div>
       </main>
 

@@ -137,7 +137,7 @@ export const WaitingRoomPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between p-4 max-w-md mx-auto">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between p-4 sm:p-6 lg:p-8 max-w-2xl mx-auto w-full">
       {/* Top Banner */}
       <div className="space-y-4 pt-2">
         <div className="flex items-center justify-between">

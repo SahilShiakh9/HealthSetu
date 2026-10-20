@@ -103,13 +103,13 @@ export const ResultPage: React.FC = () => {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pb-20">
       {/* Top Header */}
       <header className="sticky top-0 z-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3">
-        <div className="max-w-md mx-auto flex items-center justify-between">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
           <h1 className="text-base font-semibold text-slate-900 dark:text-white">
             {t('result.header', 'Screening Assessment Result')}
           </h1>
           <button
             onClick={() => navigate('/screening')}
-            className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold hover:underline flex items-center gap-1"
+            className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold hover:underline flex items-center gap-1 min-h-[36px] px-2.5 py-1 rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>{t('result.retake', 'New')}</span>
@@ -117,151 +117,171 @@ export const ResultPage: React.FC = () => {
         </div>
       </header>
 
-      <main className="max-w-md mx-auto px-4 py-6 space-y-6">
-        {/* Risk Tier Badge Card */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
-          <div className="flex items-center gap-3">
-            <div className={`p-2.5 rounded-2xl border ${riskTierConfig.badgeBg}`}>
-              <RiskIcon className="w-6 h-6" />
-            </div>
-            <div>
-              <span
-                className={`inline-block text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border mb-1 ${riskTierConfig.badgeBg}`}
-              >
-                {riskTier} RISK
-              </span>
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                {riskTierConfig.title}
-              </h2>
-            </div>
-          </div>
-          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-            {riskTierConfig.desc}
-          </p>
-        </div>
-
-        {/* Mandatory Statutory Disclaimer per Section 11.6 */}
-        <div className="bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/50 rounded-2xl p-4 flex items-start gap-3">
-          <Info className="w-5 h-5 text-amber-700 dark:text-amber-400 shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <p className="text-xs font-bold text-amber-900 dark:text-amber-300">
-              {t('result.disclaimerTitle', 'Official Clinical Disclaimer')}
-            </p>
-            <p className="text-xs text-amber-800/90 dark:text-amber-400/90 leading-relaxed">
-              {t(
-                'result.disclaimerBody',
-                'This assessment is an AI and rule-assisted screening tool for decision support. It is NOT an official medical diagnosis. Please consult a qualified doctor or healthcare worker for professional medical evaluation.',
-              )}
-            </p>
-          </div>
-        </div>
-
-        {/* Condition Probabilities */}
-        {screening.possibleConditions && screening.possibleConditions.length > 0 && (
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                {t('result.possibleConditions', 'Condition Likelihood Estimates')}
-              </h3>
-              <span className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
-                {screening.engine?.type === 'rules'
-                  ? `Rule-based Screening v${screening.engine?.version || '1.0.0'}`
-                  : screening.engine?.type === 'ml'
-                  ? `Server ML Assist v${screening.engine?.version || '1.0.0'}`
-                  : `On-device Naive Bayes v${screening.engine?.version || '1.0.0'}`}
-              </span>
-            </div>
-
-            <div className="space-y-3">
-              {screening.possibleConditions.map((cond, idx) => {
-                const percent = Math.round(cond.probability * 100);
-                return (
-                  <div key={idx} className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold text-slate-800 dark:text-slate-200">
-                        {cond.name}
-                      </span>
-                      <span className="font-bold text-slate-600 dark:text-slate-400">
-                        {percent}%
-                      </span>
-                    </div>
-                    <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full rounded-full transition-all duration-500 ${
-                          idx === 0 ? riskTierConfig.barColor : 'bg-slate-400 dark:bg-slate-600'
-                        }`}
-                        style={{ width: `${Math.max(percent, 4)}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-              <span>{t('result.specialty', 'Recommended Care:')}</span>
-              <span className="font-semibold text-slate-700 dark:text-slate-300">
-                {screening.recommendedSpecialty || 'General Physician'}
-              </span>
-            </div>
-          </div>
-        )}
-
-        {/* Symptoms Breakdown ("Why this result?") */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 space-y-3">
-          <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-            {t('result.symptomsReported', 'Reported Symptoms & Indicators')}
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {screening.symptoms && screening.symptoms.length > 0 ? (
-              screening.symptoms.map((s, idx) => (
+      <main className="max-w-4xl mx-auto px-4 py-6 sm:py-8 space-y-6">
+        {/* Top Section: Risk Tier Badge Card & Statutory Disclaimer */}
+        <div className="space-y-4">
+          {/* Risk Tier Badge Card */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
+            <div className="flex items-center gap-3">
+              <div className={`p-2.5 rounded-2xl border ${riskTierConfig.badgeBg}`}>
+                <RiskIcon className="w-6 h-6" />
+              </div>
+              <div>
                 <span
-                  key={idx}
-                  className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-full"
+                  className={`inline-block text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border mb-1 ${riskTierConfig.badgeBg}`}
                 >
-                  {s.replace(/_/g, ' ')}
+                  {riskTier} RISK
                 </span>
-              ))
-            ) : (
-              <span className="text-xs text-slate-400">
-                {t('result.noSpecificSymptoms', 'No specific symptoms logged.')}
-              </span>
-            )}
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                  {riskTierConfig.title}
+                </h2>
+              </div>
+            </div>
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              {riskTierConfig.desc}
+            </p>
+          </div>
+
+          {/* Mandatory Statutory Disclaimer per Section 11.6 */}
+          <div className="bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/50 rounded-2xl p-4 flex items-start gap-3">
+            <Info className="w-5 h-5 text-amber-700 dark:text-amber-400 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <p className="text-xs font-bold text-amber-900 dark:text-amber-300">
+                {t('result.disclaimerTitle', 'Official Clinical Disclaimer')}
+              </p>
+              <p className="text-xs text-amber-800/90 dark:text-amber-400/90 leading-relaxed">
+                {t(
+                  'result.disclaimerBody',
+                  'This assessment is an AI and rule-assisted screening tool for decision support. It is NOT an official medical diagnosis. Please consult a qualified doctor or healthcare worker for professional medical evaluation.',
+                )}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Primary Action Buttons */}
-        <div className="space-y-3 pt-2">
-          {/* Consult Doctor */}
-          <button
-            type="button"
-            onClick={() => navigate('/consult')}
-            className="w-full min-h-[56px] bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold text-base rounded-2xl shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition-all"
-          >
-            <Stethoscope className="w-5 h-5 text-white" />
-            <span>{t('result.consultDoctor', 'Consult a Doctor (Teleconsult)')}</span>
-            <ArrowRight className="w-5 h-5 ml-1" />
-          </button>
+        {/* Responsive Grid on Tablet / Desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+          {/* Left Column: Conditions & Symptoms */}
+          <div className="space-y-5">
+            {/* Condition Probabilities */}
+            {screening.possibleConditions && screening.possibleConditions.length > 0 && (
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 space-y-4 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                    {t('result.possibleConditions', 'Condition Likelihood Estimates')}
+                  </h3>
+                  <span className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                    {screening.engine?.type === 'rules'
+                      ? `Rule-based Screening v${screening.engine?.version || '1.0.0'}`
+                      : screening.engine?.type === 'ml'
+                      ? `Server ML Assist v${screening.engine?.version || '1.0.0'}`
+                      : `On-device Naive Bayes v${screening.engine?.version || '1.0.0'}`}
+                  </span>
+                </div>
 
-          {/* Find Facility */}
-          <button
-            type="button"
-            onClick={() => navigate('/facilities')}
-            className="w-full min-h-[52px] bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-semibold text-sm rounded-2xl border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
-          >
-            <MapPin className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            <span>{t('result.findFacility', 'Find Nearest PHC / CHC')}</span>
-          </button>
+                <div className="space-y-3">
+                  {screening.possibleConditions.map((cond, idx) => {
+                    const percent = Math.round(cond.probability * 100);
+                    return (
+                      <div key={idx} className="space-y-1.5">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-semibold text-slate-800 dark:text-slate-200">
+                            {cond.name}
+                          </span>
+                          <span className="font-bold text-slate-600 dark:text-slate-400">
+                            {percent}%
+                          </span>
+                        </div>
+                        <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-500 ${
+                              idx === 0 ? riskTierConfig.barColor : 'bg-slate-400 dark:bg-slate-600'
+                            }`}
+                            style={{ width: `${Math.max(percent, 4)}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
 
-          {/* Return Home */}
-          <button
-            type="button"
-            onClick={() => navigate('/home')}
-            className="w-full min-h-[44px] text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium text-xs flex items-center justify-center gap-1.5 transition-colors"
-          >
-            <Home className="w-3.5 h-3.5" />
-            <span>{t('common.returnHome', 'Return to Home')}</span>
-          </button>
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                  <span>{t('result.specialty', 'Recommended Care:')}</span>
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">
+                    {screening.recommendedSpecialty || 'General Physician'}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Symptoms Breakdown ("Why this result?") */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 space-y-3 shadow-xs">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                {t('result.symptomsReported', 'Reported Symptoms & Indicators')}
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {screening.symptoms && screening.symptoms.length > 0 ? (
+                  screening.symptoms.map((s, idx) => (
+                    <span
+                      key={idx}
+                      className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-full"
+                    >
+                      {s.replace(/_/g, ' ')}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-xs text-slate-400">
+                    {t('result.noSpecificSymptoms', 'No specific symptoms logged.')}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Primary Action Buttons */}
+          <div className="space-y-4">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4 shadow-xs">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                Recommended Next Steps
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Connect with an empanelled doctor via teleconsultation or discover nearest public health facilities.
+              </p>
+
+              <div className="space-y-3 pt-1">
+                {/* Consult Doctor */}
+                <button
+                  type="button"
+                  onClick={() => navigate('/consult')}
+                  className="w-full min-h-[56px] bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold text-sm sm:text-base rounded-2xl shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
+                >
+                  <Stethoscope className="w-5 h-5 text-white" />
+                  <span>{t('result.consultDoctor', 'Consult a Doctor (Teleconsult)')}</span>
+                  <ArrowRight className="w-5 h-5 ml-1" />
+                </button>
+
+                {/* Find Facility */}
+                <button
+                  type="button"
+                  onClick={() => navigate('/facilities')}
+                  className="w-full min-h-[52px] bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-semibold text-sm rounded-2xl border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
+                >
+                  <MapPin className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span>{t('result.findFacility', 'Find Nearest PHC / CHC')}</span>
+                </button>
+
+                {/* Return Home */}
+                <button
+                  type="button"
+                  onClick={() => navigate('/home')}
+                  className="w-full min-h-[44px] text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <Home className="w-3.5 h-3.5" />
+                  <span>{t('common.returnHome', 'Return to Home')}</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     </div>

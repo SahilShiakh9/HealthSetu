@@ -231,16 +231,17 @@ export const PhcDashboardPage: React.FC = () => {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pb-16">
       {/* Top Header */}
       <header className="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3.5">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <button
               onClick={() => navigate('/home')}
-              className="p-2 -ml-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-2 -ml-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center cursor-pointer"
+              aria-label="Back to Home"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 flex-wrap">
                 <h1 className="text-sm md:text-base font-bold text-slate-900 dark:text-white">
                   PHC Epidemiological Surveillance
                 </h1>
@@ -264,7 +265,7 @@ export const PhcDashboardPage: React.FC = () => {
             <button
               onClick={handleSimulateOutbreak}
               disabled={generating}
-              className="hidden sm:flex px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-xl text-xs font-bold items-center space-x-1.5 transition-all"
+              className="hidden sm:flex px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-xl text-xs font-bold items-center space-x-1.5 transition-all cursor-pointer min-h-[36px]"
               title="Inject demonstration outbreak cluster"
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -273,8 +274,9 @@ export const PhcDashboardPage: React.FC = () => {
 
             <button
               onClick={fetchDashboardData}
-              className="p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center cursor-pointer"
               title="Refresh Surveillance Data"
+              aria-label="Refresh Surveillance Data"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
@@ -282,7 +284,7 @@ export const PhcDashboardPage: React.FC = () => {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto p-4 space-y-5">
+      <main className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
         {/* Error notification banner */}
         {error && (
           <div className="bg-red-50 dark:bg-red-950/40 border border-red-500/40 rounded-xl p-3 text-xs text-red-800 dark:text-red-200 flex items-center justify-between">

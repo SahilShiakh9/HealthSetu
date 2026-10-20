@@ -249,10 +249,10 @@ export const HospitalAdminDashboardPage: React.FC = () => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
+        <div className="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto scrollbar-none flex-nowrap">
           <button
             onClick={() => setActiveTab('roster')}
-            className={`px-4 py-2 font-bold text-xs rounded-xl transition-all ${
+            className={`px-4 py-2 font-bold text-xs rounded-xl transition-all whitespace-nowrap shrink-0 min-h-[40px] cursor-pointer ${
               activeTab === 'roster'
                 ? 'bg-indigo-600 text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
@@ -262,7 +262,7 @@ export const HospitalAdminDashboardPage: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('requests')}
-            className={`px-4 py-2 font-bold text-xs rounded-xl transition-all relative ${
+            className={`px-4 py-2 font-bold text-xs rounded-xl transition-all relative whitespace-nowrap shrink-0 min-h-[40px] cursor-pointer ${
               activeTab === 'requests'
                 ? 'bg-indigo-600 text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
@@ -277,7 +277,7 @@ export const HospitalAdminDashboardPage: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('queue')}
-            className={`px-4 py-2 font-bold text-xs rounded-xl transition-all ${
+            className={`px-4 py-2 font-bold text-xs rounded-xl transition-all whitespace-nowrap shrink-0 min-h-[40px] cursor-pointer ${
               activeTab === 'queue'
                 ? 'bg-indigo-600 text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
@@ -287,7 +287,7 @@ export const HospitalAdminDashboardPage: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('verification')}
-            className={`px-4 py-2 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 ${
+            className={`px-4 py-2 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 min-h-[40px] cursor-pointer ${
               activeTab === 'verification'
                 ? 'bg-indigo-600 text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
@@ -298,7 +298,7 @@ export const HospitalAdminDashboardPage: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('profile')}
-            className={`px-4 py-2 font-bold text-xs rounded-xl transition-all ${
+            className={`px-4 py-2 font-bold text-xs rounded-xl transition-all whitespace-nowrap shrink-0 min-h-[40px] cursor-pointer ${
               activeTab === 'profile'
                 ? 'bg-indigo-600 text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
