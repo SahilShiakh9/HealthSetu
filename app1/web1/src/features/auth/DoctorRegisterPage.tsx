@@ -206,31 +206,31 @@ export const DoctorRegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-[#FFF9F5] flex flex-col">
       <Header />
 
       <main className="flex-1 max-w-xl w-full mx-auto p-4 flex flex-col justify-center">
-        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-xs border border-[#F0E2D8] space-y-6">
           {/* Header */}
           <div className="text-center space-y-1">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 mb-1">
-              <Stethoscope className="w-6 h-6 text-emerald-600" />
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#FFF0E6] text-[#D95D24] mb-1 shadow-xs">
+              <Stethoscope className="w-6 h-6 text-[#F47738]" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900">
+            <h1 className="text-xl sm:text-2xl font-black text-[#242424]">
               Doctor Professional Registration
             </h1>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#6B7280]">
               Register as a verified Medical Officer / Teleconsultant on HealthSetu
             </p>
           </div>
 
           {/* Stepper Tabs */}
-          <div className="grid grid-cols-4 gap-1 p-1 bg-slate-100 rounded-xl text-xs font-bold text-center">
+          <div className="grid grid-cols-4 gap-1 p-1 bg-[#FFF9F5] border border-[#F0E2D8] rounded-xl text-xs font-bold text-center">
             <button
               type="button"
               onClick={() => setStep(1)}
-              className={`py-1.5 rounded-lg transition-all ${
-                step === 1 ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-500'
+              className={`py-1.5 rounded-lg transition-all cursor-pointer ${
+                step === 1 ? 'bg-[#F47738] text-white shadow-xs' : 'text-[#6B7280] hover:text-[#242424]'
               }`}
             >
               1. Basics
@@ -238,8 +238,8 @@ export const DoctorRegisterPage: React.FC = () => {
             <button
               type="button"
               onClick={() => validateStep1() && setStep(2)}
-              className={`py-1.5 rounded-lg transition-all ${
-                step === 2 ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-500'
+              className={`py-1.5 rounded-lg transition-all cursor-pointer ${
+                step === 2 ? 'bg-[#F47738] text-white shadow-xs' : 'text-[#6B7280] hover:text-[#242424]'
               }`}
             >
               2. License
@@ -247,8 +247,8 @@ export const DoctorRegisterPage: React.FC = () => {
             <button
               type="button"
               onClick={() => validateStep1() && validateStep2() && setStep(3)}
-              className={`py-1.5 rounded-lg transition-all ${
-                step === 3 ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-500'
+              className={`py-1.5 rounded-lg transition-all cursor-pointer ${
+                step === 3 ? 'bg-[#F47738] text-white shadow-xs' : 'text-[#6B7280] hover:text-[#242424]'
               }`}
             >
               3. Specialty
@@ -256,8 +256,8 @@ export const DoctorRegisterPage: React.FC = () => {
             <button
               type="button"
               onClick={() => validateStep1() && validateStep2() && setStep(4)}
-              className={`py-1.5 rounded-lg transition-all ${
-                step === 4 ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-500'
+              className={`py-1.5 rounded-lg transition-all cursor-pointer ${
+                step === 4 ? 'bg-[#F47738] text-white shadow-xs' : 'text-[#6B7280] hover:text-[#242424]'
               }`}
             >
               4. Hospital
@@ -279,15 +279,15 @@ export const DoctorRegisterPage: React.FC = () => {
             {step === 1 && (
               <div className="space-y-4 animate-in fade-in">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 block">Full Legal Name</label>
+                  <label className="text-xs font-bold text-[#242424] block">Full Legal Name</label>
                   <div className="relative">
-                    <User className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <User className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Dr. Rajesh Kulkarni"
-                      className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                      className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                       required
                     />
                   </div>
@@ -295,30 +295,30 @@ export const DoctorRegisterPage: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 block">Work Email</label>
+                    <label className="text-xs font-bold text-[#242424] block">Work Email</label>
                     <div className="relative">
-                      <Mail className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <Mail className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="doctor@healthsetu.org"
-                        className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                        className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                         required
                       />
                     </div>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 block">Mobile Number</label>
+                    <label className="text-xs font-bold text-[#242424] block">Mobile Number</label>
                     <div className="relative">
-                      <Phone className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <Phone className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
                         type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
                         placeholder="10-digit mobile"
-                        className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                        className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                         required
                       />
                     </div>
@@ -327,21 +327,21 @@ export const DoctorRegisterPage: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 block">Password</label>
+                    <label className="text-xs font-bold text-[#242424] block">Password</label>
                     <div className="relative">
-                      <Lock className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <Lock className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
                         type={showPassword ? 'text' : 'password'}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Min 8 characters"
-                        className="w-full min-h-[48px] pl-11 pr-10 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                        className="w-full min-h-[48px] pl-11 pr-10 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                         required
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#242424] p-1 cursor-pointer"
                       >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -349,15 +349,15 @@ export const DoctorRegisterPage: React.FC = () => {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 block">Confirm Password</label>
+                    <label className="text-xs font-bold text-[#242424] block">Confirm Password</label>
                     <div className="relative">
-                      <Lock className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <Lock className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
                         type={showPassword ? 'text' : 'password'}
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="Re-enter password"
-                        className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                        className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                         required
                       />
                     </div>
@@ -367,7 +367,7 @@ export const DoctorRegisterPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => validateStep1() && setStep(2)}
-                  className="w-full min-h-[48px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer mt-2"
+                  className="w-full min-h-[48px] bg-[#F47738] hover:bg-[#D95D24] text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer mt-2"
                 >
                   <span>Continue to Medical License</span>
                   <ArrowRight className="w-4 h-4" />
@@ -380,11 +380,11 @@ export const DoctorRegisterPage: React.FC = () => {
               <div className="space-y-4 animate-in fade-in">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 block">Primary Qualification</label>
+                    <label className="text-xs font-bold text-[#242424] block">Primary Qualification</label>
                     <select
                       value={qualification}
                       onChange={(e) => setQualification(e.target.value)}
-                      className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                      className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                     >
                       <option value="MBBS">MBBS</option>
                       <option value="MD">MD (Doctor of Medicine)</option>
@@ -396,7 +396,7 @@ export const DoctorRegisterPage: React.FC = () => {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 block">
+                    <label className="text-xs font-bold text-[#242424] block">
                       Additional Qualification (Optional)
                     </label>
                     <input
@@ -404,23 +404,23 @@ export const DoctorRegisterPage: React.FC = () => {
                       value={additionalQualification}
                       onChange={(e) => setAdditionalQualification(e.target.value)}
                       placeholder="e.g. DCH, DGO, Fellow"
-                      className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                      className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 block">
+                  <label className="text-xs font-bold text-[#242424] block">
                     Medical Council Registration Number
                   </label>
                   <div className="relative">
-                    <FileBadge className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <FileBadge className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       value={registrationNumber}
                       onChange={(e) => setRegistrationNumber(e.target.value)}
                       placeholder="e.g. MMC/2018/05/1234 or MCI-84920"
-                      className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                      className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                       required
                     />
                   </div>
@@ -428,7 +428,7 @@ export const DoctorRegisterPage: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 block">
+                    <label className="text-xs font-bold text-[#242424] block">
                       Registering Medical Council / Authority
                     </label>
                     <input
@@ -436,32 +436,32 @@ export const DoctorRegisterPage: React.FC = () => {
                       value={medicalCouncil}
                       onChange={(e) => setMedicalCouncil(e.target.value)}
                       placeholder="e.g. Maharashtra Medical Council"
-                      className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                      className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                       required
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 block">Year Registered</label>
+                      <label className="text-xs font-bold text-[#242424] block">Year Registered</label>
                       <input
                         type="number"
                         min="1960"
                         max={new Date().getFullYear()}
                         value={registrationYear}
                         onChange={(e) => setRegistrationYear(Number(e.target.value))}
-                        className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                        className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 block">Years Experience</label>
+                      <label className="text-xs font-bold text-[#242424] block">Years Experience</label>
                       <input
                         type="number"
                         min="0"
                         max="60"
                         value={experienceYears}
                         onChange={(e) => setExperienceYears(Number(e.target.value))}
-                        className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                        className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                       />
                     </div>
                   </div>
@@ -471,15 +471,15 @@ export const DoctorRegisterPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="flex-1 min-h-[48px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl flex items-center justify-center gap-2 text-sm transition-all cursor-pointer"
+                    className="flex-1 min-h-[48px] bg-white hover:bg-[#FFF0E6] text-[#242424] border border-[#F0E2D8] font-bold rounded-xl flex items-center justify-center gap-2 text-sm transition-all cursor-pointer"
                   >
-                    <ArrowLeft className="w-4 h-4" />
+                    <ArrowLeft className="w-4 h-4 text-[#6B7280]" />
                     <span>Back</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => validateStep2() && setStep(3)}
-                    className="flex-2 min-h-[48px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer"
+                    className="flex-2 min-h-[48px] bg-[#F47738] hover:bg-[#D95D24] text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer"
                   >
                     <span>Continue to Specialties</span>
                     <ArrowRight className="w-4 h-4" />
@@ -492,7 +492,7 @@ export const DoctorRegisterPage: React.FC = () => {
             {step === 3 && (
               <div className="space-y-4 animate-in fade-in">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-700 block">
+                  <label className="text-xs font-bold text-[#242424] block">
                     Clinical Specialties (Select all that apply)
                   </label>
                   <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto p-1">
@@ -505,8 +505,8 @@ export const DoctorRegisterPage: React.FC = () => {
                           onClick={() => toggleSpecialty(spec.id)}
                           className={`p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
                             isSelected
-                              ? 'bg-emerald-50 border-emerald-500 text-emerald-900 font-bold'
-                              : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                              ? 'bg-[#FFF0E6] border-[#F47738] text-[#D95D24] font-bold shadow-xs'
+                              : 'bg-white border-[#F0E2D8] text-[#242424] hover:border-[#F47738]/50'
                           }`}
                         >
                           <div className="truncate">{spec.name}</div>
@@ -517,7 +517,7 @@ export const DoctorRegisterPage: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-700 block">Languages Spoken</label>
+                  <label className="text-xs font-bold text-[#242424] block">Languages Spoken</label>
                   <div className="grid grid-cols-3 gap-2">
                     {[
                       { code: 'en', label: 'English' },
@@ -530,10 +530,10 @@ export const DoctorRegisterPage: React.FC = () => {
                           key={lang.code}
                           type="button"
                           onClick={() => toggleLanguage(lang.code as any)}
-                          className={`p-2.5 rounded-xl border text-center text-xs font-semibold cursor-pointer ${
+                          className={`p-2.5 rounded-xl border text-center text-xs font-semibold cursor-pointer transition-all ${
                             isSel
-                              ? 'bg-emerald-50 border-emerald-500 text-emerald-900'
-                              : 'bg-white border-slate-200 text-slate-600'
+                              ? 'bg-[#FFF0E6] border-[#F47738] text-[#D95D24] font-bold shadow-xs'
+                              : 'bg-white border-[#F0E2D8] text-[#242424] hover:border-[#F47738]/50'
                           }`}
                         >
                           {lang.label}
@@ -544,7 +544,7 @@ export const DoctorRegisterPage: React.FC = () => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 block">
+                  <label className="text-xs font-bold text-[#242424] block">
                     Professional Biography / Summary (Optional)
                   </label>
                   <textarea
@@ -552,7 +552,7 @@ export const DoctorRegisterPage: React.FC = () => {
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
                     placeholder="Brief background about your clinical experience and patient care approach..."
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                   />
                 </div>
 
@@ -560,15 +560,15 @@ export const DoctorRegisterPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setStep(2)}
-                    className="flex-1 min-h-[48px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl flex items-center justify-center gap-2 text-sm transition-all cursor-pointer"
+                    className="flex-1 min-h-[48px] bg-white hover:bg-[#FFF0E6] text-[#242424] border border-[#F0E2D8] font-bold rounded-xl flex items-center justify-center gap-2 text-sm transition-all cursor-pointer"
                   >
-                    <ArrowLeft className="w-4 h-4" />
+                    <ArrowLeft className="w-4 h-4 text-[#6B7280]" />
                     <span>Back</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setStep(4)}
-                    className="flex-2 min-h-[48px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer"
+                    className="flex-2 min-h-[48px] bg-[#F47738] hover:bg-[#D95D24] text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer"
                   >
                     <span>Continue to Hospital Affiliation</span>
                     <ArrowRight className="w-4 h-4" />
@@ -582,17 +582,17 @@ export const DoctorRegisterPage: React.FC = () => {
               <div className="space-y-4 animate-in fade-in">
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-slate-700 block">
+                    <label className="text-xs font-bold text-[#242424] block">
                       Affiliated Hospital / Healthcare Facility
                     </label>
-                    <span className="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    <span className="text-[11px] font-semibold text-[#D95D24] bg-[#FFF0E6] px-2 py-0.5 rounded-full border border-[#F0E2D8]">
                       {facilitiesLoading ? 'Loading...' : `${facilities.length} registered organizations`}
                     </span>
                   </div>
                   <select
                     value={facilityId}
                     onChange={(e) => setFacilityId(e.target.value)}
-                    className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                    className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                   >
                     <option value="">-- Private Practice / Independent Teleconsultant --</option>
                     {facilities.map((fac) => {
@@ -604,7 +604,7 @@ export const DoctorRegisterPage: React.FC = () => {
                       );
                     })}
                   </select>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-[#6B7280]">
                     Select your registered hospital to link your profile directly, or choose Private Practice if you practice independently.
                   </p>
                 </div>
@@ -612,11 +612,11 @@ export const DoctorRegisterPage: React.FC = () => {
                 {facilityId && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 block">Role in Facility</label>
+                      <label className="text-xs font-bold text-[#242424] block">Role in Facility</label>
                       <select
                         value={roleInFacility}
                         onChange={(e) => setRoleInFacility(e.target.value as any)}
-                        className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                        className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                       >
                         <option value="CONSULTANT">Visiting Consultant</option>
                         <option value="MEDICAL_OFFICER">Medical Officer (PHC/CHC)</option>
@@ -625,30 +625,30 @@ export const DoctorRegisterPage: React.FC = () => {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 block">Affiliation Notes</label>
+                      <label className="text-xs font-bold text-[#242424] block">Affiliation Notes</label>
                       <input
                         type="text"
                         value={affiliationNotes}
                         onChange={(e) => setAffiliationNotes(e.target.value)}
                         placeholder="e.g. Telemedicine panel doctor"
-                        className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                        className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                       />
                     </div>
                   </div>
                 )}
 
                 {/* Professional Statutory Declaration */}
-                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-600 space-y-2">
+                <div className="p-3.5 bg-[#FFF9F5] rounded-2xl border border-[#F0E2D8] text-xs text-[#6B7280] space-y-2">
                   <div className="flex items-start gap-2.5">
                     <input
                       type="checkbox"
                       id="agreedToTerms"
                       checked={agreedToTerms}
                       onChange={(e) => setAgreedToTerms(e.target.checked)}
-                      className="w-4 h-4 mt-0.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                      className="w-4 h-4 mt-0.5 rounded border-[#F0E2D8] text-[#F47738] focus:ring-[#F47738] cursor-pointer"
                       required
                     />
-                    <label htmlFor="agreedToTerms" className="cursor-pointer font-medium leading-relaxed">
+                    <label htmlFor="agreedToTerms" className="cursor-pointer font-medium leading-relaxed text-[#242424]">
                       I declare that all medical credentials and registration details submitted are genuine,
                       current, and subject to statutory verification under the National Medical Commission /
                       State Medical Council guidelines.
@@ -660,15 +660,15 @@ export const DoctorRegisterPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setStep(3)}
-                    className="flex-1 min-h-[48px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl flex items-center justify-center gap-2 text-sm transition-all cursor-pointer"
+                    className="flex-1 min-h-[48px] bg-white hover:bg-[#FFF0E6] text-[#242424] border border-[#F0E2D8] font-bold rounded-xl flex items-center justify-center gap-2 text-sm transition-all cursor-pointer"
                   >
-                    <ArrowLeft className="w-4 h-4" />
+                    <ArrowLeft className="w-4 h-4 text-[#6B7280]" />
                     <span>Back</span>
                   </button>
                   <button
                     type="submit"
                     disabled={loading || !agreedToTerms}
-                    className="flex-2 min-h-[48px] bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] disabled:bg-slate-300 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer disabled:cursor-not-allowed"
+                    className="flex-2 min-h-[48px] bg-[#F47738] hover:bg-[#D95D24] active:scale-[0.98] disabled:bg-[#F0E2D8] disabled:text-[#6B7280] text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer disabled:cursor-not-allowed"
                   >
                     {loading ? (
                       <>
@@ -688,16 +688,16 @@ export const DoctorRegisterPage: React.FC = () => {
           </form>
 
           {/* Switchers */}
-          <div className="pt-4 border-t border-slate-100 text-center space-y-2 text-xs">
+          <div className="pt-4 border-t border-[#F0E2D8] text-center space-y-2 text-xs">
             <div>
-              <span className="text-slate-500">Already have an account? </span>
-              <Link to="/staff/login" className="font-bold text-emerald-700 hover:underline">
+              <span className="text-[#6B7280]">Already have an account? </span>
+              <Link to="/staff/login" className="font-bold text-[#D95D24] hover:text-[#F47738] hover:underline">
                 Sign in to Doctor Portal
               </Link>
             </div>
             <div>
-              <span className="text-slate-500">Registering a clinic or hospital? </span>
-              <Link to="/hospital/register" className="font-bold text-indigo-700 hover:underline">
+              <span className="text-[#6B7280]">Registering a clinic or hospital? </span>
+              <Link to="/hospital/register" className="font-bold text-[#D95D24] hover:text-[#F47738] hover:underline">
                 Register Hospital / Organization
               </Link>
             </div>

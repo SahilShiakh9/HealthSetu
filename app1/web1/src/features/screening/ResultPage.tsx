@@ -100,16 +100,16 @@ export const ResultPage: React.FC = () => {
   const RiskIcon = riskTierConfig.icon;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pb-20">
+    <div className="min-h-screen bg-[#FFF9F5] text-[#242424] pb-20 font-sans">
       {/* Top Header */}
-      <header className="sticky top-0 z-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3">
+      <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-[#F0E2D8] px-4 py-3 shadow-xs">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <h1 className="text-base font-semibold text-slate-900 dark:text-white">
+          <h1 className="text-base font-semibold text-[#242424]">
             {t('result.header', 'Screening Assessment Result')}
           </h1>
           <button
             onClick={() => navigate('/screening')}
-            className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold hover:underline flex items-center gap-1 min-h-[36px] px-2.5 py-1 rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="text-xs text-[#D95D24] font-semibold hover:underline flex items-center gap-1 min-h-[36px] px-2.5 py-1 rounded-lg hover:bg-[#FFF0E6] transition-colors cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>{t('result.retake', 'New')}</span>
@@ -121,7 +121,7 @@ export const ResultPage: React.FC = () => {
         {/* Top Section: Risk Tier Badge Card & Statutory Disclaimer */}
         <div className="space-y-4">
           {/* Risk Tier Badge Card */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
+          <div className="bg-white border border-[#F0E2D8] rounded-3xl p-6 shadow-xs space-y-4">
             <div className="flex items-center gap-3">
               <div className={`p-2.5 rounded-2xl border ${riskTierConfig.badgeBg}`}>
                 <RiskIcon className="w-6 h-6" />
@@ -132,24 +132,24 @@ export const ResultPage: React.FC = () => {
                 >
                   {riskTier} RISK
                 </span>
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                <h2 className="text-lg font-bold text-[#242424]">
                   {riskTierConfig.title}
                 </h2>
               </div>
             </div>
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p className="text-xs text-[#6B7280] leading-relaxed">
               {riskTierConfig.desc}
             </p>
           </div>
 
           {/* Mandatory Statutory Disclaimer per Section 11.6 */}
-          <div className="bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/50 rounded-2xl p-4 flex items-start gap-3">
-            <Info className="w-5 h-5 text-amber-700 dark:text-amber-400 shrink-0 mt-0.5" />
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+            <Info className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <p className="text-xs font-bold text-amber-900 dark:text-amber-300">
+              <p className="text-xs font-bold text-amber-900">
                 {t('result.disclaimerTitle', 'Official Clinical Disclaimer')}
               </p>
-              <p className="text-xs text-amber-800/90 dark:text-amber-400/90 leading-relaxed">
+              <p className="text-xs text-amber-800/90 leading-relaxed">
                 {t(
                   'result.disclaimerBody',
                   'This assessment is an AI and rule-assisted screening tool for decision support. It is NOT an official medical diagnosis. Please consult a qualified doctor or healthcare worker for professional medical evaluation.',
@@ -165,12 +165,12 @@ export const ResultPage: React.FC = () => {
           <div className="space-y-5">
             {/* Condition Probabilities */}
             {screening.possibleConditions && screening.possibleConditions.length > 0 && (
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 space-y-4 shadow-xs">
+              <div className="bg-white border border-[#F0E2D8] rounded-3xl p-5 space-y-4 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-sm font-bold text-[#242424]">
                     {t('result.possibleConditions', 'Condition Likelihood Estimates')}
                   </h3>
-                  <span className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                  <span className="text-[10px] font-semibold text-[#D95D24] bg-[#FFF0E6] px-2.5 py-0.5 rounded-full border border-[#F0E2D8]">
                     {screening.engine?.type === 'rules'
                       ? `Rule-based Screening v${screening.engine?.version || '1.0.0'}`
                       : screening.engine?.type === 'ml'
@@ -185,17 +185,17 @@ export const ResultPage: React.FC = () => {
                     return (
                       <div key={idx} className="space-y-1.5">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-semibold text-slate-800 dark:text-slate-200">
+                          <span className="font-semibold text-[#242424]">
                             {cond.name}
                           </span>
-                          <span className="font-bold text-slate-600 dark:text-slate-400">
+                          <span className="font-bold text-[#6B7280]">
                             {percent}%
                           </span>
                         </div>
-                        <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div className="h-2 w-full bg-[#FFF9F5] border border-[#F0E2D8] rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full transition-all duration-500 ${
-                              idx === 0 ? riskTierConfig.barColor : 'bg-slate-400 dark:bg-slate-600'
+                              idx === 0 ? riskTierConfig.barColor : 'bg-slate-300'
                             }`}
                             style={{ width: `${Math.max(percent, 4)}%` }}
                           />
@@ -205,9 +205,9 @@ export const ResultPage: React.FC = () => {
                   })}
                 </div>
 
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                <div className="pt-2 border-t border-[#F0E2D8] flex items-center justify-between text-xs text-[#6B7280]">
                   <span>{t('result.specialty', 'Recommended Care:')}</span>
-                  <span className="font-semibold text-slate-700 dark:text-slate-300">
+                  <span className="font-semibold text-[#242424]">
                     {screening.recommendedSpecialty || 'General Physician'}
                   </span>
                 </div>
@@ -215,8 +215,8 @@ export const ResultPage: React.FC = () => {
             )}
 
             {/* Symptoms Breakdown ("Why this result?") */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 space-y-3 shadow-xs">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+            <div className="bg-white border border-[#F0E2D8] rounded-3xl p-5 space-y-3 shadow-xs">
+              <h3 className="text-sm font-bold text-[#242424]">
                 {t('result.symptomsReported', 'Reported Symptoms & Indicators')}
               </h3>
               <div className="flex flex-wrap gap-2">
@@ -224,13 +224,13 @@ export const ResultPage: React.FC = () => {
                   screening.symptoms.map((s, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-full"
+                      className="px-3 py-1 bg-[#FFF0E6] text-[#D95D24] border border-[#F0E2D8] text-xs font-medium rounded-full"
                     >
                       {s.replace(/_/g, ' ')}
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-[#6B7280]">
                     {t('result.noSpecificSymptoms', 'No specific symptoms logged.')}
                   </span>
                 )}
@@ -240,11 +240,11 @@ export const ResultPage: React.FC = () => {
 
           {/* Right Column: Primary Action Buttons */}
           <div className="space-y-4">
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4 shadow-xs">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+            <div className="bg-white border border-[#F0E2D8] rounded-3xl p-5 sm:p-6 space-y-4 shadow-xs">
+              <h3 className="text-sm font-bold text-[#242424]">
                 Recommended Next Steps
               </h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <p className="text-xs text-[#6B7280] leading-relaxed">
                 Connect with an empanelled doctor via teleconsultation or discover nearest public health facilities.
               </p>
 
@@ -253,7 +253,7 @@ export const ResultPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => navigate('/consult')}
-                  className="w-full min-h-[56px] bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold text-sm sm:text-base rounded-2xl shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
+                  className="w-full min-h-[56px] bg-[#F47738] hover:bg-[#D95D24] active:scale-[0.98] text-white font-semibold text-sm sm:text-base rounded-2xl shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
                 >
                   <Stethoscope className="w-5 h-5 text-white" />
                   <span>{t('result.consultDoctor', 'Consult a Doctor (Teleconsult)')}</span>
@@ -264,9 +264,9 @@ export const ResultPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => navigate('/facilities')}
-                  className="w-full min-h-[52px] bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-semibold text-sm rounded-2xl border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
+                  className="w-full min-h-[52px] bg-white hover:bg-[#FFF0E6] text-[#242424] font-semibold text-sm rounded-2xl border border-[#F0E2D8] flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
                 >
-                  <MapPin className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <MapPin className="w-4 h-4 text-[#F47738]" />
                   <span>{t('result.findFacility', 'Find Nearest PHC / CHC')}</span>
                 </button>
 
@@ -274,7 +274,7 @@ export const ResultPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => navigate('/home')}
-                  className="w-full min-h-[44px] text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-medium text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                  className="w-full min-h-[44px] text-[#6B7280] hover:text-[#242424] font-medium text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <Home className="w-3.5 h-3.5" />
                   <span>{t('common.returnHome', 'Return to Home')}</span>

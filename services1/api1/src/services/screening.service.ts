@@ -263,6 +263,14 @@ export class ScreeningService {
         { name: 'Acute Gastroenteritis', probability: 0.70 },
         { name: 'Food Poisoning', probability: 0.20 },
       ];
+    } else if (symSet.has('back_pain') || symSet.has('joint_pain')) {
+      riskTier = 'LOW';
+      specialty = 'Orthopedics';
+      conditions = [
+        { name: 'Musculoskeletal Strain / Lumbago', probability: 0.75 },
+        { name: 'Postural Back Pain', probability: 0.15 },
+        { name: 'Osteoarthritis', probability: 0.10 },
+      ];
     }
 
     return {

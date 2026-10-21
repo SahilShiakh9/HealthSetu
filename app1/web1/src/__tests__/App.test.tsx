@@ -48,7 +48,7 @@ describe('Phase 2 Web App Shell & Router', () => {
 
     render(<App />);
 
-    const welcome = await screen.findByText(/Welcome to HealthSetu|हेल्थसेतू मध्ये आपले स्वागत आहे|हेल्थसेतु में आपका स्वागत है/i);
+    const welcome = await screen.findByText(/Welcome to SwasthSetu|स्वास्थसेतू मध्ये आपले स्वागत आहे|स्वस्थसेतु में आपका स्वागत है|Welcome to HealthSetu/i);
     expect(welcome).toBeInTheDocument();
 
     // Emergency 108 button must be present
@@ -237,7 +237,7 @@ describe('Phase 2 Web App Shell & Router', () => {
 
     render(<App />);
 
-    const title = await screen.findByText(/HealthSetu Guidance & First Aid|आरोग्य मार्गदर्शक|स्वास्थ्य मार्गदर्शिका/i);
+    const title = await screen.findByText(/SwasthSetu Guidance & First Aid|HealthSetu Guidance & First Aid|आरोग्य मार्गदर्शक|स्वास्थ्य मार्गदर्शिका/i);
     expect(title).toBeInTheDocument();
     expect(screen.getByText(/100% Offline Available/i)).toBeInTheDocument();
     expect(screen.getByText(/ORS Preparation/i)).toBeInTheDocument();

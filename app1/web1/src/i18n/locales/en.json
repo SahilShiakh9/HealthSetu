@@ -1,7 +1,7 @@
 {
   "_review": "approved",
   "app": {
-    "name": "HealthSetu",
+    "name": "SwasthSetu",
     "subtitle": "Rural Healthcare Screening & Teleconsultation",
     "offline_ready": "Offline Ready",
     "saved_on_phone": "Saved on phone",
@@ -25,14 +25,14 @@
     "choose_language": "Choose your language",
     "select_language_sub": "You can change this anytime",
     "consent_title": "Consent for Healthcare & Privacy",
-    "consent_desc": "HealthSetu stores screening results locally on your phone and securely syncs them when connected. Anonymous public health signals help your local Primary Health Centre (PHC) detect disease trends early.",
+    "consent_desc": "SwasthSetu stores screening results locally on your phone and securely syncs them when connected. Anonymous public health signals help your local Primary Health Centre (PHC) detect disease trends early.",
     "consent_storage": "I agree to store my health check responses securely.",
     "consent_analytics": "I agree to contribute anonymised health signals to help my community.",
     "agree_continue": "I Agree & Continue",
     "get_started": "Get Started"
   },
   "home": {
-    "welcome": "Welcome to HealthSetu",
+    "welcome": "Welcome to SwasthSetu",
     "welcome_sub": "Rural healthcare screening, nearby clinic locator, and doctor consultation.",
     "action_screening": "Start Health Check",
     "action_screening_sub": "Answer simple questions by voice, touch or text",
@@ -74,7 +74,7 @@
   },
   "offline_page": {
     "title": "You are Offline",
-    "desc": "No internet connection detected. HealthSetu is designed to work offline.",
+    "desc": "No internet connection detected. SwasthSetu is designed to work offline.",
     "can_do": "What works right now:",
     "can_do_1": "Complete symptom screening with deterministic emergency rules",
     "can_do_2": "Browse cached nearby healthcare facilities with approximate distances",

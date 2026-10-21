@@ -259,7 +259,7 @@ describe('Production Patient Authentication & Onboarding Suite', () => {
       render(<App />);
 
       // Should redirect to home and display welcome banner
-      const welcome = await screen.findByText(/Welcome to HealthSetu|हेल्थसेतू मध्ये आपले स्वागत आहे|हेल्थसेतु में आपका स्वागत है/i);
+      const welcome = await screen.findByText(/Welcome to SwasthSetu|स्वास्थसेतू मध्ये आपले स्वागत आहे|स्वस्थसेतु में आपका स्वागत है|Welcome to HealthSetu/i);
       expect(welcome).toBeInTheDocument();
     });
 
@@ -292,7 +292,7 @@ describe('Production Patient Authentication & Onboarding Suite', () => {
         expect(useAuthStore.getState().user?.age).toBe(28);
       });
 
-      const welcome = await screen.findByText(/Welcome to HealthSetu|हेल्थसेतू मध्ये आपले स्वागत आहे|हेल्थसेतु में आपका स्वागत है/i);
+      const welcome = await screen.findByText(/Welcome to SwasthSetu|स्वास्थसेतू मध्ये आपले स्वागत आहे|स्वस्थसेतु में आपका स्वागत है|Welcome to HealthSetu/i);
       expect(welcome).toBeInTheDocument();
     });
   });

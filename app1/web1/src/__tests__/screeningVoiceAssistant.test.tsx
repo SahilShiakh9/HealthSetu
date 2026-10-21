@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 import { MemoryRouter } from 'react-router-dom';
 import ScreeningPage from '../features/screening/ScreeningPage.js';
 import { db } from '../offline/db.js';
+import i18n from '../i18n/index.js';
 
 // Setup SpeechSynthesis mocks
 const mockSpeak = vi.fn();
@@ -27,6 +28,7 @@ class MockSpeechSynthesisUtterance {
 const originalLocation = window.location;
 
 beforeEach(async () => {
+  await i18n.changeLanguage('en');
   await db.screenings.clear();
   await db.outbox.clear();
   mockSpeak.mockClear();
@@ -67,7 +69,7 @@ describe('Screening Assistant Redesign & Voice Lifecycle', () => {
     );
 
     // Compact header title
-    expect(screen.getByText(/HealthSetu/i)).toBeInTheDocument();
+    expect(screen.getByText(/SwasthSetu|HealthSetu/i)).toBeInTheDocument();
     expect(screen.getByText(/108/i)).toBeInTheDocument();
 
     // 3 large language options
@@ -113,7 +115,7 @@ describe('Screening Assistant Redesign & Voice Lifecycle', () => {
     await waitFor(() => {
       expect(screen.getByText(/Tap and Speak/i)).toBeInTheDocument();
       expect(screen.getByText(/Or type symptoms instead/i)).toBeInTheDocument();
-      expect(screen.getByText(/Hello! I am your HealthSetu screening assistant/i)).toBeInTheDocument();
+      expect(screen.getByText(/Hello! I am your (SwasthSetu|HealthSetu) screening assistant/i)).toBeInTheDocument();
     });
   });
 

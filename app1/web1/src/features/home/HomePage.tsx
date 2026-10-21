@@ -10,9 +10,11 @@ import {
   ChevronRight,
   ShieldAlert,
   BookOpen,
+  ArrowRight,
 } from 'lucide-react';
 import { Header } from '../../components/Header.js';
 import { OfflineBanner } from '../../components/OfflineBanner.js';
+import { HealthcareImage } from '../../components/HealthcareImage.js';
 import { useAuthStore } from '../auth/useAuthStore.js';
 import { ROLE_HOME_MAP } from '../../components/RequireAuth.js';
 
@@ -34,10 +36,10 @@ export const HomePage: React.FC = () => {
 
   if (isLoading || (isAuthenticated && user && user.role !== 'PATIENT' && user.role !== 'ASHA')) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FFF9F5] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 rounded-full border-3 border-emerald-500 border-t-transparent animate-spin" />
-          <span className="text-xs font-semibold text-slate-500">Redirecting to workspace...</span>
+          <div className="w-8 h-8 rounded-full border-3 border-[#F47738] border-t-transparent animate-spin" />
+          <span className="text-xs font-semibold text-[#6B7280]">Redirecting to workspace...</span>
         </div>
       </div>
     );
@@ -49,8 +51,8 @@ export const HomePage: React.FC = () => {
       title: t('home.action_screening'),
       subtitle: t('home.action_screening_sub'),
       icon: Stethoscope,
-      color: 'bg-emerald-500 text-white',
-      border: 'border-emerald-200 hover:border-emerald-500',
+      iconBg: 'bg-[#FFF0E6] text-[#F47738]',
+      border: 'border-[#F0E2D8] hover:border-[#F47738]',
       path: '/screening',
     },
     {
@@ -58,8 +60,8 @@ export const HomePage: React.FC = () => {
       title: t('home.action_facilities'),
       subtitle: t('home.action_facilities_sub'),
       icon: MapPin,
-      color: 'bg-blue-600 text-white',
-      border: 'border-blue-200 hover:border-blue-500',
+      iconBg: 'bg-blue-50 text-blue-600',
+      border: 'border-[#F0E2D8] hover:border-blue-400',
       path: '/facilities',
     },
     {
@@ -67,8 +69,8 @@ export const HomePage: React.FC = () => {
       title: t('home.action_consult'),
       subtitle: t('home.action_consult_sub'),
       icon: Video,
-      color: 'bg-indigo-600 text-white',
-      border: 'border-indigo-200 hover:border-indigo-500',
+      iconBg: 'bg-[#FFF0E6] text-[#D95D24]',
+      border: 'border-[#F0E2D8] hover:border-[#F47738]',
       path: '/consult/choose',
     },
     {
@@ -76,8 +78,8 @@ export const HomePage: React.FC = () => {
       title: t('home.action_reports'),
       subtitle: t('home.action_reports_sub'),
       icon: FileText,
-      color: 'bg-teal-600 text-white',
-      border: 'border-teal-200 hover:border-teal-500',
+      iconBg: 'bg-amber-50 text-amber-700',
+      border: 'border-[#F0E2D8] hover:border-amber-400',
       path: '/reports',
     },
     {
@@ -85,55 +87,82 @@ export const HomePage: React.FC = () => {
       title: 'Guidance & First Aid',
       subtitle: 'ORS, snakebite, burns & immunization protocols',
       icon: BookOpen,
-      color: 'bg-indigo-600 text-white',
-      border: 'border-indigo-200 hover:border-indigo-500',
+      iconBg: 'bg-[#FFF0E6] text-[#F47738]',
+      border: 'border-[#F0E2D8] hover:border-[#F47738]',
       path: '/guidance',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-[#FFF9F5] flex flex-col font-sans">
       <Header />
       <OfflineBanner />
 
-      <main className="flex-1 max-w-6xl w-full mx-auto p-3.5 sm:p-6 lg:p-8 space-y-5 sm:space-y-6">
-        {/* Welcome Hero Card */}
-        <div className="bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 text-white rounded-3xl p-5 sm:p-7 shadow-sm border border-emerald-600/30 relative overflow-hidden">
-          <div className="absolute -right-8 -bottom-8 w-44 h-44 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-1.5 max-w-2xl">
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-600/60 text-emerald-100 border border-emerald-400/30">
-                  HealthSetu Platform
+      <main className="flex-1 max-w-6xl w-full mx-auto p-3.5 sm:p-6 lg:p-8 space-y-6">
+        {/* Welcome Hero Card with Healthcare Visual */}
+        <div className="bg-white rounded-3xl p-5 sm:p-7 shadow-xs border border-[#F0E2D8] overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+            {/* Left Content */}
+            <div className="md:col-span-7 space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#FFF0E6] text-[#D95D24] border border-[#F0E2D8]">
+                  SwasthSetu Platform
                 </span>
-                <span className="text-[11px] font-semibold text-emerald-200 hidden sm:inline">
+                <span className="text-[11px] font-semibold text-[#6B7280]">
                   • Rural AI Medical Helpline
                 </span>
               </div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white leading-tight">
+
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-[#242424] leading-tight">
                 {t('home.welcome')}
-              </h2>
-              <p className="text-xs sm:text-sm text-emerald-100/90 font-medium leading-relaxed max-w-xl">
+              </h1>
+
+              <p className="text-xs sm:text-sm text-[#6B7280] font-normal leading-relaxed max-w-xl">
                 {t('home.welcome_sub')}
               </p>
+
+              <div className="pt-2 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => navigate('/screening')}
+                  className="min-h-[44px] px-5 py-2.5 bg-[#F47738] hover:bg-[#D95D24] active:scale-[0.98] text-white rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 shadow-xs transition-all cursor-pointer"
+                >
+                  <Stethoscope className="w-4 h-4" />
+                  <span>Start AI Symptom Screening</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => navigate('/guidance')}
+                  className="min-h-[44px] px-4 py-2.5 bg-[#FFF0E6] hover:bg-[#F0E2D8] active:scale-[0.98] text-[#D95D24] rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all cursor-pointer"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  <span>First Aid Protocols</span>
+                </button>
+              </div>
             </div>
 
-            {/* Quick emergency status pill on desktop */}
-            <div className="hidden lg:flex flex-col items-end gap-1 shrink-0 bg-emerald-900/40 border border-emerald-500/20 rounded-2xl p-3.5 text-right">
-              <span className="text-[10px] uppercase font-bold text-emerald-300 tracking-wider">National Rural Support</span>
-              <span className="text-sm font-extrabold text-white">Call 108 (Emergency)</span>
-              <span className="text-xs text-emerald-200">24/7 AI Triage & Teleconsult</span>
+            {/* Right Healthcare Visual */}
+            <div className="md:col-span-5 flex justify-center">
+              <HealthcareImage
+                src="/images/citizen_hero_healthcare.jpg"
+                alt="Welcoming Indian healthcare doctor consulting rural citizens"
+                aspectRatio="16/9"
+                className="w-full max-w-md rounded-2xl shadow-xs border border-[#F0E2D8]"
+                placeholderLabel="Welcoming rural healthcare consultation"
+              />
             </div>
           </div>
         </div>
 
-        {/* Primary Action Buttons - 1 col on mobile, 2 cols on tablet, 3 cols on desktop */}
+        {/* Primary Action Buttons */}
         <div>
           <div className="flex items-center justify-between mb-3 px-0.5">
-            <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#6B7280]">
               Healthcare Services
-            </h3>
-            <span className="text-[11px] text-slate-400 font-medium">Offline-capable</span>
+            </h2>
+            <span className="text-[11px] text-[#6B7280] font-medium">Offline-capable</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -143,18 +172,18 @@ export const HomePage: React.FC = () => {
                 <button
                   key={act.id}
                   onClick={() => navigate(act.path)}
-                  className={`w-full min-h-[76px] p-4 bg-white rounded-2xl border-2 ${act.border} shadow-xs hover:shadow-md flex items-center gap-3.5 transition-all active:scale-[0.99] text-left group cursor-pointer`}
+                  className={`w-full min-h-[76px] p-4 bg-white rounded-2xl border-2 ${act.border} shadow-xs hover:shadow-sm flex items-center gap-3.5 transition-all active:scale-[0.99] text-left group cursor-pointer`}
                 >
-                  <div className={`p-3 rounded-xl ${act.color} shrink-0 shadow-xs group-hover:scale-105 transition-transform`}>
+                  <div className={`p-3 rounded-xl ${act.iconBg} shrink-0 shadow-xs group-hover:scale-105 transition-transform`}>
                     <Icon className="w-6 h-6" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-slate-900 text-sm sm:text-base leading-tight group-hover:text-emerald-700 transition-colors truncate">
+                    <h3 className="font-bold text-[#242424] text-sm sm:text-base leading-tight group-hover:text-[#D95D24] transition-colors truncate">
                       {act.title}
-                    </h4>
-                    <p className="text-xs text-slate-500 line-clamp-1 mt-0.5">{act.subtitle}</p>
+                    </h3>
+                    <p className="text-xs text-[#6B7280] line-clamp-1 mt-0.5">{act.subtitle}</p>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-slate-400 shrink-0 group-hover:translate-x-1 group-hover:text-emerald-600 transition-all" />
+                  <ChevronRight className="w-5 h-5 text-[#6B7280] shrink-0 group-hover:translate-x-1 group-hover:text-[#F47738] transition-all" />
                 </button>
               );
             })}
@@ -186,8 +215,8 @@ export const HomePage: React.FC = () => {
         </div>
       </main>
 
-      <footer className="text-center py-4 px-4 text-xs text-slate-400 bg-white border-t border-slate-200 mt-auto">
-        HealthSetu &bull; Offline-First Rural Health Screening &amp; AI Helpline
+      <footer className="text-center py-4 px-4 text-xs text-[#6B7280] bg-white border-t border-[#F0E2D8] mt-auto">
+        SwasthSetu &bull; Offline-First Rural Health Screening &amp; AI Helpline
       </footer>
     </div>
   );

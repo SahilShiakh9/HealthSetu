@@ -25,7 +25,7 @@ export const EmergencyPage: React.FC = () => {
   const matchedRules = emergencyRulesData.rules.filter((r) => flagIds.includes(r.id));
 
   return (
-    <div className="min-h-screen bg-rose-50 dark:bg-rose-950/40 text-slate-900 dark:text-slate-100 pb-16 flex flex-col justify-between">
+    <div className="min-h-screen bg-rose-50/70 text-[#242424] pb-16 flex flex-col justify-between">
       {/* Top Banner */}
       <header className="bg-rose-600 text-white px-4 py-4 shadow-md sticky top-0 z-20">
         <div className="max-w-4xl mx-auto flex items-center gap-3">
@@ -49,20 +49,20 @@ export const EmergencyPage: React.FC = () => {
           {/* Left Column: Direct Call 108 & Triggered Red Flags */}
           <div className="space-y-5">
             {/* Big 108 Call Action Button */}
-            <div className="bg-white dark:bg-slate-900 border-2 border-rose-500 rounded-3xl p-6 shadow-xl text-center space-y-4">
-              <p className="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest">
+            <div className="bg-white border-2 border-rose-500 rounded-3xl p-6 shadow-sm text-center space-y-4">
+              <p className="text-xs font-bold text-rose-600 uppercase tracking-widest">
                 {t('emergency.freeCall', 'Toll-Free Emergency Ambulance')}
               </p>
 
               <a
                 href="tel:108"
-                className="w-full min-h-[64px] bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white text-xl font-black rounded-2xl shadow-lg shadow-rose-600/40 flex items-center justify-center gap-3 transition-all cursor-pointer"
+                className="w-full min-h-[64px] bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white text-xl font-black rounded-2xl shadow-md shadow-rose-600/30 flex items-center justify-center gap-3 transition-all cursor-pointer"
               >
                 <PhoneCall className="w-7 h-7 animate-bounce" />
                 <span>{t('emergency.call108', 'CALL 108 NOW')}</span>
               </a>
 
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-[#6B7280]">
                 {t(
                   'emergency.callNotice',
                   'Available 24x7 across all rural districts for immediate ambulance dispatch.',
@@ -71,8 +71,8 @@ export const EmergencyPage: React.FC = () => {
             </div>
 
             {/* Triggered Red Flags */}
-            <div className="bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-900/60 rounded-3xl p-5 space-y-3">
-              <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <div className="bg-white border border-rose-200 rounded-3xl p-5 space-y-3">
+              <h2 className="text-sm font-bold text-[#242424] flex items-center gap-2">
                 <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
                 <span>{t('emergency.detectedFlags', 'Critical Warning Signs:')}</span>
               </h2>
@@ -83,14 +83,14 @@ export const EmergencyPage: React.FC = () => {
                     return (
                       <div
                         key={rule.id}
-                        className="p-3 bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200/60 dark:border-rose-800/40 rounded-xl text-xs font-semibold text-rose-900 dark:text-rose-200 leading-relaxed"
+                        className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs font-semibold text-rose-900 leading-relaxed"
                       >
                         {msg}
                       </div>
                     );
                   })
                 ) : (
-                  <div className="p-3 bg-rose-50/70 dark:bg-rose-950/30 rounded-xl text-xs text-rose-900 dark:text-rose-200">
+                  <div className="p-3 bg-rose-50 rounded-xl text-xs text-rose-900">
                     {t(
                       'emergency.genericWarning',
                       'Severe symptoms indicating possible acute cardiac, respiratory, or neurological crisis.',
@@ -104,11 +104,11 @@ export const EmergencyPage: React.FC = () => {
           {/* Right Column: First Aid Instructions & Secondary Routing Actions */}
           <div className="space-y-5">
             {/* First Aid Instructions */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 space-y-3">
-              <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
+            <div className="bg-white border border-[#F0E2D8] rounded-3xl p-5 space-y-3 shadow-xs">
+              <h2 className="text-sm font-semibold text-[#242424]">
                 {t('emergency.actionsTitle', 'While Help is on the Way:')}
               </h2>
-              <ul className="text-xs text-slate-600 dark:text-slate-300 space-y-2.5 list-disc list-inside leading-relaxed">
+              <ul className="text-xs text-[#6B7280] space-y-2.5 list-disc list-inside leading-relaxed">
                 <li>{t('emergency.action1', 'Keep the patient sitting upright or in a comfortable resting position.')}</li>
                 <li>{t('emergency.action2', 'Do NOT give solid food or liquids if drowsiness or difficulty swallowing is present.')}</li>
                 <li>{t('emergency.action3', 'Loosen tight clothing around the neck and chest for easy breathing.')}</li>
@@ -121,9 +121,9 @@ export const EmergencyPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate('/facilities')}
-                className="w-full min-h-[52px] bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white font-semibold text-sm rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
+                className="w-full min-h-[52px] bg-[#242424] hover:bg-[#333333] text-white font-semibold text-sm rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer shadow-xs"
               >
-                <MapPin className="w-4 h-4 text-emerald-400" />
+                <MapPin className="w-4 h-4 text-[#F47738]" />
                 <span>{t('emergency.findHospitals', 'Locate Nearest Hospital / CHC')}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
@@ -131,9 +131,9 @@ export const EmergencyPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate('/home')}
-                className="w-full min-h-[48px] bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-medium text-xs rounded-2xl flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer"
+                className="w-full min-h-[48px] bg-white text-[#242424] font-medium text-xs rounded-2xl flex items-center justify-center gap-2 border border-[#F0E2D8] hover:bg-[#FFF0E6] transition-all cursor-pointer"
               >
-                <Home className="w-4 h-4" />
+                <Home className="w-4 h-4 text-[#6B7280]" />
                 <span>{t('emergency.returnHome', 'Return to Home')}</span>
               </button>
             </div>

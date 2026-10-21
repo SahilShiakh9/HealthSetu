@@ -14,6 +14,26 @@ import {
 } from '../offline/outbox.js';
 import { useAuthStore } from '../features/auth/useAuthStore.js';
 
+// Polyfill BroadcastChannel for Node 22 + JSDOM compatibility
+class MockBroadcastChannel {
+  name: string;
+  onmessage = null;
+  onmessageerror = null;
+  constructor(name: string) {
+    this.name = name;
+  }
+  postMessage() {}
+  close() {}
+  addEventListener() {}
+  removeEventListener() {}
+  dispatchEvent() {
+    return true;
+  }
+}
+if (typeof globalThis !== 'undefined') {
+  (globalThis as any).BroadcastChannel = MockBroadcastChannel;
+}
+
 describe('Phase 9: Honest Offline/Online Behaviour & Shared-Device Safety', () => {
   beforeEach(async () => {
     setActiveUserDb('guest');

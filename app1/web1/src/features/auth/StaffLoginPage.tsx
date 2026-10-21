@@ -57,28 +57,28 @@ export const StaffLoginPage: React.FC = () => {
 
   if (isLoading || (isAuthenticated && user)) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FFF9F5] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 rounded-full border-3 border-emerald-500 border-t-transparent animate-spin" />
-          <span className="text-xs font-semibold text-slate-500">Redirecting to workspace...</span>
+          <div className="w-8 h-8 rounded-full border-3 border-[#F47738] border-t-transparent animate-spin" />
+          <span className="text-xs font-semibold text-[#6B7280]">Redirecting to workspace...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-[#FFF9F5] flex flex-col">
       <Header />
 
       <main className="flex-1 max-w-md w-full mx-auto p-4 flex flex-col justify-center">
-        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 space-y-5">
+        <div className="bg-white rounded-3xl p-6 shadow-xs border border-[#F0E2D8] space-y-5">
           {/* Header */}
           <div className="text-center space-y-1">
-            <div className="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-2xl mx-auto flex items-center justify-center mb-2 shadow-xs">
+            <div className="w-12 h-12 bg-[#FFF0E6] text-[#D95D24] rounded-2xl mx-auto flex items-center justify-center mb-2 shadow-xs">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <h1 className="text-xl font-black text-slate-900 tracking-tight">Staff & Clinical Portal</h1>
-            <p className="text-xs text-slate-500">
+            <h1 className="text-xl font-black text-[#242424] tracking-tight">Staff & Clinical Portal</h1>
+            <p className="text-xs text-[#6B7280]">
               Authorized Doctors, Hospital Administrators, Public Health & NGO Users
             </p>
           </div>
@@ -95,36 +95,36 @@ export const StaffLoginPage: React.FC = () => {
           {/* Staff Login Form */}
           <form onSubmit={handleStaffPasswordLogin} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 block">Staff Email</label>
+              <label className="text-xs font-bold text-[#242424] block">Staff Email</label>
               <div className="relative">
-                <Mail className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Mail className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="doctor@healthsetu.org"
-                  className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 bg-white"
+                  className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-hidden focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 block">Password</label>
+              <label className="text-xs font-bold text-[#242424] block">Password</label>
               <div className="relative">
-                <Lock className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full min-h-[48px] pl-11 pr-12 py-2 text-sm rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 bg-white"
+                  className="w-full min-h-[48px] pl-11 pr-12 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-hidden focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#242424] p-1 cursor-pointer"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -135,7 +135,7 @@ export const StaffLoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading || !email.trim() || !password}
-              className="w-full min-h-[48px] bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] disabled:bg-slate-300 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer"
+              className="w-full min-h-[48px] bg-[#F47738] hover:bg-[#D95D24] active:scale-[0.98] disabled:bg-[#F0E2D8] disabled:text-[#6B7280] text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer"
             >
               {loading ? (
                 <>
@@ -151,8 +151,8 @@ export const StaffLoginPage: React.FC = () => {
             </button>
 
             {/* Quick Demo Role Autofill */}
-            <div className="pt-2 border-t border-slate-100 space-y-2">
-              <span className="text-[11px] font-bold text-slate-500 block text-center uppercase tracking-wider">
+            <div className="pt-2 border-t border-[#F0E2D8] space-y-2">
+              <span className="text-[11px] font-bold text-[#6B7280] block text-center uppercase tracking-wider">
                 Quick Demo Accounts
               </span>
               <div className="grid grid-cols-2 gap-1.5 text-[11px]">
@@ -162,7 +162,7 @@ export const StaffLoginPage: React.FC = () => {
                     setEmail('doctor@healthsetu.org');
                     setPassword('Doctor@12345');
                   }}
-                  className="p-1.5 rounded-lg border border-slate-200 hover:border-emerald-500 bg-slate-50 text-slate-700 font-semibold text-left truncate cursor-pointer active:scale-95 transition-all"
+                  className="p-2 rounded-xl border border-[#F0E2D8] hover:border-[#F47738] bg-[#FFF9F5] hover:bg-[#FFF0E6] text-[#242424] font-semibold text-left truncate cursor-pointer active:scale-95 transition-all"
                 >
                   👨‍⚕️ Doctor (PHC)
                 </button>
@@ -172,7 +172,7 @@ export const StaffLoginPage: React.FC = () => {
                     setEmail('hospital_admin@healthsetu.org');
                     setPassword('Hospital@12345');
                   }}
-                  className="p-1.5 rounded-lg border border-slate-200 hover:border-indigo-500 bg-slate-50 text-slate-700 font-semibold text-left truncate cursor-pointer active:scale-95 transition-all"
+                  className="p-2 rounded-xl border border-[#F0E2D8] hover:border-[#F47738] bg-[#FFF9F5] hover:bg-[#FFF0E6] text-[#242424] font-semibold text-left truncate cursor-pointer active:scale-95 transition-all"
                 >
                   🏥 Hospital Admin
                 </button>
@@ -182,7 +182,7 @@ export const StaffLoginPage: React.FC = () => {
                     setEmail('govt@healthsetu.org');
                     setPassword('Govt@12345');
                   }}
-                  className="p-1.5 rounded-lg border border-slate-200 hover:border-blue-500 bg-slate-50 text-slate-700 font-semibold text-left truncate cursor-pointer active:scale-95 transition-all"
+                  className="p-2 rounded-xl border border-[#F0E2D8] hover:border-[#F47738] bg-[#FFF9F5] hover:bg-[#FFF0E6] text-[#242424] font-semibold text-left truncate cursor-pointer active:scale-95 transition-all"
                 >
                   🏛️ IDSP Govt Officer
                 </button>
@@ -192,7 +192,7 @@ export const StaffLoginPage: React.FC = () => {
                     setEmail('ngo@healthsetu.org');
                     setPassword('Ngo@12345');
                   }}
-                  className="p-1.5 rounded-lg border border-slate-200 hover:border-teal-500 bg-slate-50 text-slate-700 font-semibold text-left truncate cursor-pointer active:scale-95 transition-all"
+                  className="p-2 rounded-xl border border-[#F0E2D8] hover:border-[#F47738] bg-[#FFF9F5] hover:bg-[#FFF0E6] text-[#242424] font-semibold text-left truncate cursor-pointer active:scale-95 transition-all"
                 >
                   🌐 NGO Observer
                 </button>
@@ -200,16 +200,16 @@ export const StaffLoginPage: React.FC = () => {
             </div>
 
             {/* Clinical & Hospital Onboarding */}
-            <div className="pt-2 text-center border-t border-slate-100 space-y-1 text-xs">
+            <div className="pt-2 text-center border-t border-[#F0E2D8] space-y-1 text-xs">
               <div>
-                <span className="text-slate-500">Need to onboard as a physician? </span>
-                <Link to="/doctor/register" className="font-bold text-emerald-700 hover:underline">
+                <span className="text-[#6B7280]">Need to onboard as a physician? </span>
+                <Link to="/doctor/register" className="font-bold text-[#D95D24] hover:text-[#F47738] hover:underline">
                   Register as Doctor
                 </Link>
               </div>
               <div>
-                <span className="text-slate-500">New healthcare facility? </span>
-                <Link to="/hospital/register" className="font-bold text-indigo-700 hover:underline">
+                <span className="text-[#6B7280]">New healthcare facility? </span>
+                <Link to="/hospital/register" className="font-bold text-[#D95D24] hover:text-[#F47738] hover:underline">
                   Register Hospital / Organization
                 </Link>
               </div>
@@ -217,12 +217,12 @@ export const StaffLoginPage: React.FC = () => {
           </form>
 
           {/* Return to patient portal link */}
-          <div className="pt-2 border-t border-slate-100 text-center">
+          <div className="pt-2 border-t border-[#F0E2D8] text-center">
             <Link
               to="/home"
-              className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-emerald-700 font-semibold transition-colors py-1 px-3 rounded-lg hover:bg-slate-50 cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs text-[#6B7280] hover:text-[#D95D24] font-semibold transition-colors py-1.5 px-3 rounded-lg hover:bg-[#FFF0E6] cursor-pointer"
             >
-              <HeartPulse className="w-3.5 h-3.5 text-emerald-600" />
+              <HeartPulse className="w-3.5 h-3.5 text-[#F47738]" />
               <span>Looking for Patient Screening? Go to Patient App</span>
             </Link>
           </div>

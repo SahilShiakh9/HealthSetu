@@ -111,35 +111,40 @@ const MULTILINGUAL_EMERGENCY_RULES: EmergencyRuleDefinition[] = [
 
 // Symptom vocabulary mapping for Marathi, Hindi, English
 const SYMPTOM_LEXICON: Record<string, { en: string[]; hi: string[]; mr: string[] }> = {
+  back_pain: {
+    en: ['back pain', 'lower back pain', 'backache', 'spine pain', 'lower back hurts', 'back hurts'],
+    hi: ['कमर दर्द', 'कमर में दर्द', 'पीठ दर्द', 'पीठ में दर्द', 'कमर दुख रही', 'कमर का दर्द'],
+    mr: ['कंबरदुखी', 'कंबरेत दुखणे', 'कंबर दुखत', 'पाठीत दुखणे', 'पाठदुखी', 'कंबरेत कळ', 'कंबर दुखते'],
+  },
   fever: {
     en: ['fever', 'high temperature', 'chills', 'feverish', 'hot body', 'temperature'],
-    hi: ['बुखार', 'ताप', 'बदन गरम', 'ठंड लगना', 'हरारत'],
-    mr: ['ताप', 'अंग गरम', 'थंडी वाजून येणे', 'अंग तापणे', 'हुडहुडी'],
+    hi: ['बुखार', 'ताप', 'बदन गरम', 'ठंड लगना', 'हरारत', 'कंपकंपी'],
+    mr: ['ताप', 'अंग गरम', 'थंडी वाजून येणे', 'अंग तापणे', 'हुडहुडी', 'कणकण'],
   },
   cough: {
     en: ['cough', 'coughing', 'dry cough', 'wet cough', 'phlegm', 'throat irritation'],
-    hi: ['खांसी', 'कफ', 'सूखी खांसी', 'बलगम', 'गले में खराश'],
+    hi: ['खांसी', 'कफ', 'सूखी खांसी', 'बलगम', 'गले में खराश', 'खंासी'],
     mr: ['खोकला', 'कफ', 'कोरडा खोकला', 'घशात खवखव', 'धाप'],
   },
   headache: {
     en: ['headache', 'head pain', 'migraine', 'head throbbing'],
-    hi: ['सिरदर्द', 'सिर में दर्द', 'माइग्रेन', 'सिर भारी'],
-    mr: ['डोकेदुखी', 'डोके दुखणे', 'मायग्रेन', 'डोके जड'],
+    hi: ['सिरदर्द', 'सिर में दर्द', 'माइग्रेन', 'सिर भारी', 'सरदर्द'],
+    mr: ['डोकेदुखी', 'डोके दुखणे', 'मायग्रेन', 'डोके जड', 'डोकं दुखणे'],
   },
   vomiting: {
     en: ['vomiting', 'nausea', 'throwing up', 'puking', 'queasy'],
-    hi: ['उल्टी', 'जी मिचलाना', 'कै', 'उबकाई'],
-    mr: ['उलटी', 'मळमळ', 'ओकारी', 'उलटीसारखे वाटणे'],
+    hi: ['उल्टी', 'जी मिचलाना', 'कै', 'उबकाई', 'उल्टियां'],
+    mr: ['उलटी', 'मळमळ', 'ओकारी', 'उलटीसारखे वाटणे', 'उलट्या'],
   },
   diarrhea: {
     en: ['diarrhea', 'loose motions', 'watery stool', 'stomach upset'],
     hi: ['दस्त', 'पेट खराब', 'पतले दस्त', 'लूज मोशन'],
-    mr: ['जुलाब', 'संडास लागणे', 'हगवण', 'पोट बिघडणे'],
+    mr: ['जुलाब', 'संडास लागणे', 'हगवण', 'पोट बिघडणे', 'पातळ शौचास'],
   },
   joint_pain: {
-    en: ['joint pain', 'knee pain', 'body ache', 'arthritis', 'back pain'],
-    hi: ['जोड़ों का दर्द', 'घुटनों में दर्द', 'बदन दर्द', 'कमर दर्द'],
-    mr: ['सांधेदुखी', 'गुडघेदुखी', 'अंगदुखी', 'कंबरदुखी'],
+    en: ['joint pain', 'knee pain', 'body ache', 'arthritis', 'joint swelling'],
+    hi: ['जोड़ों का दर्द', 'घुटनों में दर्द', 'बदन दर्द', 'गठिया'],
+    mr: ['सांधेदुखी', 'गुडघेदुखी', 'अंगदुखी', 'सांधे सुजणे'],
   },
   skin_rash: {
     en: ['skin rash', 'itching', 'red spots', 'allergies', 'skin eruption'],
@@ -147,9 +152,9 @@ const SYMPTOM_LEXICON: Record<string, { en: string[]; hi: string[]; mr: string[]
     mr: ['खाज', 'पुरळ', 'अंगावर गांधी', 'त्वचेचा संसर्ग', 'लाल डाग'],
   },
   fatigue: {
-    en: ['fatigue', 'weakness', 'tiredness', 'exhausted', 'lack of energy'],
-    hi: ['थकान', 'कमजोरी', 'सुस्ती', 'अशक्तता'],
-    mr: ['थकवा', 'अशक्तपणा', 'गळाल्यासारखे वाटणे', 'त्राण नसणे'],
+    en: ['fatigue', 'weakness', 'tiredness', 'exhausted', 'lack of energy', 'weak'],
+    hi: ['थकान', 'कमजोरी', 'सुस्ती', 'अशक्तता', 'कमजोरी लग रही'],
+    mr: ['थकवा', 'अशक्तपणा', 'गळाल्यासारखे वाटणे', 'त्राण नसणे', 'अशक्तपणा जाणवत'],
   },
   chest_discomfort: {
     en: ['chest discomfort', 'chest tightness', 'chest pressure', 'chest heaviness', 'heaviness in chest'],
@@ -167,14 +172,160 @@ const SYMPTOM_LEXICON: Record<string, { en: string[]; hi: string[]; mr: string[]
     mr: ['पोटात दुखणे', 'पोटदुखी', 'पोटात मुरडा', 'पोटात कळ'],
   },
   dizziness: {
-    en: ['dizziness', 'lightheaded', 'spinning head', 'giddiness', 'unsteady'],
-    hi: ['चक्कर आना', 'सिर घूमना', 'कमजोरी से चक्कर'],
-    mr: ['चक्कर येणे', 'भोवळ येणे', 'डोके फिरणे'],
+    en: ['dizziness', 'lightheaded', 'spinning head', 'giddiness', 'unsteady', 'dizzy'],
+    hi: ['चक्कर आना', 'सिर घूमना', 'कमजोरी से चक्कर', 'चक्कर आ रहे', 'चक्कर आ रही'],
+    mr: ['चक्कर येणे', 'भोवळ येणे', 'डोके फिरणे', 'चक्कर येत', 'भोवळ'],
   },
+};
+
+export interface ColloquialPattern {
+  symptomId: string;
+  patterns: RegExp[];
+}
+
+export const COLLOQUIAL_SYMPTOM_PATTERNS: ColloquialPattern[] = [
+  {
+    symptomId: 'back_pain',
+    patterns: [
+      /(?:कमर|पीठ)\s*(?:में)?\s*(?:दर्द|पीड़ा|तकलीफ|अकड़न|खिंचाव|दुख)/i,
+      /(?:कमर|पीठ)\s*(?:दुख\s*रह[ेाी]|दुखने)/i,
+      /(?:कंबर|कंबरेत|पाठीत|पाठ)\s*(?:दुख|कळ|वेदना|अकडली|जड)/i,
+      /\b(?:कंबरदुखी|पाठदुखी)\b/i,
+      /\b(?:(?:lower\s+)?back\s*(?:pain|ache|hurts?|aching|stiff(?:ness)?)|pain\s+in\s+(?:my\s+)?(?:lower\s+)?back)\b/i,
+    ],
+  },
+  {
+    symptomId: 'dizziness',
+    patterns: [
+      /(?:चक्कर\s*(?:आ\s*रह[ेाी]|आना|लग\s*रह[ेाी]|खाकर)|सिर\s*घूम\s*रह[ेाी]|सिर\s*चकरा)/i,
+      /(?:चक्कर\s*(?:येत|येणे|येऊन|आली)|भोवळ\s*(?:येत|येणे|आली)|डोके\s*फिर(?:त|णे)|अंधारी\s*ये(?:णे|त))/i,
+      /\b(?:dizzy|dizziness|lightheaded(?:ness)?|spinning\s*head|giddiness|room\s*is\s*spinning)\b/i,
+    ],
+  },
+  {
+    symptomId: 'fatigue',
+    patterns: [
+      /(?:कमजोरी\s*(?:लग\s*रह[ेाी]|महसूस|हो\s*रह[ेाी])|थकान\s*(?:लग\s*रह[ेाी]|हो\s*रह[ेाी])|सुस्ती|अशक्तता)/i,
+      /\b(?:कमजोरी|थकान|सुस्ती|थकावट)\b/i,
+      /(?:अशक्तपणा\s*(?:जाणव(?:त|णे)|आला)|थकवा\s*(?:जाणव(?:त|णे)|आला)|गळाल्यासारखे|त्राण\s*नस(?:णे|ल्यासारखे)|दमल्यासारखे)/i,
+      /\b(?:अशक्तपणा|थकवा)\b/i,
+      /\b(?:fatigue|weak(?:ness)?|tired(?:ness)?|exhausted|exhaustion|lack\s*of\s*energy|feeling\s*weak)\b/i,
+    ],
+  },
+  {
+    symptomId: 'fever',
+    patterns: [
+      /\b(?:बुखार|ताप|हरारत|बदन\s*गरम|ठंड\s*लग\s*(?:रही|कर)|कंपकंपी)\b/i,
+      /\b(?:ताप|कणकण|अंग\s*गरम|अंग\s*तापणे|हुडहुडी|थंडी\s*वाज(?:ून|णे|ते))\b/i,
+      /\b(?:fever|high\s*temperature|feverish|chills|hot\s*body)\b/i,
+    ],
+  },
+  {
+    symptomId: 'cough',
+    patterns: [
+      /\b(?:खांसी|खंासी|कफ|बलगम|सूखी\s*खांसी|गले\s*में\s*खराश)\b/i,
+      /\b(?:खोकला|कफ|कोरडा\s*खोकला|घशात\s*खवखव)\b/i,
+      /\b(?:cough(?:ing)?|dry\s*cough|wet\s*cough|phlegm)\b/i,
+    ],
+  },
+  {
+    symptomId: 'headache',
+    patterns: [
+      /(?:सिर|सर)\s*(?:में)?\s*(?:दर्द|भारी|पीड़ा)/i,
+      /\b(?:सिरदर्द|सरदर्द|माइग्रेन)\b/i,
+      /(?:डोके|डोकं)\s*(?:दुख(?:णे|त|तेय)|जड)/i,
+      /\b(?:डोकेदुखी|मायग्रेन)\b/i,
+      /\b(?:headache|head\s*(?:pain|throbbing|hurts?)|migraine)\b/i,
+    ],
+  },
+  {
+    symptomId: 'vomiting',
+    patterns: [
+      /\b(?:उल्टी|उल्टियां|जी\s*मिचलाना|जी\s*घबराना|कै|उबकाई)\b/i,
+      /\b(?:उलटी|उलट्या|मळमळ|मळमळणे|ओकारी|उलटीसारखे)\b/i,
+      /\b(?:vomit(?:ing)?|nausea|nauseous|throwing\s*up|puking)\b/i,
+    ],
+  },
+  {
+    symptomId: 'diarrhea',
+    patterns: [
+      /\b(?:दस्त|पतले\s*दस्त|पेट\s*खराब|लूज\s*मोशन)\b/i,
+      /\b(?:जुलाब|संडास\s*लागणे|हगवण|पोट\s*बिघडणे|पातळ\s*शौचास)\b/i,
+      /\b(?:diarrhea|loose\s*motions?|watery\s*stool|stomach\s*upset)\b/i,
+    ],
+  },
+  {
+    symptomId: 'joint_pain',
+    patterns: [
+      /(?:जोड़ों|घुटनों|कंधे|हाथ-पैर)\s*(?:में)?\s*(?:दर्द|अकड़न|सूजन)/i,
+      /\b(?:जोड़ों\s*का\s*दर्द|गठिया|बदन\s*दर्द)\b/i,
+      /(?:सांधे|गुडघे|हातपाय)\s*(?:दुख(?:णे|त)|सूज)/i,
+      /\b(?:सांधेदुखी|गुडघेदुखी|अंगदुखी)\b/i,
+      /\b(?:joint\s*pain|knee\s*pain|body\s*ache|arthritis|stiff\s*joints)\b/i,
+    ],
+  },
+  {
+    symptomId: 'stomach_ache',
+    patterns: [
+      /(?:पेट)\s*(?:में)?\s*(?:दर्द|मरोड़|ऐंठन)/i,
+      /\b(?:पेट\s*दर्द|उदर\s*शूल)\b/i,
+      /(?:पोटात)\s*(?:दुख(?:णे|त)|मुरडा|कळ)/i,
+      /\b(?:पोटदुखी|पोटात\s*वेदना)\b/i,
+      /\b(?:stomach\s*(?:pain|ache|cramps?)|abdominal\s*pain|belly\s*pain)\b/i,
+    ],
+  },
+  {
+    symptomId: 'throat_pain',
+    patterns: [
+      /(?:गले|गला)\s*(?:में)?\s*(?:दर्द|खराश|सूजन|निगलने\s*में\s*दर्द)/i,
+      /\b(?:गला\s*खराब|गले\s*का\s*दर्द)\b/i,
+      /(?:घशात|घसा)\s*(?:दुख(?:णे|त)|खवखव|बसणे|गिळताना\s*त्रास)/i,
+      /\b(?:sore\s*throat|throat\s*pain|pain\s*(?:when|in)\s*swallowing)\b/i,
+    ],
+  },
+  {
+    symptomId: 'skin_rash',
+    patterns: [
+      /\b(?:खुजली|खाज|चकत्ते|लाल\s*दाने|त्वचा\s*संक्रमण|फोड़े-फुंसी)\b/i,
+      /\b(?:खाज|पुरळ|अंगावर\s*गांधी|लाल\s*डाग|त्वचेची\s*खाज)\b/i,
+      /\b(?:rash|skin\s*rash|itching|red\s*spots|hives)\b/i,
+    ],
+  },
+  {
+    symptomId: 'chest_discomfort',
+    patterns: [
+      /(?:सीने|छाती)\s*(?:में)?\s*(?:बेचैनी|जकड़न|भारीपन|दबाव)/i,
+      /(?:छातीत)\s*(?:अस्वस्थता|जड\s*वाटणे|दाब|जडपणा)/i,
+      /\b(?:chest\s*discomfort|chest\s*tightness|chest\s*heaviness|heaviness\s*in\s*chest)\b/i,
+    ],
+  },
+];
+
+// Localized Display Names for empathetic conversational acknowledgment
+const SYMPTOM_DISPLAY_NAMES: Record<string, { en: string; hi: string; mr: string }> = {
+  back_pain: { en: 'back pain', hi: 'कमर दर्द', mr: 'कंबरदुखी' },
+  joint_pain: { en: 'joint and body pain', hi: 'जोड़ों और बदन में दर्द', mr: 'सांधेदुखी व अंगदुखी' },
+  fever: { en: 'fever', hi: 'बुखार', mr: 'ताप' },
+  cough: { en: 'cough', hi: 'खांसी', mr: 'खोकला' },
+  headache: { en: 'headache', hi: 'सिरदर्द', mr: 'डोकेदुखी' },
+  dizziness: { en: 'dizziness', hi: 'चक्कर आना', mr: 'चक्कर येणे' },
+  fatigue: { en: 'fatigue and weakness', hi: 'कमजोरी और थकान', mr: 'अशक्तपणा आणि थकवा' },
+  vomiting: { en: 'vomiting or nausea', hi: 'उल्टी या जी मिचलाना', mr: 'उलटी किंवा मळमळ' },
+  diarrhea: { en: 'loose motions or diarrhea', hi: 'दस्त या पेट खराब', mr: 'जुलाब किंवा पोट बिघडणे' },
+  stomach_ache: { en: 'stomach ache', hi: 'पेट दर्द', mr: 'पोटदुखी' },
+  throat_pain: { en: 'sore throat', hi: 'गले में खराश या दर्द', mr: 'घशात खवखव किंवा दुखणे' },
+  skin_rash: { en: 'skin rash or itching', hi: 'त्वचा पर खुजली या चकत्ते', mr: 'त्वचेवर पुरळ किंवा खाज' },
+  chest_discomfort: { en: 'chest discomfort', hi: 'सीने में भारीपन', mr: 'छातीत अस्वस्थता' },
+  default: { en: 'these symptoms', hi: 'आपकी समस्या', mr: 'तुमचा त्रास' },
 };
 
 // Fallback Duration Questions across English, Hindi, and Marathi
 const DURATION_QUESTIONS: Record<string, { en: string; hi: string; mr: string }> = {
+  back_pain: {
+    en: 'Since when has this back pain started? How many days or hours has it been?',
+    hi: 'यह कमर दर्द कब से शुरू हुआ है? कितने दिन या घंटे हो गए हैं?',
+    mr: 'ही कंबरदुखी कधीपासून सुरू झाली आहे? किती दिवस किंवा तास झाले आहेत?',
+  },
   headache: {
     en: 'Since when has this headache started? How many hours or days has it been?',
     hi: 'यह सिरदर्द कब से शुरू हुआ है? कितने घंटे या दिन हो गए हैं?',
@@ -244,6 +395,11 @@ const DURATION_QUESTIONS: Record<string, { en: string; hi: string; mr: string }>
 
 // Fallback Red-Flag & Associated Warning Sign Questions
 const FOLLOW_UP_QUESTIONS: Record<string, { en: string; hi: string; mr: string }> = {
+  back_pain: {
+    en: 'Does this back pain shoot down into your legs, or do you have any numbness or difficulty walking?',
+    hi: 'क्या यह कमर दर्द पैरों की तरफ जाता है, या पैरों में सुन्नपन या चलने में तकलीफ है?',
+    mr: 'हे कंबरदुखीचे दुखणे पायात उतरते का, किंवा पायाला मुंग्या येणे अथवा चालताना त्रास होतो का?',
+  },
   fever: {
     en: 'Have you also experienced chills, sweating, or severe shivering with this fever?',
     hi: 'क्या आपको इस बुखार के साथ ठंड, पसीना या कंपकंपी भी महसूस हुई है?',
@@ -308,6 +464,11 @@ const FOLLOW_UP_QUESTIONS: Record<string, { en: string; hi: string; mr: string }
 
 // Clinical Home-Care Tips and Prevention Guidance for LOW-RISK cases
 const LOW_RISK_HOME_CARE_TIPS: Record<string, { en: string; hi: string; mr: string }> = {
+  back_pain: {
+    en: 'Screening complete. Based on your symptoms, this appears to be a Low Risk muscle strain or posture-related back pain.\n\nHome Care & Prevention:\n• Rest on a firm surface and avoid lifting heavy objects or bending suddenly.\n• Apply a warm compress or heating pad to the lower back for 15-20 minutes.\n• Maintain an upright posture while sitting and avoid prolonged sitting.\n• If pain radiates down the legs, causes numbness, or worsens over 3 days, consult a clinician at your local PHC.',
+    hi: 'स्क्रीनिंग पूरी हो गई है। आपके लक्षणों के अनुसार यह कम जोखिम (Low Risk) का मांसपेशियों में खिंचाव या सामान्य कमर दर्द है।\n\nघरेलू देखभाल और बचाव के उपाय:\n• भारी सामान उठाने या अचानक झुकने से बचें, समतल बिस्तर पर विश्राम करें।\n• कमर पर 15-20 मिनट के लिए गर्म सिकाई या गुनगुना तौलिया लगाएं।\n• बैठते समय रीढ़ की हड्डी सीधी रखें और लगातार एक जगह ज्यादा देर न बैठें।\n• यदि दर्द पैरों में उतरे, पैरों में सुन्नपन आए या 3 दिन में आराम न मिले, तो PHC में डॉक्टर से परामर्श लें।',
+    mr: 'तपासणी पूर्ण झाली आहे. प्राथमिक मूल्यांकनानुसार हा कमी जोखमीचा (Low Risk) स्नायूंचा ताण किंवा सामान्य कंबरदुखीचा त्रास आहे.\n\nघरगुती काळजी व प्रतिबंधात्मक उपाय:\n• जड वस्तू उचलणे किंवा अचानक वाकणे टाळा, सपाट गादीवर विश्रांती घ्या.\n• कंबरेला दिवसातून २ वेळा गरम पाण्याचा शेक द्या.\n• बसताना पाठीचा कणा ताठ ठेवा, एकाच जागेवर जास्त वेळ बसू नका.\n• त्रास पायात उतरत असल्यास किंवा ३ दिवसांत कमी न झाल्यास प्राथमिक आरोग्य केंद्रातील (PHC) डॉक्टरांचा सल्ला घ्या.',
+  },
   fever: {
     en: 'Screening complete. Based on your symptoms, this appears to be a Low Risk mild fever.\n\nHome Care & Prevention:\n• Rest well and stay hydrated with clean boiled water, ORS, or coconut water.\n• Sponge forehead with normal temperature water if feeling hot.\n• Eat light, easily digestible meals (khichdi, warm soup).\n• Watch for warning signs: if fever rises very high or lasts over 3 days, consult a PHC doctor.',
     hi: 'स्क्रीनिंग पूरी हो गई है। आपके लक्षणों के अनुसार यह कम जोखिम (Low Risk) का हल्का बुखार है।\n\nघरेलू देखभाल और बचाव के उपाय:\n• पर्याप्त आराम करें और खूब पानी, ओआरएस या गुनगुने तरल पदार्थ पिएं।\n• शरीर तपने पर सामान्य पानी की ठंडी पट्टी माथे पर रखें।\n• हल्का और सुपाच्य भोजन (जैसे खिचड़ी, दलिया, सूप) लें।\n• यदि बुखार 3 दिन से अधिक रहे या बहुत तेज हो, तभी प्राथमिक स्वास्थ्य केंद्र (PHC) में डॉक्टर से संपर्क करें।',
@@ -323,12 +484,46 @@ const LOW_RISK_HOME_CARE_TIPS: Record<string, { en: string; hi: string; mr: stri
     hi: 'स्क्रीनिंग पूरी हो गई है। आपके लक्षणों के अनुसार यह कम जोखिम (Low Risk) की सामान्य खांसी या गले की खराश है।\n\nघरेलू देखभाल और बचाव के उपाय:\n• गुनगुना पानी पिएं और दिन में 2-3 बार नमक के पानी से गरारे करें।\n• भाप (steam) लें जिससे श्वास नली में आराम मिले।\n• ठंडी चीजें, तली-भुनी चीजें और धुएं से बचें।\n• यदि खांसी 2 हफ्ते से ज्यादा बनी रहे या सांस फूले, तो PHC में डॉक्टर से जांच कराएं।',
     mr: 'तपासणी पूर्ण झाली आहे. प्राथमिक मूल्यांकनानुसार हा कमी जोखमीचा (Low Risk) सामान्य खोकला किंवा घशातील खवखव आहे.\n\nघरगुती काळजी व प्रतिबंधात्मक उपाय:\n• कोमट पाणी प्या आणि दिवसातून २-३ वेळा मिठाच्या कोमट पाण्याच्या गुळण्या करा.\n• दिवसातून एकदा वाफ (steam) घ्या.\n• थंड पेये, तेलकट अन्न आणि धूर टाळा.\n• खोकला २ आठवड्यांपेक्षा जास्त राहिल्यास किंवा धाप लागल्यास जवळच्या PHC ला भेट द्या.',
   },
+  dizziness: {
+    en: 'Screening complete. Based on your symptoms, this appears to be a Low Risk mild dizziness or postural unsteadiness.\n\nHome Care & Prevention:\n• Sit or lie down immediately when feeling lightheaded to prevent falls.\n• Drink plenty of water or electrolyte solution (ORS).\n• Avoid sudden standing from a lying or sitting position; get up slowly.\n• If dizziness causes fainting, loss of balance, or speech difficulty, seek medical care immediately.',
+    hi: 'स्क्रीनिंग पूरी हो गई है। आपके लक्षणों के अनुसार यह कम जोखिम (Low Risk) के सामान्य चक्कर या डिहाइड्रेशन है।\n\nघरेलू देखभाल और बचाव के उपाय:\n• चक्कर आने पर तुरंत बैठ जाएं या लेट जाएं ताकि गिरने से बचें।\n• पर्याप्त मात्रा में पानी, नींबू पानी या ओआरएस (ORS) पिएं।\n• बिस्तर या कुर्सी से अचानक तेजी से न उठें, धीरे-धीरे खड़े हों।\n• यदि बेहोशी महसूस हो, जुबान लड़खड़ाए या संतुलन बिगड़े, तो तुरंत डॉक्टर से मिलें।',
+    mr: 'तपासणी पूर्ण झाली आहे. प्राथमिक मूल्यांकनानुसार ही कमी जोखमीची (Low Risk) सौम्य भोवळ किंवा अशक्तपणा आहे.\n\nघरगुती काळजी व प्रतिबंधात्मक उपाय:\n• चक्कर आल्यास लगेच बसा किंवा झोपा, खाली पडणे टाळा.\n• भरपूर पाणी, लिंबू पाणी किंवा ओआरएस (ORS) प्या.\n• झोपेतून किंवा बसल्यावरून अचानक जलद उठू नका, हळूहळू उभे राहा.\n• बेशुद्ध पडल्यासारखे वाटल्यास किंवा तोल गेल्यास तात्काळ डॉक्टरांशी संपर्क साधा.',
+  },
+  fatigue: {
+    en: 'Screening complete. Based on your symptoms, this appears to be a Low Risk mild physical fatigue or weakness.\n\nHome Care & Prevention:\n• Ensure 7-8 hours of sound sleep and avoid strenuous physical labor.\n• Eat nutrient-dense meals including fruits, lentils, and clean boiled water.\n• Sip electrolyte water or coconut water to replenish essential minerals.\n• If weakness is extreme or persists beyond a week, consult a PHC doctor.',
+    hi: 'स्क्रीनिंग पूरी हो गई है। आपके लक्षणों के अनुसार यह कम जोखिम (Low Risk) की सामान्य शारीरिक कमजोरी और थकान है।\n\nघरेलू देखभाल और बचाव के उपाय:\n• पर्याप्त 7-8 घंटे की नींद लें और भारी परिश्रम से बचें।\n• पोषक भोजन लें, जैसे दाल, मौसमी फल, दलिया और नारियल पानी।\n• शरीर में पानी की कमी न होने दें, ओआरएस या गुनगुना पानी पिएं।\n• यदि कमजोरी बहुत ज्यादा बढ़ जाए या कई दिनों तक बनी रहे, तो डॉक्टर से जांच कराएं।',
+    mr: 'तपासणी पूर्ण झाली आहे. प्राथमिक मूल्यांकनानुसार हा कमी जोखमीचा (Low Risk) सामान्य शारीरिक थकवा किंवा अशक्तपणा आहे.\n\nघरगुती काळजी व प्रतिबंधात्मक उपाय:\n• पुरेशी ७-८ तास शांत झोप घ्या आणि जड कामे करणे टाळा.\n• पौष्टिक आहार घ्या (ताजी फळे, डाळींची खिचडी, नारळ पाणी).\n• भरपूर पाणी व ओआरएस प्या जेणेकरून शरीरातील क्षार भरून निघतील.\n• जर अशक्तपणा खूप जास्त वाढला किंवा आठवड्यापेक्षा जास्त राहिला तर डॉक्टरांचा सल्ला घ्या.',
+  },
+  joint_pain: {
+    en: 'Screening complete. Based on your symptoms, this appears to be a Low Risk mild joint or body ache.\n\nHome Care & Prevention:\n• Rest the affected joints and avoid excessive strain.\n• Apply warm compress or gentle massage with warm oil.\n• Stay active with gentle stretches without overloading the joints.\n• If joints swell up severely or become hot, consult a clinician at your PHC.',
+    hi: 'स्क्रीनिंग पूरी हो गई है। आपके लक्षणों के अनुसार यह कम जोखिम (Low Risk) का सामान्य जोड़ों या बदन का दर्द है।\n\nघरेलू देखभाल और बचाव के उपाय:\n• प्रभावित जोड़ों को आराम दें और भारी वजन उठाने से बचें।\n• हल्के गुनगुने तेल से मालिश करें या गर्म पानी की सिकाई करें।\n• हल्के व्यायाम और खिंचाव करें, लंबे समय तक अकड़कर न बैठें।\n• यदि जोड़ों में लालिमा या अत्यधिक सूजन आए, तो प्राथमिक स्वास्थ्य केंद्र में दिखाएं।',
+    mr: 'तपासणी पूर्ण झाली आहे. प्राथमिक मूल्यांकनानुसार ही कमी जोखमीची (Low Risk) सामान्य सांधेदुखी किंवा अंगदुखी आहे.\n\nघरगुती काळजी व प्रतिबंधात्मक उपाय:\n• दुखणाऱ्या सांध्यांना आराम द्या आणि जास्त ताण देणे टाळा.\n• कोमट तेलाने हलका मसाज करा किंवा गरम पाण्याचा शेक द्या.\n• हलके व्यायाम करा, सांधे जास्त वेळ आखडून ठेवू नका.\n• सांध्यांवर खूप जास्त सूज किंवा उष्णता जाणवल्यास डॉक्टरांचा सल्ला घ्या.',
+  },
   default: {
     en: 'Screening complete. Based on your reported symptoms, this appears to be a Low Risk condition.\n\nHome Care & Prevention:\n• Ensure adequate rest and stay well hydrated with water, ORS, or warm broths.\n• Maintain good hand hygiene and eat fresh, light meals.\n• Monitor your health at home. Consult an on-duty clinician only if symptoms worsen.',
     hi: 'स्क्रीनिंग पूरी हो गई है। आपके द्वारा बताए गए लक्षणों के अनुसार यह कम जोखिम (Low Risk) की स्थिति है।\n\nघरेलू देखभाल और बचाव के उपाय:\n• भरपूर आराम करें और शरीर में पानी की कमी न होने दें (पानी, ओआरएस या नारियल पानी पिएं)।\n• स्वच्छता का ध्यान रखें और ताजा, सुपाच्य भोजन करें।\n• घर पर स्वास्थ्य का ध्यान रखें। यदि समस्या बढ़ती है तभी डॉक्टर से परामर्श लें।',
     mr: 'तपासणी पूर्ण झाली आहे. तुमच्या लक्षणांनुसार ही कमी जोखमीची (Low Risk) प्राथमिक स्थिती आहे.\n\nघरगुती काळजी व प्रतिबंधात्मक उपाय:\n• पुरेशी विश्रांती घ्या आणि शरीरात पाण्याची कमतरता भासू देऊ नका (पाणी, ओआरएस प्या).\n• स्वच्छता बाळगा आणि ताजा, हलका आहार घ्या.\n• घरातच काळजी घ्या. त्रास वाढल्यासच डॉक्टरांशी संपर्क साधा.',
   },
 };
+
+export interface DialogueLlmProviderConfig {
+  provider: 'grok' | 'groq';
+  apiKey: string;
+  baseUrl: string;
+  model: string;
+}
+
+export interface DialogueLlmResult {
+  intent: 'greeting_or_intro' | 'symptom_report' | 'answering_question' | 'correction_or_negation' | 'general_query' | 'unclear_or_unrelated' | 'ready_for_assessment';
+  patient_name: string | null;
+  new_positive_symptoms: string[];
+  new_negated_symptoms: string[];
+  duration: string | null;
+  question_type: 'duration' | 'severity' | 'yes_no';
+  conversational_reply: string | null;
+  follow_up_question: string | null;
+  is_ready_for_assessment: boolean;
+}
 
 export class VoiceScreeningService {
   /**
@@ -404,7 +599,48 @@ export class VoiceScreeningService {
   }
 
   /**
-   * Extracts symptoms and distinguishes positive vs negated mentions.
+   * Extracts duration from colloquial patient descriptions in Hindi, Marathi, and English.
+   * Examples:
+   * - "मुझे दो दिन से बुखार है" -> "दो दिन से"
+   * - "मला दोन दिवसांपासून ताप आहे" -> "दोन दिवसांपासून"
+   * - "I have had a fever for two days" -> "two days"
+   */
+  public extractDuration(
+    text: string,
+    _language: 'en' | 'hi' | 'mr'
+  ): string | null {
+    const trimmed = text.trim();
+
+    // Hindi duration patterns
+    const hiDuration =
+      trimmed.match(/(?:(\d+|एक|दो|तीन|चार|पांच|छह|सात|आठ|दस)\s*(?:दिन|घंटे|घंटों|हफ्ते|हफ्तों|महीने|महीनों)\s*से)/i) ||
+      trimmed.match(/(?:कल\s*से|परसों\s*से|आज\s*से|सुबह\s*से|रात\s*से)/i);
+    if (hiDuration) {
+      return hiDuration[0].trim();
+    }
+
+    // Marathi duration patterns
+    const mrDuration =
+      trimmed.match(/(?:(\d+|एक|दोन|तीन|चार|पाच|सहा|सात|आठ|दहा)\s*(?:दिवसांपासून|दिवस|तासांपासून|तास|आठवड्यांपासून|आठवडे|महिन्यांपासून)\s*(?:आहे|झाले)?)/i) ||
+      trimmed.match(/(?:कालपासून|परवापासून|आजपासून|सकाळपासून|रात्रीपासून)/i);
+    if (mrDuration) {
+      return mrDuration[0].trim();
+    }
+
+    // English duration patterns
+    const enDuration =
+      trimmed.match(/(?:(?:for|since)\s+(\d+|one|two|three|four|five|six|seven|a few|couple of)\s+(?:days?|hours?|weeks?|months?))/i) ||
+      trimmed.match(/(?:since\s+(?:yesterday|today|this\s*morning|last\s*night))/i);
+    if (enDuration) {
+      return enDuration[0].trim();
+    }
+
+    return null;
+  }
+
+  /**
+   * Extracts symptoms and distinguishes positive vs negated mentions using colloquial regex patterns
+   * and vocabulary dictionaries.
    */
   public extractSymptomsWithPolarity(
     text: string,
@@ -414,16 +650,45 @@ export class VoiceScreeningService {
     const positive: Set<string> = new Set();
     const negated: Set<string> = new Set();
 
-    const clauses = lower.split(/[,;.\n]|(?:\b(?:but|only|except|however|पण|परंतु|मात्र|लेकिन|मगर|किंतु)\b)/i);
+    // Split into clauses across punctuation and contrastive conjunctions (but, however, लेकिन, पण, etc.)
+    const clauses = lower.split(/[,;.\n।]|(?:\s+(?:but|only|except|however|पण|परंतु|मात्र|तरी|पण\s+मात्र|लेकिन|मगर|किंतु|परन्तु)\s+)/i);
 
-    const prefixNegationRegex = /\b(?:do\s*not\s*have|don't\s*have|not\s*having|no|not|without|never|नाही|नाहीये|नहीं|नहीं\s*है)\b/i;
-    const suffixNegationRegex = /\b(?:नाही|नाहीये|होत\s*नाही|नव्हता|नाहीत|नसून|नहीं|नहीं\s*है)\b/i;
+    const prefixNegationRegex =
+      /(?:^|\s)(?:do\s*not\s*have|don't\s*have|not\s*having|no|not|without|never|नाही|नाहीये|नाहीत|नसून|अजिबात\s*नाही|नाहीच|नहीं|नहीं\s*है|बिल्कुल\s*नहीं)(?:$|\s|[।,;.!?])/i;
+    const suffixNegationRegex =
+      /(?:^|\s)(?:नाही|नाहीये|होत\s*नाही|नव्हता|नाहीत|नसून|अजिबात\s*नाही|नाहीच|नाही\s*हो|नहीं|नहीं\s*है|बिल्कुल\s*नहीं|नहीं\s*हो\s*रहा|नहीं\s*आ\s*रहा)(?:$|\s|[।,;.!?])/i;
 
     for (const clause of clauses) {
       const trimmedClause = clause.trim();
       if (!trimmedClause) continue;
 
+      const matchedSymptomsInClause = new Set<string>();
+
+      // 1. High-precision colloquial regex pattern matching (handles Hindi/Marathi inflections)
+      for (const item of COLLOQUIAL_SYMPTOM_PATTERNS) {
+        for (const pattern of item.patterns) {
+          const match = pattern.exec(trimmedClause);
+          if (match && match.index !== undefined) {
+            const before = trimmedClause.slice(0, match.index);
+            const after = trimmedClause.slice(match.index + match[0].length);
+
+            const isNegated =
+              prefixNegationRegex.test(before) || suffixNegationRegex.test(after);
+
+            if (isNegated) {
+              negated.add(item.symptomId);
+            } else {
+              positive.add(item.symptomId);
+            }
+            matchedSymptomsInClause.add(item.symptomId);
+            break;
+          }
+        }
+      }
+
+      // 2. Lexicon keyword fallback for terms not matched by regex patterns
       for (const [symptomId, terms] of Object.entries(SYMPTOM_LEXICON)) {
+        if (matchedSymptomsInClause.has(symptomId)) continue;
         const allTerms = [...terms.en, ...terms.hi, ...terms.mr];
 
         for (const term of allTerms) {
@@ -448,6 +713,7 @@ export class VoiceScreeningService {
       }
     }
 
+    // Explicit negation overrides positive in case of cross-clause conflicts
     for (const neg of negated) {
       positive.delete(neg);
     }
@@ -589,36 +855,37 @@ export class VoiceScreeningService {
       Array.from(askedSet).some((q) => q.includes('redflag')) ||
       answeredKeys.some((k) => k.includes('redflag'));
 
-    // 4. Query Groq LLM to Drive the Dialogue Naturally
+    // 4. Query Dialogue LLM (Grok / Groq) to Drive Dialogue Naturally
     let llmSuggestedFollowUp: string | null = null;
     let llmConversationalReply: string | null = null;
     let llmIntent: string | null = null;
-    let llmDurationExtracted: string | null = null;
+    const deterministicDuration = this.extractDuration(text, lang);
+    let llmDurationExtracted: string | null = deterministicDuration;
     let llmQuestionType: 'duration' | 'severity' | 'yes_no' = 'yes_no';
     let llmReadyForAssessment = false;
 
-    if (env.GROQ_API_KEY) {
-      const groqResult = await this.queryGroqDialogue(
+    const activeProvider = this.getActiveDialogueProvider();
+    if (activeProvider) {
+      const llmResult = await this.queryLlmDialogue(
         text,
         lang,
         Array.from(currentPositive),
         Array.from(currentNegated),
-        patientName || null,
         req.conversationHistory || []
       );
 
-      if (groqResult) {
-        if (groqResult.patient_name && !patientName) {
-          patientName = groqResult.patient_name;
+      if (llmResult) {
+        if (llmResult.patient_name && !patientName) {
+          patientName = llmResult.patient_name;
         }
-        if (groqResult.new_positive_symptoms && groqResult.new_positive_symptoms.length > 0) {
-          groqResult.new_positive_symptoms.forEach((s) => {
+        if (llmResult.new_positive_symptoms && llmResult.new_positive_symptoms.length > 0) {
+          llmResult.new_positive_symptoms.forEach((s: string) => {
             currentPositive.add(s);
             currentNegated.delete(s);
           });
         }
-        if (groqResult.new_negated_symptoms && groqResult.new_negated_symptoms.length > 0) {
-          groqResult.new_negated_symptoms.forEach((s) => {
+        if (llmResult.new_negated_symptoms && llmResult.new_negated_symptoms.length > 0) {
+          llmResult.new_negated_symptoms.forEach((s: string) => {
             if (isAnsweringFollowUp && isDirectNegationAnswer && (req.currentSymptoms || []).includes(s)) {
               return;
             }
@@ -626,16 +893,16 @@ export class VoiceScreeningService {
             currentPositive.delete(s);
           });
         }
-        if (groqResult.duration) {
-          llmDurationExtracted = groqResult.duration;
+        if (llmResult.duration) {
+          llmDurationExtracted = llmResult.duration;
         }
-        llmSuggestedFollowUp = groqResult.follow_up_question;
-        llmConversationalReply = groqResult.conversational_reply;
-        llmIntent = groqResult.intent;
-        if (groqResult.question_type) {
-          llmQuestionType = groqResult.question_type;
+        llmSuggestedFollowUp = llmResult.follow_up_question;
+        llmConversationalReply = llmResult.conversational_reply;
+        llmIntent = llmResult.intent;
+        if (llmResult.question_type) {
+          llmQuestionType = llmResult.question_type;
         }
-        llmReadyForAssessment = Boolean(groqResult.is_ready_for_assessment);
+        llmReadyForAssessment = Boolean(llmResult.is_ready_for_assessment);
       }
     }
 
@@ -650,16 +917,16 @@ export class VoiceScreeningService {
       let greetingReply = '';
       if (lang === 'mr') {
         greetingReply = patientName
-          ? `नमस्कार ${patientName}जी! मी तुमचा हेल्थसेतू तपासणी सहाय्यक आहे. तुम्हाला सध्या कोणता त्रास किंवा कोणती लक्षणे जाणवत आहेत ते सांगा.`
-          : 'नमस्कार! मी तुमचा हेल्थसेतू तपासणी सहाय्यक आहे. तुम्हाला सध्या काय त्रास होत आहे ते कृपया सांगा किंवा खाली टाईप करा.';
+          ? `नमस्कार ${patientName}जी! मी तुमचा स्वास्थसेतू तपासणी सहाय्यक आहे. तुम्हाला सध्या कोणता त्रास किंवा कोणती लक्षणे जाणवत आहेत ते सांगा.`
+          : 'नमस्कार! मी तुमचा स्वास्थसेतू तपासणी सहाय्यक आहे. तुम्हाला सध्या काय त्रास होत आहे ते कृपया सांगा किंवा खाली टाईप करा.';
       } else if (lang === 'hi') {
         greetingReply = patientName
-          ? `नमस्ते ${patientName}जी! मैं आपका हेल्थसेतु सहायक हूँ। कृपया बताएं कि आपको क्या तकलीफ या लक्षण महसूस हो रहे हैं।`
-          : 'नमस्ते! मैं आपका हेल्थसेतु सहायक हूँ। कृपया बताएं कि आपको क्या समस्या या तकलीफ हो रही है।';
+          ? `नमस्ते ${patientName}जी! मैं आपका स्वस्थसेतु सहायक हूँ। कृपया बताएं कि आपको क्या तकलीफ या लक्षण महसूस हो रहे हैं।`
+          : 'नमस्ते! मैं आपका स्वस्थसेतु सहायक हूँ। कृपया बताएं कि आपको क्या समस्या या तकलीफ हो रही है।';
       } else {
         greetingReply = patientName
-          ? `Hello ${patientName}! I am your HealthSetu screening assistant. Please describe what symptoms or health concerns you are experiencing.`
-          : 'Hello! I am your HealthSetu screening assistant. Please describe your health concern by voice or typing below.';
+          ? `Hello ${patientName}! I am your SwasthSetu screening assistant. Please describe what symptoms or health concerns you are experiencing.`
+          : 'Hello! I am your SwasthSetu screening assistant. Please describe your health concern by voice or typing below.';
       }
 
       return {
@@ -676,7 +943,7 @@ export class VoiceScreeningService {
         riskTier: 'LOW',
         recommendedSpecialty: 'General Physician',
         guidanceText: llmConversationalReply || greetingReply,
-        modelVersion: 'voice-dialogue-adaptive-v2',
+        modelVersion: activeProvider ? `${activeProvider.provider}-${activeProvider.model}` : 'voice-dialogue-adaptive-v2',
       };
     }
 
@@ -708,7 +975,7 @@ export class VoiceScreeningService {
         riskTier: 'LOW',
         recommendedSpecialty: 'General Physician',
         guidanceText: llmConversationalReply || generalReply,
-        modelVersion: 'voice-dialogue-adaptive-v2',
+        modelVersion: activeProvider ? `${activeProvider.provider}-${activeProvider.model}` : 'voice-dialogue-adaptive-v2',
       };
     }
 
@@ -788,19 +1055,16 @@ export class VoiceScreeningService {
         }
       }
 
-      // Guidance text carries Groq's conversational answer to any patient question
-      const defaultGuidance =
-        qType === 'duration'
-          ? (lang === 'mr'
-              ? 'कृपया त्रास कधीपासून सुरू आहे ते सांगा किंवा खालील पर्यायांमधून निवडा.'
-              : lang === 'hi'
-              ? 'कृपया बताएं कि यह समस्या कब से है या नीचे दिए गए विकल्पों में से चुनें।'
-              : 'Please indicate how long you have had this symptom or select an option below.')
-          : (lang === 'mr'
-              ? 'कृपया या लक्षणाबद्दल होय किंवा नाही असे सांगा.'
-              : lang === 'hi'
-              ? 'कृपया इस लक्षण के बारे में हां या ना में बताएं।'
-              : 'Please answer yes, no, or describe any additional details.');
+      // Guidance text carries LLM's conversational answer or empathetic localized acknowledgment of reported symptoms
+      const symptomDisplay = (SYMPTOM_DISPLAY_NAMES[primarySymptom] || SYMPTOM_DISPLAY_NAMES.default)[lang] || primarySymptom;
+      let defaultGuidance = '';
+      if (lang === 'mr') {
+        defaultGuidance = `मला समजले की तुम्हाला ${symptomDisplay}चा त्रास होत आहे. काळजी करू नका, आपण योग्य प्राथमिक तपासणी करू.`;
+      } else if (lang === 'hi') {
+        defaultGuidance = `मैंने समझ लिया कि आपको ${symptomDisplay} की समस्या हो रही है। घबराएं नहीं, हम आपकी सही जांच कर रहे हैं।`;
+      } else {
+        defaultGuidance = `I have noted that you are experiencing ${symptomDisplay}. Do not worry, let us complete a quick screening.`;
+      }
 
       return {
         sessionId,
@@ -821,7 +1085,7 @@ export class VoiceScreeningService {
         riskTier: 'LOW',
         recommendedSpecialty: 'General Physician',
         guidanceText: llmConversationalReply || defaultGuidance,
-        modelVersion: env.GROQ_API_KEY ? 'groq-llama-3.3-70b' : 'voice-dialogue-adaptive-v2',
+        modelVersion: activeProvider ? `${activeProvider.provider}-${activeProvider.model}` : 'voice-dialogue-adaptive-v2',
       };
     }
 
@@ -890,7 +1154,7 @@ export class VoiceScreeningService {
 
   /**
    * Generates empathetic, practical home-care tips and prevention measures for LOW-RISK patients.
-   * Utilizes Groq LLM (llama-3.3-70b-versatile) with reliable multi-lingual fallback.
+   * Utilizes active Dialogue LLM (Grok or Groq) with reliable multi-lingual fallback to localized dictionaries.
    */
   public async generateLowRiskHomeCareTips(
     symptoms: string[],
@@ -901,24 +1165,26 @@ export class VoiceScreeningService {
     const fallbackObj = LOW_RISK_HOME_CARE_TIPS[primary] || LOW_RISK_HOME_CARE_TIPS.default;
     const fallbackText = fallbackObj[lang] || fallbackObj.en;
 
-    if (!env.GROQ_API_KEY) return fallbackText;
+    const providerConfig = this.getActiveDialogueProvider();
+    if (!providerConfig) return fallbackText;
 
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 4500);
 
-      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      const endpoint = `${providerConfig.baseUrl.replace(/\/+$/, '')}/chat/completions`;
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${env.GROQ_API_KEY}`,
+          Authorization: `Bearer ${providerConfig.apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
+          model: providerConfig.model,
           messages: [
             {
               role: 'system',
-              content: `You are HealthSetu, an empathetic rural healthcare AI screening assistant in India.
+              content: `You are SwasthSetu, an empathetic rural healthcare AI screening assistant in India.
 Language: ${lang} (mr = Marathi, hi = Hindi, en = English).
 The patient has undergone health screening and their symptoms indicate a LOW-RISK, mild condition.
 Patient symptoms: [${symptoms.join(', ')}]. Patient Name: ${patientName || 'Friend'}.
@@ -941,6 +1207,47 @@ Generate supportive, practical home-care and prevention advice in ${lang}:
       });
 
       clearTimeout(timeoutId);
+      if (!res.ok && providerConfig.provider === 'grok' && env.GROQ_API_KEY) {
+        try {
+          const failoverRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${env.GROQ_API_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: env.GROQ_MODEL || 'qwen/qwen3.8-27b',
+              messages: [
+                {
+                  role: 'system',
+                  content: `You are SwasthSetu, an empathetic rural healthcare AI screening assistant in India.
+Language: ${lang} (mr = Marathi, hi = Hindi, en = English).
+The patient has undergone health screening and their symptoms indicate a LOW-RISK, mild condition.
+Patient symptoms: [${symptoms.join(', ')}]. Patient Name: ${patientName || 'Friend'}.
+
+Generate supportive, practical home-care and prevention advice in ${lang}:
+1. Clearly state that the screening is complete and the assessment shows a mild, Low-Risk condition.
+2. Provide 3-4 bullet points of simple home remedies, prevention tips, hydration (ORS/boiled water), rest, and nutrition.
+3. Crucial Rule: DO NOT tell the patient to urgently consult a doctor or book an appointment. Only advise consulting a doctor if symptoms worsen, don't improve after 3-4 days, or red flags appear.
+4. Keep the tone warm, clear, and reassuring. Respond with plain text only.`,
+                },
+                {
+                  role: 'user',
+                  content: `Generate Low Risk home-care tips for ${symptoms.join(', ')} in ${lang}.`,
+                },
+              ],
+              temperature: 0.25,
+              max_tokens: 380,
+            }),
+          });
+          if (failoverRes.ok) {
+            const failoverJson = (await failoverRes.json()) as any;
+            const failoverContent = failoverJson.choices?.[0]?.message?.content?.trim();
+            if (failoverContent) return failoverContent;
+          }
+        } catch {}
+      }
+
       if (!res.ok) return fallbackText;
       const json = (await res.json()) as any;
       const content = json.choices?.[0]?.message?.content?.trim();
@@ -1034,69 +1341,148 @@ Generate supportive, practical home-care and prevention advice in ${lang}:
   }
 
   /**
-   * Queries Groq LLM (llama-3.3-70b-versatile) to drive dialogue naturally,
-   * answer any patient health questions logically, adapt to newly mentioned symptoms,
-   * and form context-aware screening questions.
+   * Resolves the active dialogue LLM provider based on environment configuration and available keys.
+   * Prioritizes Grok (xAI) when configured or in 'auto' mode with GROK_API_KEY present.
    */
-  private async queryGroqDialogue(
+  public getActiveDialogueProvider(): DialogueLlmProviderConfig | null {
+    const preference = env.DIALOGUE_LLM_PROVIDER;
+
+    if (preference === 'none') {
+      return null;
+    }
+
+    if (preference === 'grok') {
+      if (!env.GROK_API_KEY) {
+        logger.warn('DIALOGUE_LLM_PROVIDER is configured as "grok" but GROK_API_KEY is not set; falling back to deterministic state machine');
+        return null;
+      }
+      return {
+        provider: 'grok',
+        apiKey: env.GROK_API_KEY,
+        baseUrl: env.GROK_API_URL || 'https://api.x.ai/v1',
+        model: env.GROK_MODEL || 'grok-2-mini',
+      };
+    }
+
+    if (preference === 'groq') {
+      if (!env.GROQ_API_KEY) {
+        logger.warn('DIALOGUE_LLM_PROVIDER is configured as "groq" but GROQ_API_KEY is not set; falling back to deterministic state machine');
+        return null;
+      }
+      return {
+        provider: 'groq',
+        apiKey: env.GROQ_API_KEY,
+        baseUrl: 'https://api.groq.com/openai/v1',
+        model: 'llama-3.3-70b-versatile',
+      };
+    }
+
+    // Auto resolution: prefer Grok if GROK_API_KEY is present, else fall back to Groq if GROQ_API_KEY is present
+    if (env.GROK_API_KEY) {
+      return {
+        provider: 'grok',
+        apiKey: env.GROK_API_KEY,
+        baseUrl: env.GROK_API_URL || 'https://api.x.ai/v1',
+        model: env.GROK_MODEL || 'grok-2-mini',
+      };
+    }
+
+    if (env.GROQ_API_KEY) {
+      return {
+        provider: 'groq',
+        apiKey: env.GROQ_API_KEY,
+        baseUrl: 'https://api.groq.com/openai/v1',
+        model: 'llama-3.3-70b-versatile',
+      };
+    }
+
+    return null;
+  }
+
+  /**
+   * Queries the active Dialogue LLM (Grok or Groq) to drive dialogue naturally,
+   * answer patient health questions, adapt to newly mentioned symptoms,
+   * and form context-aware screening questions in Marathi, Hindi, or English.
+   *
+   * Medical Safety & Privacy:
+   * 1. Strips PII (phone numbers, emails) before transmission.
+   * 2. Never passes patient names or village codes to external LLMs.
+   * 3. 5000ms bounded timeout with graceful fallback on 429, 5xx, or errors.
+   */
+  public async queryLlmDialogue(
     text: string,
     lang: 'en' | 'hi' | 'mr',
     currentSymptoms: string[],
     negatedSymptoms: string[],
-    patientName: string | null,
-    history: Array<{ role: 'user' | 'assistant'; text: string }>
-  ): Promise<{
-    intent: 'greeting_or_intro' | 'symptom_report' | 'answering_question' | 'correction_or_negation' | 'general_query' | 'unclear_or_unrelated' | 'ready_for_assessment';
-    patient_name: string | null;
-    new_positive_symptoms: string[];
-    new_negated_symptoms: string[];
-    duration: string | null;
-    question_type: 'duration' | 'severity' | 'yes_no';
-    conversational_reply: string | null;
-    follow_up_question: string | null;
-    is_ready_for_assessment: boolean;
-  } | null> {
-    if (!env.GROQ_API_KEY) return null;
+    history: Array<{ role: 'user' | 'assistant'; text: string }> = []
+  ): Promise<DialogueLlmResult | null> {
+    const providerConfig = this.getActiveDialogueProvider();
+    if (!providerConfig) return null;
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5500);
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-      const systemPrompt = `You are HealthSetu, an empathetic, intelligent clinical healthcare screening AI for rural India.
+      // Privacy: Sanitize input text and history to strip phone numbers and emails
+      const sanitizedText = text
+        .replace(/\b(?:\+91[- ]?)?[6-9]\d{9}\b/g, '[PHONE]')
+        .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[EMAIL]');
+
+      const sanitizedHistory = history.slice(-8).map((h) => ({
+        role: h.role,
+        content: h.text
+          .replace(/\b(?:\+91[- ]?)?[6-9]\d{9}\b/g, '[PHONE]')
+          .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[EMAIL]'),
+      }));
+
+      const systemPrompt = `You are SwasthSetu, an empathetic, intelligent clinical healthcare screening assistant for rural India.
 Language: ${lang} (mr = Marathi, hi = Hindi, en = English). All your generated text and questions MUST be in ${lang}.
 
 Clinical Objective & Responsibilities:
 1. DRIVE THE DIALOGUE NATURALLY:
-   Do NOT output rigid or robotic boilerplate. Talk like an experienced, warm, attentive clinician.
+   - Talk like an experienced, warm, attentive clinician speaking to a rural patient.
+   - Use simple, culturally resonant language in ${lang}. Avoid complex medical jargon or clinical codes.
+   - For Marathi (mr): Use natural spoken Marathi (e.g. "तुम्हाला ताप किती दिवसांपासून आहे?", "अंगात कणकण किंवा थंडी वाजतेय का?", "काळजी करू नका, आपण योग्य सल्ला घेऊ.").
+   - For Hindi (hi): Use simple, warm Hindi (e.g. "आपको बुखार कितने दिनों से है?", "क्या ठंड लग रही है या कमजोरी महसूस हो रही है?").
+   - For English (en): Use clear, compassionate English.
 
 2. LOGICALLY ANSWER ANY PATIENT QUESTION:
-   If the patient asks ANY question (e.g., "Can I take paracetamol?", "Why is my chest feeling tight?", "What should I eat?", "Is it serious?", "Cold water or warm water?", "Will I be okay?"):
-   - Provide a clear, scientifically accurate, reassuring answer in "conversational_reply" in ${lang}.
-   - You may mention standard supportive home care (rest, hydration, ORS, standard fever relief like paracetamol) while reminding them only a qualified doctor prescribes medications.
-   - If the question is anxious or unusual, address it calmly and logically.
+   - If the patient asks ANY question (e.g. home care, paracetamol, drinking warm water, resting, dietary advice):
+     * Provide a clear, reassuring, medically sound answer in "conversational_reply" in ${lang}.
+     * Mention standard supportive care (rest, hydration, ORS, warm fluids).
+     * DO NOT prescribe specific drug dosages or claim diagnostic certainty.
+     * Always remind them that definitive diagnosis and treatment require a qualified doctor.
 
-3. ADAPT DYNAMICALLY TO ALL REPORTED SYMPTOMS:
-   - Identify ANY mentioned symptoms: fever, cough, headache, chest_discomfort, vomiting, nausea, diarrhea, joint_pain, body_ache, skin_rash, fatigue, dizziness, throat_pain, stomach_ache, breathlessness.
-   - Put newly confirmed symptoms into "new_positive_symptoms".
-   - Put explicitly negated symptoms into "new_negated_symptoms" (e.g. "I don't have fever" -> "fever").
-   - Follow-up check: If patient is answering "No" / "नाही" / "नहीं" to a question about a complication or warning sign (like chills, vomiting, or chest pain), DO NOT put their existing confirmed symptoms into "new_negated_symptoms"! Set intent to "answering_question".
+3. ADAPT DYNAMICALLY & EXTRACT SYMPTOMS:
+   - Recognize colloquial symptom descriptions:
+     * Marathi: कंबरदुखी / कंबरेत दुखणे (back_pain), खोकला (cough), ताप / कणकण (fever), डोकं दुखणे (headache), चक्कर / भोवळ (dizziness), अशक्तपणा / थकवा (fatigue), छातीत दुखणे / भरून येणे (chest_discomfort), उलटी / मळमळ (vomiting/nausea), पोटदुखी (stomach_ache), जुलाब (diarrhea), दम लागणे / श्वास त्रास (breathlessness), सांधेदुखी / अंगदुखी (joint_pain).
+     * Hindi: कमर दर्द / कमर में दर्द (back_pain), सिर दर्द (headache), बुखार / हरारत (fever), खांसी (cough), चक्कर आना / चक्कर (dizziness), कमजोरी / थकान (fatigue), सीने में दर्द (chest_discomfort), उल्टी / जी मिचलाना (vomiting/nausea), पेट दर्द (stomach_ache), दस्त (diarrhea), सांस फूलना (breathlessness), जोड़ों का दर्द / बदन दर्द (joint_pain).
+     * English: back pain / lower back hurts (back_pain), headache (headache), fever (fever), cough (cough), dizziness / feeling dizzy (dizziness), weakness / fatigue (fatigue), nausea / vomiting (vomiting), diarrhea (diarrhea), joint pain (joint_pain).
+   - Put newly identified positive symptoms into "new_positive_symptoms" as lowercase standardized keys (e.g., back_pain, fever, cough, headache, dizziness, fatigue, joint_pain, chest_discomfort, vomiting, diarrhea, stomach_ache, throat_pain, skin_rash).
+   - Recognize explicitly negated symptoms separately:
+     * E.g. "मला ताप नाही" / "बुखार नहीं है" / "no fever" -> put "fever" into "new_negated_symptoms".
+     * E.g. "खोकला नाही" / "खांसी नहीं है" / "no cough" -> put "cough" into "new_negated_symptoms".
+   - CRITICAL NEGATION RULE: If the patient is answering "No" / "नाही" / "नहीं" to a specific follow-up question (e.g. checking for chest pain, chills, or vomiting), DO NOT negate their previously confirmed symptoms! Set intent to "answering_question" and only negate the specific symptom that was asked about.
 
-4. FORMULATE NATURAL QUESTIONS:
-   - In "follow_up_question", formulate a natural, empathetic, context-specific question in ${lang}.
-   - Adapt to what they just reported! If they just mentioned headache and chest discomfort, investigate the onset, radiation, or associated red flags.
-   - Set "question_type" to "duration" (if inquiring about timeline/onset), "severity" (if asking how mild or severe), or "yes_no" (if checking for red flags or specific symptoms).
-   - Do NOT ask duration if duration has already been shared.
+4. FORMULATE CONTEXT-SPECIFIC FOLLOW-UP QUESTIONS:
+   - In "follow_up_question", ask ONE concise, empathetic question based on what information is ACTUALLY missing.
+   - If duration is not yet known, ask duration: set "question_type" to "duration".
+   - If red flags or associated symptoms are uninvestigated, ask a yes/no question: set "question_type" to "yes_no".
+   - If assessing symptom severity or progression: set "question_type" to "severity".
+   - Do NOT ask duration if duration has already been mentioned in conversation history.
+   - Avoid repetitive questions.
 
-5. DIALOGUE COMPLETION / ASSESSMENT READINESS:
-   - When the conversation has gathered sufficient context (the main symptoms, duration/onset, and critical red flags have been explored, or if the patient says "that's all / nothing else / और कुछ नहीं / एवढेच आहे"),
-     set "is_ready_for_assessment" to true and "follow_up_question" to null.
-   - Otherwise, set "is_ready_for_assessment" to false and provide the next natural question.
+5. COMPLETION & ASSESSMENT READINESS:
+   - Set "is_ready_for_assessment" to true and "follow_up_question" to null when:
+     * Core symptoms, duration, and red flags have been addressed, OR
+     * The patient says they have nothing more to add ("एवढेच आहे", "और कुछ नहीं", "that is all", "nothing else").
+   - Otherwise, set "is_ready_for_assessment" to false and provide the next follow-up question.
 
-Output format STRICTLY in JSON:
+Output format STRICTLY in JSON without markdown fences:
 {
-  "intent": "greeting_or_intro" | "symptom_report" | "answering_question" | "general_query" | "correction_or_negation" | "ready_for_assessment",
-  "patient_name": "extracted name or null",
-  "conversational_reply": "Compassionate, natural answer to whatever the patient asked or said in ${lang}",
+  "intent": "greeting_or_intro" | "symptom_report" | "answering_question" | "general_query" | "correction_or_negation" | "unclear_or_unrelated" | "ready_for_assessment",
+  "patient_name": null,
+  "conversational_reply": "Natural answer to user's question or supportive acknowledgement in ${lang}, or null",
   "follow_up_question": "Natural clinical follow-up question in ${lang}, or null if ready for assessment",
   "question_type": "duration" | "severity" | "yes_no",
   "new_positive_symptoms": [],
@@ -1105,64 +1491,209 @@ Output format STRICTLY in JSON:
   "is_ready_for_assessment": false
 }`;
 
-      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${env.GROQ_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            ...history.slice(-8).map((h) => ({ role: h.role, content: h.text })),
-            {
-              role: 'user',
-              content: `Patient says: "${text}"\nCurrent confirmed symptoms: [${currentSymptoms.join(
-                ', '
-              )}]\nNegated symptoms: [${negatedSymptoms.join(', ')}]\nKnown Patient Name: ${
-                patientName || 'None'
-              }`,
-            },
-          ],
-          temperature: 0.2,
-          response_format: { type: 'json_object' },
-        }),
-        signal: controller.signal,
-      });
+      let res: Response | null = null;
+      try {
+        const endpoint = `${providerConfig.baseUrl.replace(/\/+$/, '')}/chat/completions`;
+        res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${providerConfig.apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: providerConfig.model,
+            messages: [
+              { role: 'system', content: systemPrompt },
+              ...sanitizedHistory,
+              {
+                role: 'user',
+                content: `User utterance: "${sanitizedText}"\nConfirmed symptoms so far: [${currentSymptoms.join(
+                  ', '
+                )}]\nNegated symptoms so far: [${negatedSymptoms.join(', ')}]`,
+              },
+            ],
+            temperature: 0.2,
+            max_tokens: 400,
+            response_format: { type: 'json_object' },
+          }),
+          signal: controller.signal,
+        });
+      } catch (primaryErr: any) {
+        logger.warn({ provider: providerConfig.provider, err: primaryErr?.message }, 'Primary dialogue provider request failed');
+      }
 
       clearTimeout(timeoutId);
 
-      if (!res.ok) {
-        logger.warn({ status: res.status }, 'Groq LLM returned non-200; falling back to local state machine');
+      // Automatic secondary failover: If Grok is unavailable (e.g. 403 credit exhaustion, 429 rate limit, 5xx)
+      // and Groq is configured with a key in auto or grok mode, failover immediately to Groq!
+      if (
+        (!res || !res.ok) &&
+        providerConfig.provider === 'grok' &&
+        env.GROQ_API_KEY &&
+        (env.DIALOGUE_LLM_PROVIDER === 'auto' || env.DIALOGUE_LLM_PROVIDER === 'grok')
+      ) {
+        logger.info(
+          { grokStatus: res?.status || 'unavailable' },
+          'Grok API returned non-OK status; automatically failing over to Groq dialogue provider'
+        );
+        try {
+          const failoverController = new AbortController();
+          const failoverTimeout = setTimeout(() => failoverController.abort(), 4000);
+          res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${env.GROQ_API_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: env.GROQ_MODEL || 'qwen/qwen3.8-27b',
+              messages: [
+                { role: 'system', content: systemPrompt },
+                ...sanitizedHistory,
+                {
+                  role: 'user',
+                  content: `User utterance: "${sanitizedText}"\nConfirmed symptoms so far: [${currentSymptoms.join(
+                    ', '
+                  )}]\nNegated symptoms so far: [${negatedSymptoms.join(', ')}]`,
+                },
+              ],
+              temperature: 0.2,
+              max_tokens: 400,
+              response_format: { type: 'json_object' },
+            }),
+            signal: failoverController.signal,
+          });
+          clearTimeout(failoverTimeout);
+        } catch (failoverErr: any) {
+          logger.warn({ err: failoverErr?.message }, 'Failover to Groq dialogue provider also failed');
+        }
+      }
+
+      if (!res || !res.ok) {
+        if (res && res.status === 429) {
+          logger.warn(
+            { provider: providerConfig.provider, status: 429 },
+            'Dialogue LLM rate limit encountered (HTTP 429); falling back to deterministic state machine'
+          );
+        } else {
+          logger.warn(
+            { provider: providerConfig.provider, status: res?.status },
+            'Dialogue LLM returned non-200 error; falling back to deterministic state machine'
+          );
+        }
         return null;
       }
 
       const json = (await res.json()) as any;
-      const content = json.choices?.[0]?.message?.content;
-      if (!content) return null;
+      const rawContent = json.choices?.[0]?.message?.content;
+      if (!rawContent || typeof rawContent !== 'string') {
+        logger.warn({ provider: providerConfig.provider }, 'Dialogue LLM returned empty content; falling back');
+        return null;
+      }
 
-      const parsed = JSON.parse(content);
+      let cleanJson = rawContent.trim();
+      if (cleanJson.startsWith('```')) {
+        cleanJson = cleanJson.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+      }
+
+      let parsed: any = null;
+      try {
+        parsed = JSON.parse(cleanJson);
+      } catch {
+        const firstBrace = cleanJson.indexOf('{');
+        const lastBrace = cleanJson.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace > firstBrace) {
+          try {
+            parsed = JSON.parse(cleanJson.substring(firstBrace, lastBrace + 1));
+          } catch {
+            logger.warn({ provider: providerConfig.provider }, 'Failed to parse JSON substring from LLM response');
+            return null;
+          }
+        } else {
+          logger.warn({ provider: providerConfig.provider }, 'No valid JSON object detected in LLM response');
+          return null;
+        }
+      }
+
+      if (!parsed || typeof parsed !== 'object') {
+        return null;
+      }
+
+      const validIntents = [
+        'greeting_or_intro',
+        'symptom_report',
+        'answering_question',
+        'correction_or_negation',
+        'general_query',
+        'unclear_or_unrelated',
+        'ready_for_assessment',
+      ];
+      const intent = validIntents.includes(parsed.intent) ? parsed.intent : 'symptom_report';
+
       const qType: 'duration' | 'severity' | 'yes_no' =
         parsed.question_type === 'duration' || parsed.question_type === 'severity'
           ? parsed.question_type
           : 'yes_no';
 
+      const sanitizeSymptoms = (arr: any): string[] => {
+        if (!Array.isArray(arr)) return [];
+        return arr
+          .filter((item) => typeof item === 'string')
+          .map((item) => item.trim().toLowerCase().replace(/\s+/g, '_'))
+          .filter((item) => item.length > 0);
+      };
+
       return {
-        intent: parsed.intent || 'symptom_report',
-        patient_name: parsed.patient_name || null,
-        new_positive_symptoms: Array.isArray(parsed.new_positive_symptoms) ? parsed.new_positive_symptoms : [],
-        new_negated_symptoms: Array.isArray(parsed.new_negated_symptoms) ? parsed.new_negated_symptoms : [],
-        duration: parsed.duration || null,
+        intent,
+        patient_name:
+          typeof parsed.patient_name === 'string' && parsed.patient_name.trim().length > 0
+            ? parsed.patient_name.trim()
+            : null,
+        new_positive_symptoms: sanitizeSymptoms(parsed.new_positive_symptoms),
+        new_negated_symptoms: sanitizeSymptoms(parsed.new_negated_symptoms),
+        duration:
+          typeof parsed.duration === 'string' && parsed.duration.trim().length > 0
+            ? parsed.duration.trim()
+            : null,
         question_type: qType,
-        conversational_reply: typeof parsed.conversational_reply === 'string' ? parsed.conversational_reply : null,
-        follow_up_question: typeof parsed.follow_up_question === 'string' ? parsed.follow_up_question : null,
+        conversational_reply:
+          typeof parsed.conversational_reply === 'string' && parsed.conversational_reply.trim().length > 0
+            ? parsed.conversational_reply.trim()
+            : null,
+        follow_up_question:
+          typeof parsed.follow_up_question === 'string' && parsed.follow_up_question.trim().length > 0
+            ? parsed.follow_up_question.trim()
+            : null,
         is_ready_for_assessment: Boolean(parsed.is_ready_for_assessment),
       };
     } catch (err: any) {
-      logger.warn({ err: err.message }, 'Failed to call Groq chat API; falling back to local state machine');
+      if (err?.name === 'AbortError') {
+        logger.warn(
+          { provider: providerConfig.provider },
+          'Dialogue LLM call timed out after 5000ms; falling back to deterministic state machine'
+        );
+      } else {
+        logger.warn(
+          { provider: providerConfig.provider, err: err?.message || String(err) },
+          'Failed to call Dialogue LLM API; falling back to deterministic state machine'
+        );
+      }
       return null;
     }
+  }
+
+  /**
+   * Backward-compatible alias for queryGroqDialogue delegating to queryLlmDialogue.
+   */
+  public async queryGroqDialogue(
+    text: string,
+    lang: 'en' | 'hi' | 'mr',
+    currentSymptoms: string[],
+    negatedSymptoms: string[],
+    _patientName: string | null,
+    history: Array<{ role: 'user' | 'assistant'; text: string }> = []
+  ): Promise<DialogueLlmResult | null> {
+    return this.queryLlmDialogue(text, lang, currentSymptoms, negatedSymptoms, history);
   }
 
   /**

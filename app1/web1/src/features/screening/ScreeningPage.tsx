@@ -234,7 +234,7 @@ const UI_STRINGS: Record<
     subtitle: 'Voice-First AI Health Assistant',
     privacy: 'Private & safe. Helps understand your symptoms; does not replace a clinician.',
     emergencyBanner: 'Medical Emergency? Call 108 immediately',
-    greeting: 'Hello! I am your HealthSetu screening assistant. Please describe your health concern by voice or typing below.',
+    greeting: 'Hello! I am your SwasthSetu screening assistant. Please describe your health concern by voice or typing below.',
     tapToSpeak: 'Tap and Speak',
     listening: 'Listening... speak now (tap to stop)',
     stopRecording: 'Stop Recording',
@@ -822,7 +822,7 @@ export const ScreeningPage: React.FC = () => {
         });
 
         const elapsed = Math.round(performance.now() - startTime);
-        console.log(`[HealthSetu AI] Dialogue turnaround: ${elapsed}ms`);
+        console.log(`[SwasthSetu AI] Dialogue turnaround: ${elapsed}ms`);
 
         // Urgent red flag check
         if (data.isEmergency) {
@@ -1005,27 +1005,27 @@ export const ScreeningPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FFF9F5] text-[#242424] flex flex-col font-sans">
       {/* Top Responsive Header */}
-      <header className="bg-slate-950/80 backdrop-blur-md border-b border-slate-800 px-3.5 sm:px-6 py-3 sticky top-0 z-30">
+      <header className="bg-white/95 backdrop-blur-md border-b border-[#F0E2D8] px-3.5 sm:px-6 py-3 sticky top-0 z-30 shadow-xs">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold shrink-0">
-              <Sparkles className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-xl bg-[#FFF0E6] text-[#F47738] flex items-center justify-center font-bold shrink-0">
+              <Sparkles className="w-4 h-4 text-[#F47738]" />
             </div>
             <div>
-              <h1 className="text-sm sm:text-base font-bold text-white leading-tight">{S.title}</h1>
-              <p className="text-[10px] sm:text-[11px] text-slate-400">{S.subtitle}</p>
+              <h1 className="text-sm sm:text-base font-bold text-[#242424] leading-tight">{S.title}</h1>
+              <p className="text-[10px] sm:text-[11px] text-[#6B7280]">{S.subtitle}</p>
             </div>
           </div>
 
           {/* Emergency 108 Direct Access Badge */}
           <a
             href="tel:108"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600/20 border border-rose-500/40 text-rose-300 text-xs font-bold hover:bg-rose-600/30 transition-all shrink-0 min-h-[38px]"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold hover:bg-rose-100 transition-all shrink-0 min-h-[38px]"
             title={S.emergencyBanner}
           >
-            <PhoneCall className="w-3.5 h-3.5 text-rose-400" />
+            <PhoneCall className="w-3.5 h-3.5 text-rose-600" />
             <span>108</span>
           </a>
         </div>
@@ -1039,42 +1039,42 @@ export const ScreeningPage: React.FC = () => {
             onClick={() => handleLanguageSwitch('mr')}
             className={`min-h-[44px] py-2 px-3 rounded-2xl text-xs font-bold transition-all cursor-pointer flex flex-col items-center justify-center ${
               selectedLanguage === 'mr'
-                ? 'bg-emerald-600 text-white shadow-md ring-2 ring-emerald-400/50 scale-[1.02]'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                ? 'bg-[#F47738] text-white shadow-xs ring-2 ring-[#FFF0E6] scale-[1.02]'
+                : 'bg-white text-[#6B7280] border border-[#F0E2D8] hover:bg-[#FFF0E6]'
             }`}
           >
             <span>मराठी</span>
-            <span className="text-[9px] font-normal opacity-75">Marathi</span>
+            <span className="text-[9px] font-normal opacity-85">Marathi</span>
           </button>
 
           <button
             onClick={() => handleLanguageSwitch('hi')}
             className={`min-h-[44px] py-2 px-3 rounded-2xl text-xs font-bold transition-all cursor-pointer flex flex-col items-center justify-center ${
               selectedLanguage === 'hi'
-                ? 'bg-emerald-600 text-white shadow-md ring-2 ring-emerald-400/50 scale-[1.02]'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                ? 'bg-[#F47738] text-white shadow-xs ring-2 ring-[#FFF0E6] scale-[1.02]'
+                : 'bg-white text-[#6B7280] border border-[#F0E2D8] hover:bg-[#FFF0E6]'
             }`}
           >
             <span>हिंदी</span>
-            <span className="text-[9px] font-normal opacity-75">Hindi</span>
+            <span className="text-[9px] font-normal opacity-85">Hindi</span>
           </button>
 
           <button
             onClick={() => handleLanguageSwitch('en')}
             className={`min-h-[44px] py-2 px-3 rounded-2xl text-xs font-bold transition-all cursor-pointer flex flex-col items-center justify-center ${
               selectedLanguage === 'en'
-                ? 'bg-emerald-600 text-white shadow-md ring-2 ring-emerald-400/50 scale-[1.02]'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                ? 'bg-[#F47738] text-white shadow-xs ring-2 ring-[#FFF0E6] scale-[1.02]'
+                : 'bg-white text-[#6B7280] border border-[#F0E2D8] hover:bg-[#FFF0E6]'
             }`}
           >
             <span>English</span>
-            <span className="text-[9px] font-normal opacity-75">English</span>
+            <span className="text-[9px] font-normal opacity-85">English</span>
           </button>
         </div>
 
         {/* Short, Honest Privacy Notice without Unsupported Claims */}
-        <div className="bg-slate-800/40 border border-slate-800 rounded-xl px-3 py-1.5 flex items-center gap-2 text-[11px] text-slate-400">
-          <Shield className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+        <div className="bg-[#FFF0E6]/60 border border-[#F0E2D8] rounded-xl px-3 py-1.5 flex items-center gap-2 text-[11px] text-[#6B7280]">
+          <Shield className="w-3.5 h-3.5 text-[#F47738] shrink-0" />
           <p className="leading-snug">{S.privacy}</p>
         </div>
 
@@ -1092,19 +1092,19 @@ export const ScreeningPage: React.FC = () => {
               <div
                 className={`max-w-[90%] rounded-2xl p-3.5 text-xs sm:text-sm leading-relaxed ${
                   msg.sender === 'user'
-                    ? 'bg-emerald-600 text-white rounded-br-xs shadow-sm'
-                    : 'bg-slate-800 border border-slate-700 text-slate-100 rounded-bl-xs shadow-sm'
+                    ? 'bg-[#F47738] text-white rounded-br-xs shadow-xs'
+                    : 'bg-white border border-[#F0E2D8] text-[#242424] rounded-bl-xs shadow-xs'
                 }`}
               >
                 <p className="whitespace-pre-wrap">{msg.text}</p>
 
                 {/* Assistant Controls: Stop Speaking / Replay */}
                 {msg.sender === 'assistant' && (
-                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-700/60">
+                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-[#F0E2D8]">
                     {isSpeaking && speakingMessageId === msg.id ? (
                       <button
                         onClick={handleStopSpeaking}
-                        className="px-2.5 py-1 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-all shadow-sm active:scale-95"
+                        className="px-2.5 py-1 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-all shadow-xs active:scale-95"
                       >
                         <VolumeX className="w-3 h-3" />
                         <span>{S.stopSpeaking}</span>
@@ -1112,10 +1112,10 @@ export const ScreeningPage: React.FC = () => {
                     ) : (
                       <button
                         onClick={() => handleReplayAudio(msg.text, msg.id)}
-                        className="px-2.5 py-1 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-[10px] font-semibold flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                        className="px-2.5 py-1 bg-[#FFF0E6] hover:bg-[#F0E2D8] text-[#D95D24] rounded-lg text-[10px] font-semibold flex items-center gap-1 cursor-pointer transition-all active:scale-95"
                         title={S.replayAudio}
                       >
-                        <Volume2 className="w-3 h-3 text-emerald-400" />
+                        <Volume2 className="w-3 h-3 text-[#F47738]" />
                         <span>{S.replayAudio}</span>
                       </button>
                     )}
@@ -1127,11 +1127,11 @@ export const ScreeningPage: React.FC = () => {
 
           {/* Processing / Transcribing Indicator */}
           {(state === 'processing' || state === 'transcribing') && (
-            <div className="flex items-center gap-2 p-3 bg-slate-800/80 border border-slate-700 rounded-2xl text-xs text-slate-300">
+            <div className="flex items-center gap-2 p-3 bg-white border border-[#F0E2D8] rounded-2xl text-xs text-[#6B7280] shadow-xs">
               <div className="flex gap-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" />
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce delay-100" />
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce delay-200" />
+                <span className="w-2 h-2 rounded-full bg-[#F47738] animate-bounce" />
+                <span className="w-2 h-2 rounded-full bg-[#F47738] animate-bounce delay-100" />
+                <span className="w-2 h-2 rounded-full bg-[#F47738] animate-bounce delay-200" />
               </div>
               <span>{S.processing}</span>
             </div>
@@ -1139,8 +1139,8 @@ export const ScreeningPage: React.FC = () => {
 
           {/* Error Message with Transcript Preservation */}
           {errorMessage && (
-            <div className="bg-rose-950/40 border border-rose-800/80 p-3 rounded-2xl text-xs text-rose-300 flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+            <div className="bg-rose-50 border border-rose-200 p-3 rounded-2xl text-xs text-rose-800 flex items-start gap-2 shadow-xs">
+              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p>{errorMessage}</p>
               </div>
@@ -1149,28 +1149,28 @@ export const ScreeningPage: React.FC = () => {
 
           {/* Dynamic Touch Targets for Follow-up Questions (Duration / Severity / Yes-No) */}
           {currentFollowUp && state !== 'processing' && (
-            <div className="bg-slate-800/90 border border-emerald-500/30 p-3.5 rounded-2xl flex flex-col gap-2 mt-1 shadow-md">
-              <span className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <HelpCircle className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="bg-white border border-[#F0E2D8] p-3.5 rounded-2xl flex flex-col gap-2 mt-1 shadow-xs">
+              <span className="text-xs font-semibold text-[#6B7280] flex items-center gap-1.5">
+                <HelpCircle className="w-3.5 h-3.5 text-[#F47738]" />
                 {S.quickAnswer}
               </span>
               {currentFollowUp.questionType === 'duration' ? (
                 <div className="grid grid-cols-3 gap-2">
                   <button
                     onClick={() => handleQuickAnswer('today', S.today)}
-                    className="min-h-[46px] px-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer text-center"
+                    className="min-h-[46px] px-2 bg-[#F47738] hover:bg-[#D95D24] active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer text-center"
                   >
                     {S.today}
                   </button>
                   <button
                     onClick={() => handleQuickAnswer('1-2_days', S.oneTwoDays)}
-                    className="min-h-[46px] px-2 bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                    className="min-h-[46px] px-2 bg-[#FFF9F5] hover:bg-[#FFF0E6] active:scale-95 text-[#242424] border border-[#F0E2D8] font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
                   >
                     {S.oneTwoDays}
                   </button>
                   <button
                     onClick={() => handleQuickAnswer('more_than_week', S.moreThanWeek)}
-                    className="min-h-[46px] px-2 bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                    className="min-h-[46px] px-2 bg-[#FFF9F5] hover:bg-[#FFF0E6] active:scale-95 text-[#242424] border border-[#F0E2D8] font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
                   >
                     {S.moreThanWeek}
                   </button>
@@ -1179,7 +1179,7 @@ export const ScreeningPage: React.FC = () => {
                 <div className="grid grid-cols-3 gap-2">
                   <button
                     onClick={() => handleQuickAnswer('mild', S.mild)}
-                    className="min-h-[46px] px-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer text-center"
+                    className="min-h-[46px] px-2 bg-[#F47738] hover:bg-[#D95D24] active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer text-center"
                   >
                     {S.mild}
                   </button>
@@ -1200,19 +1200,19 @@ export const ScreeningPage: React.FC = () => {
                 <div className="grid grid-cols-3 gap-2">
                   <button
                     onClick={() => handleQuickAnswer('yes', S.yes)}
-                    className="min-h-[46px] px-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer text-center"
+                    className="min-h-[46px] px-2 bg-[#F47738] hover:bg-[#D95D24] active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer text-center"
                   >
                     {S.yes}
                   </button>
                   <button
                     onClick={() => handleQuickAnswer('no', S.no)}
-                    className="min-h-[46px] px-2 bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                    className="min-h-[46px] px-2 bg-[#FFF9F5] hover:bg-[#FFF0E6] active:scale-95 text-[#242424] border border-[#F0E2D8] font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
                   >
                     {S.no}
                   </button>
                   <button
                     onClick={() => handleQuickAnswer('unknown', S.notSure)}
-                    className="min-h-[46px] px-2 bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                    className="min-h-[46px] px-2 bg-[#FFF9F5] hover:bg-[#FFF0E6] active:scale-95 text-[#242424] border border-[#F0E2D8] font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
                   >
                     {S.notSure}
                   </button>
@@ -1223,26 +1223,26 @@ export const ScreeningPage: React.FC = () => {
 
           {/* Final Screening Outcome Card */}
           {state === 'concluded' && screeningResult && (
-            <div className="bg-slate-800/95 border-2 border-emerald-500/50 rounded-3xl p-5 flex flex-col gap-3.5 shadow-2xl mt-1">
+            <div className="bg-white border-2 border-[#F0E2D8] rounded-3xl p-5 flex flex-col gap-3.5 shadow-sm mt-1">
               {/* Header with Title and Risk Tier Badge */}
-              <div className="flex items-center justify-between pb-2 border-b border-slate-700/80">
-                <div className="flex items-center gap-2 text-sm font-bold text-white">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+              <div className="flex items-center justify-between pb-2 border-b border-[#F0E2D8]">
+                <div className="flex items-center gap-2 text-sm font-bold text-[#242424]">
+                  <CheckCircle2 className="w-5 h-5 text-[#F47738] shrink-0" />
                   <span>{S.assessmentTitle}</span>
                 </div>
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-black tracking-wide flex items-center gap-1 ${
                     screeningResult.riskTier === 'HIGH'
-                      ? 'bg-rose-950 text-rose-300 border border-rose-600 shadow-sm'
+                      ? 'bg-rose-50 text-rose-700 border border-rose-300 shadow-xs'
                       : screeningResult.riskTier === 'MEDIUM'
-                      ? 'bg-amber-950 text-amber-300 border border-amber-600 shadow-sm'
-                      : 'bg-emerald-950 text-emerald-300 border border-emerald-500 shadow-sm'
+                      ? 'bg-amber-50 text-amber-800 border border-amber-300 shadow-xs'
+                      : 'bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-xs'
                   }`}
                 >
                   {screeningResult.riskTier === 'HIGH' ? (
-                    <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+                    <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
                   ) : (
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                   )}
                   <span>{screeningResult.riskTier} RISK</span>
                 </span>
@@ -1250,15 +1250,15 @@ export const ScreeningPage: React.FC = () => {
 
               {/* Reported & Negated Symptoms Chips */}
               {(currentSymptoms.length > 0 || negatedSymptoms.length > 0) && (
-                <div className="bg-slate-900/70 p-3 rounded-2xl border border-slate-700/80 text-xs">
-                  <span className="text-[11px] font-semibold text-slate-400 block mb-1.5">
+                <div className="bg-[#FFF9F5] p-3 rounded-2xl border border-[#F0E2D8] text-xs">
+                  <span className="text-[11px] font-semibold text-[#6B7280] block mb-1.5">
                     {S.reportedSymptoms}
                   </span>
                   <div className="flex flex-wrap gap-1.5">
                     {currentSymptoms.map((sym) => (
                       <span
                         key={sym}
-                        className="px-2.5 py-0.5 rounded-lg bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[11px] font-medium capitalize"
+                        className="px-2.5 py-0.5 rounded-lg bg-[#FFF0E6] border border-[#F0E2D8] text-[#D95D24] text-[11px] font-medium capitalize"
                       >
                         {sym.replace(/_/g, ' ')}
                       </span>
@@ -1266,7 +1266,7 @@ export const ScreeningPage: React.FC = () => {
                     {negatedSymptoms.map((sym) => (
                       <span
                         key={`neg-${sym}`}
-                        className="px-2.5 py-0.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-[11px] line-through"
+                        className="px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-400 text-[11px] line-through"
                       >
                         {sym.replace(/_/g, ' ')}
                       </span>
@@ -1276,25 +1276,25 @@ export const ScreeningPage: React.FC = () => {
               )}
 
               {/* Model Assessment & Clinical Triage Guidance */}
-              <div className="bg-slate-900/70 p-3.5 rounded-2xl border border-slate-700/80 text-xs flex flex-col gap-1.5">
+              <div className="bg-[#FFF9F5] p-3.5 rounded-2xl border border-[#F0E2D8] text-xs flex flex-col gap-1.5">
                 {screeningResult.candidateCategory ? (
                   <>
-                    <span className="text-[11px] font-semibold text-slate-400">
+                    <span className="text-[11px] font-semibold text-[#6B7280]">
                       ML Research Candidate:
                     </span>
-                    <span className="font-bold text-emerald-400 text-base">
+                    <span className="font-bold text-[#D95D24] text-base">
                       {screeningResult.candidateCategory}
                     </span>
-                    <p className="text-[10px] text-slate-400 mt-0.5 italic">
+                    <p className="text-[10px] text-[#6B7280] mt-0.5 italic">
                       {S.disclaimer}
                     </p>
                   </>
                 ) : (
                   <>
-                    <span className="text-[11px] font-semibold text-emerald-400">
+                    <span className="text-[11px] font-semibold text-[#D95D24]">
                       {S.clinicalTriage}
                     </span>
-                    <p className="text-xs text-slate-200 leading-relaxed">
+                    <p className="text-xs text-[#242424] leading-relaxed">
                       {screeningResult.guidanceText}
                     </p>
                   </>
@@ -1302,15 +1302,15 @@ export const ScreeningPage: React.FC = () => {
               </div>
 
               {/* Recommended Specialty & Audio Guidance Trigger */}
-              <div className="text-xs text-slate-200 flex items-center justify-between bg-slate-900/50 px-3.5 py-2.5 rounded-2xl border border-slate-700/70">
+              <div className="text-xs text-[#242424] flex items-center justify-between bg-[#FFF9F5] px-3.5 py-2.5 rounded-2xl border border-[#F0E2D8]">
                 <div className="flex items-center gap-2">
-                  <Stethoscope className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>{S.specialtyLabel} <strong className="text-white font-bold">{screeningResult.recommendedSpecialty}</strong></span>
+                  <Stethoscope className="w-4 h-4 text-[#F47738] shrink-0" />
+                  <span>{S.specialtyLabel} <strong className="text-[#242424] font-bold">{screeningResult.recommendedSpecialty}</strong></span>
                 </div>
                 {isSpeaking && (speakingMessageId === 'concluded' || (messages.length > 0 && messages[messages.length - 1]?.id === speakingMessageId)) ? (
                   <button
                     onClick={handleStopSpeaking}
-                    className="px-2.5 py-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-all shrink-0 active:scale-95 shadow-sm"
+                    className="px-2.5 py-1 bg-rose-600/90 hover:bg-rose-600 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-all shrink-0 active:scale-95 shadow-xs"
                   >
                     <VolumeX className="w-3 h-3" />
                     <span>{S.stopSpeaking}</span>
@@ -1318,10 +1318,10 @@ export const ScreeningPage: React.FC = () => {
                 ) : (
                   <button
                     onClick={() => handleReplayAudio(screeningResult.guidanceText, 'concluded')}
-                    className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-[10px] font-semibold flex items-center gap-1 cursor-pointer transition-all border border-slate-700 shrink-0 active:scale-95 shadow-sm"
+                    className="px-2.5 py-1 bg-[#FFF0E6] hover:bg-[#F0E2D8] text-[#D95D24] rounded-lg text-[10px] font-semibold flex items-center gap-1 cursor-pointer transition-all border border-[#F0E2D8] shrink-0 active:scale-95 shadow-xs"
                     title={S.replayAudio}
                   >
-                    <Volume2 className="w-3 h-3 text-emerald-400" />
+                    <Volume2 className="w-3 h-3 text-[#F47738]" />
                     <span>{S.replayAudio}</span>
                   </button>
                 )}
@@ -1331,7 +1331,7 @@ export const ScreeningPage: React.FC = () => {
               <div className="flex flex-col gap-2.5 pt-2">
                 <button
                   onClick={() => navigate('/consult/choose')}
-                  className="min-h-[48px] w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-bold text-xs sm:text-sm rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-lg transition-all"
+                  className="min-h-[48px] w-full py-3 px-4 bg-[#F47738] hover:bg-[#D95D24] active:scale-98 text-white font-bold text-xs sm:text-sm rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-all"
                 >
                   <Stethoscope className="w-4 h-4" />
                   <span>{S.consultDoctor}</span>
@@ -1339,15 +1339,15 @@ export const ScreeningPage: React.FC = () => {
 
                 <button
                   onClick={() => navigate('/facilities')}
-                  className="min-h-[46px] w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 active:scale-98 text-slate-200 font-bold text-xs rounded-2xl flex items-center justify-center gap-2 cursor-pointer border border-slate-700 transition-all"
+                  className="min-h-[46px] w-full py-2.5 px-4 bg-white hover:bg-[#FFF0E6] active:scale-98 text-[#242424] font-bold text-xs rounded-2xl flex items-center justify-center gap-2 cursor-pointer border border-[#F0E2D8] transition-all"
                 >
-                  <MapPin className="w-4 h-4 text-emerald-400" />
+                  <MapPin className="w-4 h-4 text-[#F47738]" />
                   <span>{S.findPhc}</span>
                 </button>
 
                 <button
                   onClick={handleResetScreening}
-                  className="w-full py-2 text-slate-400 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                  className="w-full py-2 text-[#6B7280] hover:text-[#242424] text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>{S.newScreening}</span>
@@ -1361,15 +1361,15 @@ export const ScreeningPage: React.FC = () => {
 
         {/* Interactive Input Dock: Unified & Positioned Right Next to Messages */}
         {state !== 'concluded' && (
-          <div className="bg-slate-800/90 border border-slate-700 rounded-3xl p-4 flex flex-col items-center gap-3 shadow-lg">
+          <div className="bg-white border border-[#F0E2D8] rounded-3xl p-4 flex flex-col items-center gap-3 shadow-xs">
             {/* Real-time recognized speech preview while listening */}
             {state === 'listening' && (
-              <div className="w-full bg-slate-900/95 border border-emerald-500/50 rounded-2xl p-3 flex flex-col items-center gap-1.5 text-center shadow-md animate-pulse">
-                <span className="text-[11px] text-emerald-400 font-bold flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <div className="w-full bg-[#FFF9F5] border border-[#F47738] rounded-2xl p-3 flex flex-col items-center gap-1.5 text-center shadow-xs animate-pulse">
+                <span className="text-[11px] text-[#D95D24] font-bold flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#F47738] animate-ping" />
                   {S.listening}
                 </span>
-                <p className="text-xs text-white font-medium italic max-h-16 overflow-y-auto px-2">
+                <p className="text-xs text-[#242424] font-medium italic max-h-16 overflow-y-auto px-2">
                   {transcript ? `"${transcript}"` : '...'}
                 </p>
               </div>
@@ -1377,14 +1377,14 @@ export const ScreeningPage: React.FC = () => {
 
             {/* Transcript Preview & Confirmation Box (Only if confirming or user clicked to edit) */}
             {(state === 'confirming' || isEditingTranscript) && (
-              <div className="w-full bg-slate-900 border border-slate-700 rounded-2xl p-3 flex flex-col gap-2">
-                <span className="text-[11px] font-semibold text-slate-300 flex items-center gap-1">
-                  <FileEdit className="w-3 h-3 text-emerald-400" />
+              <div className="w-full bg-[#FFF9F5] border border-[#F0E2D8] rounded-2xl p-3 flex flex-col gap-2">
+                <span className="text-[11px] font-semibold text-[#6B7280] flex items-center gap-1">
+                  <FileEdit className="w-3 h-3 text-[#F47738]" />
                   {S.reviewTranscript}
                 </span>
 
-                <div className="text-xs text-slate-100 bg-slate-950 p-2.5 rounded-xl border border-slate-800 min-h-[40px]">
-                  {transcript || textInput || <span className="text-slate-500 italic">No text recognized</span>}
+                <div className="text-xs text-[#242424] bg-white p-2.5 rounded-xl border border-[#F0E2D8] min-h-[40px]">
+                  {transcript || textInput || <span className="text-[#6B7280] italic">No text recognized</span>}
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 pt-1">
@@ -1393,7 +1393,7 @@ export const ScreeningPage: React.FC = () => {
                       setIsEditingTranscript(true);
                       setInputMode('text');
                     }}
-                    className="min-h-[44px] px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer"
+                    className="min-h-[44px] px-3 py-2 bg-white hover:bg-[#FFF0E6] text-[#242424] border border-[#F0E2D8] rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer"
                   >
                     <FileEdit className="w-3.5 h-3.5" />
                     <span>{S.editBtn}</span>
@@ -1402,7 +1402,7 @@ export const ScreeningPage: React.FC = () => {
                   <button
                     onClick={() => handleProcessSubmission(transcript || textInput)}
                     disabled={(!transcript && !textInput) || state === 'processing'}
-                    className="min-h-[44px] px-3 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer shadow-md"
+                    className="min-h-[44px] px-3 py-2 bg-[#F47738] hover:bg-[#D95D24] disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer shadow-xs"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>{S.continueBtn}</span>
@@ -1421,10 +1421,10 @@ export const ScreeningPage: React.FC = () => {
                   <button
                     onClick={handleToggleRecording}
                     disabled={state === 'processing'}
-                    className={`relative w-20 h-20 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-xl ${
+                    className={`relative w-20 h-20 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-md ${
                       state === 'listening'
                         ? 'bg-rose-600 text-white ring-4 ring-rose-400/40 scale-105'
-                        : 'bg-emerald-600 hover:bg-emerald-500 text-white hover:scale-105'
+                        : 'bg-[#F47738] hover:bg-[#D95D24] text-white hover:scale-105 shadow-[#F47738]/30'
                     }`}
                     aria-label={state === 'listening' ? S.stopRecording : S.tapToSpeak}
                   >
@@ -1432,7 +1432,7 @@ export const ScreeningPage: React.FC = () => {
                   </button>
                 </div>
 
-                <span className="text-xs font-bold text-slate-200 text-center">
+                <span className="text-xs font-bold text-[#242424] text-center">
                   {state === 'listening' ? S.listening : S.tapToSpeak}
                 </span>
 
@@ -1445,7 +1445,7 @@ export const ScreeningPage: React.FC = () => {
                     setState('idle');
                     setInputMode('text');
                   }}
-                  className="mt-1 min-h-[44px] w-full py-2.5 px-4 rounded-xl bg-slate-700/60 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all border border-slate-700"
+                  className="mt-1 min-h-[44px] w-full py-2.5 px-4 rounded-xl bg-[#FFF9F5] hover:bg-[#FFF0E6] text-[#6B7280] hover:text-[#242424] text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all border border-[#F0E2D8]"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
                   <span>{S.typeInstead}</span>
@@ -1467,12 +1467,12 @@ export const ScreeningPage: React.FC = () => {
                       }
                     }}
                     placeholder={S.typePlaceholder}
-                    className="flex-1 min-h-[46px] text-xs p-3 rounded-2xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+                    className="flex-1 min-h-[46px] text-xs p-3 rounded-2xl bg-white border border-[#F0E2D8] text-[#242424] placeholder-[#6B7280] focus:outline-hidden focus:ring-2 focus:ring-[#F47738]"
                   />
                   <button
                     onClick={() => handleProcessSubmission(textInput)}
                     disabled={!textInput.trim() || state === 'processing'}
-                    className="min-h-[46px] px-4 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-bold text-xs rounded-2xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shrink-0"
+                    className="min-h-[46px] px-4 bg-[#F47738] hover:bg-[#D95D24] disabled:opacity-40 text-white font-bold text-xs rounded-2xl flex items-center justify-center gap-1.5 cursor-pointer shadow-xs shrink-0"
                   >
                     <Send className="w-4 h-4" />
                     <span>{S.continueBtn}</span>
@@ -1482,7 +1482,7 @@ export const ScreeningPage: React.FC = () => {
                 {/* Switch back to Voice button */}
                 <button
                   onClick={() => setInputMode('voice')}
-                  className="py-1 text-slate-400 hover:text-emerald-400 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                  className="py-1 text-[#6B7280] hover:text-[#D95D24] text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                 >
                   <Mic className="w-3.5 h-3.5" />
                   <span>{S.switchToVoice}</span>

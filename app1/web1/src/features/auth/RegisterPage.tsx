@@ -130,26 +130,26 @@ export const RegisterPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="w-8 h-8 rounded-full border-3 border-emerald-500 border-t-transparent animate-spin" />
+      <div className="min-h-screen bg-[#FFF9F5] flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-3 border-[#F47738] border-t-transparent animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-[#FFF9F5] flex flex-col">
       <Header />
 
       <main className="flex-1 max-w-lg w-full mx-auto p-4 flex flex-col justify-center my-4">
-        <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200 space-y-6">
+        <div className="bg-white rounded-3xl p-6 md:p-8 shadow-xs border border-[#F0E2D8] space-y-6">
           <div className="text-center space-y-1.5">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 mx-auto">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#FFF0E6] text-[#D95D24] mx-auto shadow-xs">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <h1 className="text-xl md:text-2xl font-black text-slate-900">
+            <h1 className="text-xl md:text-2xl font-black text-[#242424]">
               {t('auth.patient_register_title', 'Patient Registration')}
             </h1>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#6B7280]">
               Create your secure HealthSetu account for digital health consultations
             </p>
           </div>
@@ -167,8 +167,8 @@ export const RegisterPage: React.FC = () => {
           <form onSubmit={handleRegister} className="space-y-4" noValidate>
             {/* Preferred Language Selection */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                <Globe className="w-4 h-4 text-slate-400" />
+              <label className="text-xs font-bold text-[#242424] flex items-center gap-1.5">
+                <Globe className="w-4 h-4 text-[#F47738]" />
                 <span>{t('auth.preferred_language', 'Preferred Language')}</span>
               </label>
               <div className="grid grid-cols-3 gap-2">
@@ -177,14 +177,14 @@ export const RegisterPage: React.FC = () => {
                     key={lang.code}
                     type="button"
                     onClick={() => handleLanguageChange(lang.code)}
-                    className={`py-2 px-2 text-xs font-bold rounded-xl border transition-all text-center ${
+                    className={`py-2 px-2 text-xs font-bold rounded-xl border transition-all text-center cursor-pointer ${
                       selectedLang === lang.code
-                        ? 'border-emerald-600 bg-emerald-50 text-emerald-900 shadow-xs ring-1 ring-emerald-600'
-                        : 'border-slate-200 hover:border-slate-300 text-slate-600 bg-white'
+                        ? 'border-[#F47738] bg-[#FFF0E6] text-[#D95D24] shadow-xs ring-1 ring-[#F47738]'
+                        : 'border-[#F0E2D8] hover:border-[#F47738]/50 text-[#242424] bg-white'
                     }`}
                   >
                     <div>{lang.scriptLabel}</div>
-                    <div className="text-[10px] font-normal text-slate-400">{lang.label}</div>
+                    <div className="text-[10px] font-normal text-[#6B7280]">{lang.label}</div>
                   </button>
                 ))}
               </div>
@@ -192,18 +192,18 @@ export const RegisterPage: React.FC = () => {
 
             {/* Full Name */}
             <div className="space-y-1.5">
-              <label htmlFor="reg-name" className="text-xs font-bold text-slate-700 block">
+              <label htmlFor="reg-name" className="text-xs font-bold text-[#242424] block">
                 {t('auth.full_name', 'Full Name')} <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
-                <User className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <User className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   id="reg-name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Ramesh Patil"
-                  className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                  className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                   required
                 />
               </div>
@@ -212,21 +212,21 @@ export const RegisterPage: React.FC = () => {
             {/* Age or Date of Birth */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-slate-700 block">
+                <label className="text-xs font-bold text-[#242424] block">
                   {t('auth.age_or_dob', 'Age or Date of Birth')} <span className="text-rose-500">*</span>
                 </label>
                 <div className="flex gap-2 text-[11px] font-bold">
                   <button
                     type="button"
                     onClick={() => setAgeMode('age')}
-                    className={`px-2 py-0.5 rounded-md ${ageMode === 'age' ? 'bg-emerald-100 text-emerald-800' : 'text-slate-500 hover:text-slate-800'}`}
+                    className={`px-2 py-0.5 rounded-md cursor-pointer transition-colors ${ageMode === 'age' ? 'bg-[#FFF0E6] text-[#D95D24]' : 'text-[#6B7280] hover:text-[#242424]'}`}
                   >
                     Enter Age
                   </button>
                   <button
                     type="button"
                     onClick={() => setAgeMode('dob')}
-                    className={`px-2 py-0.5 rounded-md ${ageMode === 'dob' ? 'bg-emerald-100 text-emerald-800' : 'text-slate-500 hover:text-slate-800'}`}
+                    className={`px-2 py-0.5 rounded-md cursor-pointer transition-colors ${ageMode === 'dob' ? 'bg-[#FFF0E6] text-[#D95D24]' : 'text-[#6B7280] hover:text-[#242424]'}`}
                   >
                     Select Birthdate
                   </button>
@@ -235,7 +235,7 @@ export const RegisterPage: React.FC = () => {
 
               {ageMode === 'age' ? (
                 <div className="relative">
-                  <Calendar className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Calendar className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     id="reg-age"
                     type="number"
@@ -244,20 +244,20 @@ export const RegisterPage: React.FC = () => {
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
                     placeholder="e.g. 35"
-                    className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                    className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                     required
                   />
                 </div>
               ) : (
                 <div className="relative">
-                  <Calendar className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Calendar className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     id="reg-dob"
                     type="date"
                     max={new Date().toISOString().split('T')[0]}
                     value={dob}
                     onChange={(e) => setDob(e.target.value)}
-                    className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                    className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                     required
                   />
                 </div>
@@ -266,18 +266,18 @@ export const RegisterPage: React.FC = () => {
 
             {/* Mobile Number */}
             <div className="space-y-1.5">
-              <label htmlFor="reg-phone" className="text-xs font-bold text-slate-700 block">
+              <label htmlFor="reg-phone" className="text-xs font-bold text-[#242424] block">
                 {t('auth.phone_label', 'Mobile Number')} <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
-                <Phone className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Phone className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   id="reg-phone"
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
                   placeholder="10-digit mobile number (e.g. 9876543210)"
-                  className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                  className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                   required
                 />
               </div>
@@ -285,24 +285,24 @@ export const RegisterPage: React.FC = () => {
 
             {/* Password */}
             <div className="space-y-1.5">
-              <label htmlFor="reg-password" className="text-xs font-bold text-slate-700 block">
+              <label htmlFor="reg-password" className="text-xs font-bold text-[#242424] block">
                 {t('auth.password', 'Password')} <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
-                <Lock className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   id="reg-password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="At least 8 characters"
-                  className="w-full min-h-[48px] pl-11 pr-12 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                  className="w-full min-h-[48px] pl-11 pr-12 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#242424] p-1 cursor-pointer"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -312,24 +312,24 @@ export const RegisterPage: React.FC = () => {
 
             {/* Confirm Password */}
             <div className="space-y-1.5">
-              <label htmlFor="reg-confirm-password" className="text-xs font-bold text-slate-700 block">
+              <label htmlFor="reg-confirm-password" className="text-xs font-bold text-[#242424] block">
                 {t('auth.confirm_password', 'Confirm Password')} <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
-                <Lock className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   id="reg-confirm-password"
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Re-enter your password"
-                  className="w-full min-h-[48px] pl-11 pr-12 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                  className="w-full min-h-[48px] pl-11 pr-12 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#242424] p-1 cursor-pointer"
                   aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
                 >
                   {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -341,7 +341,7 @@ export const RegisterPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full min-h-[50px] bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] disabled:bg-slate-300 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all mt-2 cursor-pointer disabled:cursor-not-allowed"
+              className="w-full min-h-[50px] bg-[#F47738] hover:bg-[#D95D24] active:scale-[0.98] disabled:bg-[#F0E2D8] disabled:text-[#6B7280] text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all mt-2 cursor-pointer disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
@@ -358,7 +358,7 @@ export const RegisterPage: React.FC = () => {
           </form>
 
           {/* Privacy Note */}
-          <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-[11px] text-slate-600 leading-relaxed text-center">
+          <div className="p-3 bg-[#FFF9F5] border border-[#F0E2D8] rounded-xl text-[11px] text-[#6B7280] leading-relaxed text-center">
             {t(
               'auth.privacy_note',
               'Your health data is protected under India DPDP Act and ABDM guidelines.',
@@ -366,11 +366,11 @@ export const RegisterPage: React.FC = () => {
           </div>
 
           {/* Link to Login */}
-          <div className="text-center pt-2 border-t border-slate-100 space-y-1.5 text-xs">
+          <div className="text-center pt-2 border-t border-[#F0E2D8] space-y-1.5 text-xs">
             <div>
               <Link
                 to="/login"
-                className="font-semibold text-emerald-700 hover:text-emerald-800 hover:underline"
+                className="font-semibold text-[#D95D24] hover:text-[#F47738] hover:underline"
               >
                 {t('auth.have_account', 'Already have an account? Sign In')}
               </Link>

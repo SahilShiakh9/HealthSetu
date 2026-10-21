@@ -96,19 +96,19 @@ export const HospitalRegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-[#FFF9F5] flex flex-col">
       <Header />
 
       <main className="flex-1 max-w-xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
-        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-[#F0E2D8] space-y-6">
           <div className="text-center space-y-1">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-800 mb-1">
-              <Building2 className="w-6 h-6 text-indigo-600" />
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#FFF0E6] text-[#F47738] mb-1">
+              <Building2 className="w-6 h-6 text-[#F47738]" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900">
+            <h1 className="text-xl sm:text-2xl font-black text-[#242424]">
               Hospital & Clinic Onboarding
             </h1>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#6B7280]">
               Register a healthcare organization to verify doctors and manage patient queues
             </p>
           </div>
@@ -126,29 +126,29 @@ export const HospitalRegisterPage: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Facility Details Section */}
             <div className="space-y-3">
-              <span className="text-xs font-bold text-slate-900 uppercase tracking-wider block border-b border-slate-100 pb-1.5">
+              <span className="text-xs font-bold text-[#242424] uppercase tracking-wider block border-b border-[#F0E2D8] pb-1.5">
                 1. Healthcare Organization Details
               </span>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 block">Facility Name</label>
+                  <label className="text-xs font-bold text-[#242424] block">Facility Name</label>
                   <input
                     type="text"
                     value={facilityName}
                     onChange={(e) => setFacilityName(e.target.value)}
                     placeholder="e.g. Pune City Civil Hospital"
-                    className="w-full min-h-[48px] px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                    className="w-full min-h-[48px] px-3.5 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:border-[#F47738] focus:ring-2 focus:ring-[#F47738]/20 bg-white"
                     required
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 block">Facility Type</label>
+                  <label className="text-xs font-bold text-[#242424] block">Facility Type</label>
                   <select
                     value={facilityType}
                     onChange={(e) => setFacilityType(e.target.value as any)}
-                    className="w-full min-h-[48px] px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                    className="w-full min-h-[48px] px-3.5 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:border-[#F47738] focus:ring-2 focus:ring-[#F47738]/20 bg-white"
                   >
                     <option value="DH">District Hospital (DH)</option>
                     <option value="SDH">Sub-District Hospital (SDH)</option>
@@ -161,63 +161,63 @@ export const HospitalRegisterPage: React.FC = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 block">Address</label>
+                <label className="text-xs font-bold text-[#242424] block">Address</label>
                 <input
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Street address, landmark, town"
-                  className="w-full min-h-[48px] px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                  className="w-full min-h-[48px] px-3.5 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:border-[#F47738] focus:ring-2 focus:ring-[#F47738]/20 bg-white"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 block">District</label>
+                  <label className="text-xs font-bold text-[#242424] block">District</label>
                   <input
                     type="text"
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
                     placeholder="Pune"
-                    className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                    className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:border-[#F47738] focus:ring-2 focus:ring-[#F47738]/20 bg-white"
                     required
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 block">State</label>
+                  <label className="text-xs font-bold text-[#242424] block">State</label>
                   <input
                     type="text"
                     value={state}
                     onChange={(e) => setState(e.target.value)}
                     placeholder="Maharashtra"
-                    className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                    className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:border-[#F47738] focus:ring-2 focus:ring-[#F47738]/20 bg-white"
                     required
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 block">Pincode</label>
+                  <label className="text-xs font-bold text-[#242424] block">Pincode</label>
                   <input
                     type="text"
                     value={pincode}
                     onChange={(e) => setPincode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     placeholder="411001"
-                    className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                    className="w-full min-h-[48px] px-3 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:border-[#F47738] focus:ring-2 focus:ring-[#F47738]/20 bg-white"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 block">Official Contact Phone</label>
+                <label className="text-xs font-bold text-[#242424] block">Official Contact Phone</label>
                 <div className="relative">
-                  <Phone className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Phone className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="tel"
                     value={facilityPhone}
                     onChange={(e) => setFacilityPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
                     placeholder="10-digit telephone or mobile"
-                    className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                    className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:border-[#F47738] focus:ring-2 focus:ring-[#F47738]/20 bg-white"
                     required
                   />
                 </div>
@@ -226,36 +226,36 @@ export const HospitalRegisterPage: React.FC = () => {
 
             {/* Administrator Account Details */}
             <div className="space-y-3 pt-2">
-              <span className="text-xs font-bold text-slate-900 uppercase tracking-wider block border-b border-slate-100 pb-1.5">
+              <span className="text-xs font-bold text-[#242424] uppercase tracking-wider block border-b border-[#F0E2D8] pb-1.5">
                 2. Hospital Administrator Account
               </span>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 block">Administrator Name</label>
+                  <label className="text-xs font-bold text-[#242424] block">Administrator Name</label>
                   <div className="relative">
-                    <User className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <User className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       value={adminName}
                       onChange={(e) => setAdminName(e.target.value)}
                       placeholder="Dr. Anand Deshmukh, MS"
-                      className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                      className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:border-[#F47738] focus:ring-2 focus:ring-[#F47738]/20 bg-white"
                       required
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 block">Official Work Email</label>
+                  <label className="text-xs font-bold text-[#242424] block">Official Work Email</label>
                   <div className="relative">
-                    <Mail className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Mail className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="email"
                       value={adminEmail}
                       onChange={(e) => setAdminEmail(e.target.value)}
                       placeholder="admin@hospital.org"
-                      className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                      className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:border-[#F47738] focus:ring-2 focus:ring-[#F47738]/20 bg-white"
                       required
                     />
                   </div>
@@ -264,21 +264,21 @@ export const HospitalRegisterPage: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 block">Password</label>
+                  <label className="text-xs font-bold text-[#242424] block">Password</label>
                   <div className="relative">
-                    <Lock className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Lock className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={adminPassword}
                       onChange={(e) => setAdminPassword(e.target.value)}
                       placeholder="Min 8 characters"
-                      className="w-full min-h-[48px] pl-11 pr-10 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                      className="w-full min-h-[48px] pl-11 pr-10 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:border-[#F47738] focus:ring-2 focus:ring-[#F47738]/20 bg-white"
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#242424] p-1 cursor-pointer"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -286,15 +286,15 @@ export const HospitalRegisterPage: React.FC = () => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 block">Confirm Password</label>
+                  <label className="text-xs font-bold text-[#242424] block">Confirm Password</label>
                   <div className="relative">
-                    <Lock className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Lock className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Re-enter password"
-                      className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                      className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-none focus:border-[#F47738] focus:ring-2 focus:ring-[#F47738]/20 bg-white"
                       required
                     />
                   </div>
@@ -305,7 +305,7 @@ export const HospitalRegisterPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full min-h-[48px] bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] disabled:bg-slate-300 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer disabled:cursor-not-allowed mt-4"
+              className="w-full min-h-[48px] bg-[#F47738] hover:bg-[#D95D24] active:scale-[0.98] disabled:bg-slate-300 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer disabled:cursor-not-allowed mt-4"
             >
               {loading ? (
                 <>
@@ -321,16 +321,16 @@ export const HospitalRegisterPage: React.FC = () => {
             </button>
           </form>
 
-          <div className="pt-3 border-t border-slate-100 text-center space-y-2 text-xs">
+          <div className="pt-3 border-t border-[#F0E2D8] text-center space-y-2 text-xs">
             <div>
-              <span className="text-slate-500">Already registered? </span>
-              <Link to="/staff/login" className="font-bold text-indigo-700 hover:underline">
+              <span className="text-[#6B7280]">Already registered? </span>
+              <Link to="/staff/login" className="font-bold text-[#F47738] hover:text-[#D95D24] hover:underline">
                 Sign in to Organization Portal
               </Link>
             </div>
             <div>
-              <span className="text-slate-500">Are you a physician? </span>
-              <Link to="/doctor/register" className="font-bold text-emerald-700 hover:underline">
+              <span className="text-[#6B7280]">Are you a physician? </span>
+              <Link to="/doctor/register" className="font-bold text-[#F47738] hover:text-[#D95D24] hover:underline">
                 Register as a Doctor
               </Link>
             </div>

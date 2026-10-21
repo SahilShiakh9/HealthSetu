@@ -9,6 +9,8 @@ import {
 } from './guidanceEngine';
 import { speechService } from '../../services/speechService';
 import { compressImage, saveCompressedImageToDb, type CompressedImageResult } from '../../utils/imageCompressor';
+import { HealthcareImage } from '../../components/HealthcareImage';
+import { BookOpen } from 'lucide-react';
 
 export const GuidancePage: React.FC = () => {
   const navigate = useNavigate();
@@ -121,13 +123,13 @@ export const GuidancePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 p-4 sm:p-6 lg:p-8 pb-24">
+    <div className="min-h-screen bg-[#FFF9F5] text-[#242424] p-4 sm:p-6 lg:p-8 pb-24">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Navigation & Header */}
         <div className="flex items-center justify-between">
           <button
             onClick={() => navigate('/home')}
-            className="flex items-center gap-2 text-slate-400 hover:text-white min-h-[48px] px-3 py-2 rounded-lg bg-slate-800/60 border border-slate-700/60 transition"
+            className="flex items-center gap-2 text-[#6B7280] hover:text-[#D95D24] min-h-[48px] px-3.5 py-2 rounded-xl bg-white border border-[#F0E2D8] hover:bg-[#FFF0E6] transition cursor-pointer"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -135,43 +137,51 @@ export const GuidancePage: React.FC = () => {
             <span className="text-sm font-medium">{t('common.back')}</span>
           </button>
 
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-700/60 text-emerald-300 text-xs font-medium">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>100% Offline Available</span>
           </div>
         </div>
 
         {/* Hero Section */}
-        <div className="bg-gradient-to-br from-indigo-950/60 via-slate-900 to-slate-900 border border-indigo-700/40 rounded-2xl p-6 shadow-xl relative overflow-hidden">
-          <div className="relative z-10 space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold tracking-wide uppercase">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
-              <span>Rural Health Literacy & First Aid</span>
+        <div className="bg-white border border-[#F0E2D8] rounded-3xl p-5 sm:p-6 shadow-sm overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+            <div className="md:col-span-7 space-y-2.5">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFF0E6] text-[#D95D24] text-xs font-bold tracking-wide uppercase">
+                <BookOpen className="w-4 h-4" />
+                <span>Rural Health Literacy & First Aid</span>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-[#242424] tracking-tight">
+                {currentLang === 'mr'
+                  ? 'आरोग्य मार्गदर्शक आणि प्रथमोपचार'
+                  : currentLang === 'hi'
+                  ? 'स्वास्थ्य मार्गदर्शिका और प्राथमिक उपचार'
+                  : 'SwasthSetu Guidance & First Aid'}
+              </h1>
+              <p className="text-sm md:text-base text-[#6B7280] leading-relaxed">
+                {currentLang === 'mr'
+                  ? 'ओआरएस, सर्पदंश, गरोदरपण आणि लसीकरणावर त्वरित खात्रीशीर माहिती. इंटरनेट नसतानाही पूर्णपणे उपलब्ध.'
+                  : currentLang === 'hi'
+                  ? 'ओआरएस, सांप के काटने, गर्भावस्था और टीकाकरण पर तुरंत प्रमाणित जानकारी। ऑफलाइन भी पूरी तरह काम करता है।'
+                  : 'Verified clinical protocols for ORS rehydration, snakebites, pregnancy danger signs, burns, and immunization. Fully functional without internet.'}
+              </p>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
-              {currentLang === 'mr'
-                ? 'आरोग्य मार्गदर्शक आणि प्रथमोपचार'
-                : currentLang === 'hi'
-                ? 'स्वास्थ्य मार्गदर्शिका और प्राथमिक उपचार'
-                : 'HealthSetu Guidance & First Aid'}
-            </h1>
-            <p className="text-sm md:text-base text-slate-300 max-w-2xl leading-relaxed">
-              {currentLang === 'mr'
-                ? 'ओआरएस, सर्पदंश, गरोदरपण आणि लसीकरणावर त्वरित खात्रीशीर माहिती. इंटरनेट नसतानाही पूर्णपणे उपलब्ध.'
-                : currentLang === 'hi'
-                ? 'ओआरएस, सांप के काटने, गर्भावस्था और टीकाकरण पर तुरंत प्रमाणित जानकारी। ऑफलाइन भी पूरी तरह काम करता है।'
-                : 'Verified clinical protocols for ORS rehydration, snakebites, pregnancy danger signs, burns, and immunization. Fully functional without internet.'}
-            </p>
+            <div className="md:col-span-5">
+              <HealthcareImage
+                src="/images/first_aid_guidance.jpg"
+                alt="First Aid Guidance"
+                aspectRatio="16/9"
+                className="rounded-2xl max-h-44 shadow-xs"
+              />
+            </div>
           </div>
         </div>
 
         {/* Search Bar with Voice Input */}
-        <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
+        <div className="bg-white border border-[#F0E2D8] rounded-2xl p-4 shadow-sm space-y-3">
           <div className="relative flex items-center gap-2">
             <div className="relative flex-1">
-              <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#6B7280]">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -187,12 +197,12 @@ export const GuidancePage: React.FC = () => {
                     ? 'सवाल या लक्षण खोजें (जैसे ओआरएस, सांप का काटना, टीबी...)'
                     : 'Search topic or ask a question (e.g. ORS, snakebite, burns...)'
                 }
-                className="w-full bg-slate-900/90 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm md:text-base min-h-[48px]"
+                className="w-full bg-[#FFF9F5] border border-[#F0E2D8] rounded-xl pl-12 pr-4 py-3 text-[#242424] placeholder-[#6B7280] focus:outline-none focus:ring-2 focus:ring-[#F47738] focus:border-[#F47738] text-sm md:text-base min-h-[48px]"
               />
               {searchQuery && (
                 <button
                   onClick={() => handleSearchChange('')}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#6B7280] hover:text-[#242424] cursor-pointer"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -205,10 +215,10 @@ export const GuidancePage: React.FC = () => {
             <button
               onClick={handleVoiceInput}
               title="Speak your question"
-              className={`min-h-[48px] min-w-[48px] px-3.5 py-3 rounded-xl border flex items-center justify-center transition shadow-md ${
+              className={`min-h-[48px] min-w-[48px] px-3.5 py-3 rounded-xl border flex items-center justify-center transition shadow-xs cursor-pointer ${
                 isListening
                   ? 'bg-red-600 border-red-500 text-white animate-pulse'
-                  : 'bg-indigo-600/80 hover:bg-indigo-600 border-indigo-500 text-white'
+                  : 'bg-[#F47738] hover:bg-[#D95D24] border-transparent text-white'
               }`}
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -219,7 +229,7 @@ export const GuidancePage: React.FC = () => {
 
           {/* Voice Listening indicator */}
           {isListening && (
-            <div className="flex items-center gap-2 p-3 bg-red-950/40 border border-red-800/60 rounded-xl text-red-200 text-xs animate-pulse">
+            <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs animate-pulse">
               <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
               <span>
                 {currentLang === 'mr'
@@ -232,8 +242,8 @@ export const GuidancePage: React.FC = () => {
           )}
 
           {speechMockNote && (
-            <div className="p-2.5 bg-slate-900/80 border border-slate-700/80 rounded-xl text-xs text-indigo-300 flex items-center gap-2">
-              <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="p-2.5 bg-[#FFF0E6] border border-[#F0E2D8] rounded-xl text-xs text-[#D95D24] flex items-center gap-2">
+              <svg className="w-4 h-4 flex-shrink-0 text-[#F47738]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span>{speechMockNote}</span>
@@ -242,7 +252,7 @@ export const GuidancePage: React.FC = () => {
 
           {/* Suggested Quick Topic Pills */}
           <div className="pt-1">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+            <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider mb-2">
               {currentLang === 'mr' ? 'वारंवार विचारले जाणारे विषय' : currentLang === 'hi' ? 'सामान्य प्रश्न' : 'Frequent Topics'}
             </p>
             <div className="flex flex-wrap gap-2">
@@ -259,7 +269,7 @@ export const GuidancePage: React.FC = () => {
                 <button
                   key={idx}
                   onClick={() => handleQuickTopicClick(pill.query)}
-                  className="px-3 py-1.5 rounded-lg bg-slate-700/70 hover:bg-slate-700 border border-slate-600/70 text-slate-200 text-xs font-medium transition min-h-[36px]"
+                  className="px-3 py-1.5 rounded-lg bg-white hover:bg-[#FFF0E6] border border-[#F0E2D8] hover:border-[#F47738] text-[#242424] hover:text-[#D95D24] text-xs font-medium transition min-h-[36px] cursor-pointer"
                 >
                   {pill.label}
                 </button>
@@ -269,30 +279,30 @@ export const GuidancePage: React.FC = () => {
         </div>
 
         {/* Image Attachment & 200KB Compression Section */}
-        <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
+        <div className="bg-white border border-[#F0E2D8] rounded-2xl p-4 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-indigo-500/20 text-indigo-400">
+              <div className="p-2 rounded-lg bg-[#FFF0E6] text-[#D95D24]">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-white">
+                <h3 className="text-sm font-semibold text-[#242424]">
                   {currentLang === 'mr'
                     ? 'छायाचित्र जोडा (जखम / पुरळ / औषध पत्र)'
                     : currentLang === 'hi'
                     ? 'फोटो संलग्न करें (घाव / दाने / पर्ची)'
                     : 'Attach Clinical Photo (Wound / Rash / Prescription)'}
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-[#6B7280]">
                   Client-side downscaled to &le; 200 KB &bull; EXIF stripped for privacy
                 </p>
               </div>
             </div>
 
-            <label className="cursor-pointer min-h-[48px] px-4 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white text-xs font-semibold flex items-center gap-2 transition">
+            <label className="cursor-pointer min-h-[48px] px-4 py-2.5 rounded-xl bg-[#FFF0E6] hover:bg-[#F0E2D8] border border-[#F0E2D8] text-[#D95D24] text-xs font-semibold flex items-center gap-2 transition">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
@@ -308,27 +318,27 @@ export const GuidancePage: React.FC = () => {
           </div>
 
           {imageError && (
-            <p className="text-xs text-red-400 bg-red-950/40 p-2 rounded-lg border border-red-800">
+            <p className="text-xs text-red-600 bg-red-50 p-2 rounded-lg border border-red-200">
               {imageError}
             </p>
           )}
 
           {attachedImage && (
-            <div className="p-3 bg-slate-900/90 border border-slate-700 rounded-xl flex items-center justify-between gap-4">
+            <div className="p-3 bg-[#FFF9F5] border border-[#F0E2D8] rounded-xl flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <img
                   src={attachedImage.previewUrl}
                   alt="Clinical attachment"
-                  className="w-14 h-14 object-cover rounded-lg border border-slate-700"
+                  className="w-14 h-14 object-cover rounded-lg border border-[#F0E2D8]"
                 />
                 <div className="space-y-0.5">
-                  <p className="text-xs font-medium text-white truncate max-w-[200px]">
+                  <p className="text-xs font-medium text-[#242424] truncate max-w-[200px]">
                     {attachedImage.fileName}
                   </p>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-[#6B7280]">
                     Compressed: {(attachedImage.compressedSizeBytes / 1024).toFixed(1)} KB (from {(attachedImage.originalSizeBytes / 1024).toFixed(1)} KB)
                   </p>
-                  <span className="inline-block px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-semibold">
+                  <span className="inline-block px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold">
                     {Math.round(attachedImage.compressionRatio * 100)}% Bandwidth Saved &bull; Safe for 2G
                   </span>
                 </div>
@@ -336,7 +346,7 @@ export const GuidancePage: React.FC = () => {
 
               <button
                 onClick={() => setAttachedImage(null)}
-                className="text-xs text-red-400 hover:text-red-300 p-2 min-h-[40px]"
+                className="text-xs text-red-600 hover:text-red-700 p-2 min-h-[40px] cursor-pointer"
               >
                 Remove
               </button>
@@ -347,13 +357,13 @@ export const GuidancePage: React.FC = () => {
         {/* Topics List or Selected Topic Details */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-white">
+            <h2 className="text-lg font-bold text-[#242424]">
               {currentLang === 'mr' ? 'मार्गदर्शन विषय' : currentLang === 'hi' ? 'मार्गदर्शिका विषय' : 'Guidance Topics'} ({topics.length})
             </h2>
             {selectedTopic && (
               <button
                 onClick={() => setSelectedTopic(null)}
-                className="text-xs text-indigo-400 hover:underline min-h-[36px]"
+                className="text-xs text-[#D95D24] hover:underline min-h-[36px] font-bold cursor-pointer"
               >
                 View all topics
               </button>
@@ -361,32 +371,32 @@ export const GuidancePage: React.FC = () => {
           </div>
 
           {topics.length === 0 ? (
-            <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-8 text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-slate-700/60 flex items-center justify-center mx-auto text-slate-400">
+            <div className="bg-white border border-[#F0E2D8] rounded-2xl p-8 text-center space-y-3">
+              <div className="w-12 h-12 rounded-full bg-[#FFF0E6] text-[#D95D24] flex items-center justify-center mx-auto">
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-base font-semibold text-slate-200">No matching guidance found</h3>
-              <p className="text-sm text-slate-400 max-w-sm mx-auto">
+              <h3 className="text-base font-semibold text-[#242424]">No matching guidance found</h3>
+              <p className="text-sm text-[#6B7280] max-w-sm mx-auto">
                 Try searching for simple symptoms like 'fever', 'loose motion', 'pregnancy', or 'snakebite'.
               </p>
               <button
                 onClick={() => handleSearchChange('')}
-                className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold"
+                className="px-4 py-2 rounded-xl bg-[#F47738] hover:bg-[#D95D24] text-white text-xs font-semibold cursor-pointer"
               >
                 Clear Search
               </button>
             </div>
           ) : selectedTopic ? (
             // Expanded Topic View
-            <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-6">
+            <div className="bg-white border border-[#F0E2D8] rounded-2xl p-6 shadow-sm space-y-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
-                  <span className="px-2.5 py-1 rounded-md bg-indigo-500/20 text-indigo-300 text-xs font-medium">
+                  <span className="px-2.5 py-1 rounded-md bg-[#FFF0E6] text-[#D95D24] text-xs font-semibold">
                     {selectedTopic.category.replace('_', ' ')}
                   </span>
-                  <h3 className="text-xl md:text-2xl font-bold text-white">
+                  <h3 className="text-xl md:text-2xl font-bold text-[#242424]">
                     {selectedTopic.title[currentLang] || selectedTopic.title.en}
                   </h3>
                 </div>
@@ -395,10 +405,10 @@ export const GuidancePage: React.FC = () => {
                   <button
                     onClick={() => handleToggleSpeak(selectedTopic)}
                     title="Audio playback"
-                    className={`min-h-[44px] min-w-[44px] px-3 py-2 rounded-xl border flex items-center gap-1.5 text-xs font-medium transition ${
+                    className={`min-h-[44px] min-w-[44px] px-3 py-2 rounded-xl border flex items-center gap-1.5 text-xs font-semibold transition cursor-pointer ${
                       isSpeaking === selectedTopic.id
                         ? 'bg-amber-600 border-amber-500 text-white animate-pulse'
-                        : 'bg-slate-700 hover:bg-slate-600 border-slate-600 text-slate-200'
+                        : 'bg-white hover:bg-[#FFF0E6] border-[#F0E2D8] text-[#242424]'
                     }`}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -409,7 +419,7 @@ export const GuidancePage: React.FC = () => {
 
                   <button
                     onClick={() => setSelectedTopic(null)}
-                    className="min-h-[44px] px-3 py-2 rounded-xl bg-slate-700/60 hover:bg-slate-700 border border-slate-600 text-slate-300 text-xs"
+                    className="min-h-[44px] px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#242424] text-xs font-semibold cursor-pointer"
                   >
                     Close
                   </button>
@@ -418,16 +428,16 @@ export const GuidancePage: React.FC = () => {
 
               {/* Emergency Warning Banner if present */}
               {selectedTopic.emergencyWarning && (
-                <div className="p-4 rounded-xl bg-red-950/60 border border-red-700/80 text-red-100 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-lg">
+                <div className="p-4 rounded-xl bg-red-50 border border-red-300 text-red-900 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs">
                   <div className="flex items-start gap-3">
-                    <svg className="w-6 h-6 text-red-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                     <div>
-                      <h4 className="text-sm font-bold text-red-200 uppercase tracking-wide">
+                      <h4 className="text-sm font-bold text-red-800 uppercase tracking-wide">
                         Emergency Warning
                       </h4>
-                      <p className="text-xs md:text-sm mt-0.5 leading-relaxed text-red-100">
+                      <p className="text-xs md:text-sm mt-0.5 leading-relaxed text-red-900">
                         {selectedTopic.emergencyWarning[currentLang] || selectedTopic.emergencyWarning.en}
                       </p>
                     </div>
@@ -435,7 +445,7 @@ export const GuidancePage: React.FC = () => {
 
                   <a
                     href="tel:108"
-                    className="min-h-[44px] px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs flex items-center justify-center gap-2 whitespace-nowrap shadow-md transition"
+                    className="min-h-[44px] px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center justify-center gap-2 whitespace-nowrap shadow-md transition"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -446,30 +456,30 @@ export const GuidancePage: React.FC = () => {
               )}
 
               {/* Summary */}
-              <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-700/60">
-                <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">
+              <div className="p-4 rounded-xl bg-[#FFF9F5] border border-[#F0E2D8]">
+                <h4 className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider mb-1">
                   Overview
                 </h4>
-                <p className="text-sm text-slate-200 leading-relaxed">
+                <p className="text-sm text-[#242424] leading-relaxed">
                   {selectedTopic.summary[currentLang] || selectedTopic.summary.en}
                 </p>
               </div>
 
               {/* Step by Step Action Plan */}
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-wider">
+                <h4 className="text-xs font-bold text-[#D95D24] uppercase tracking-wider">
                   Step-by-Step Action Protocol
                 </h4>
                 <div className="space-y-2.5">
                   {selectedTopic.keySteps.map((step) => (
                     <div
                       key={step.step}
-                      className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-700/70 flex items-start gap-3.5"
+                      className="p-3.5 rounded-xl bg-[#FFF9F5] border border-[#F0E2D8] flex items-start gap-3.5"
                     >
-                      <div className="w-7 h-7 rounded-full bg-indigo-600/30 border border-indigo-500/50 text-indigo-300 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <div className="w-7 h-7 rounded-full bg-[#FFF0E6] border border-[#F0E2D8] text-[#D95D24] font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
                         {step.step}
                       </div>
-                      <p className="text-sm text-slate-200 leading-relaxed">
+                      <p className="text-sm text-[#242424] leading-relaxed">
                         {step.text[currentLang] || step.text.en}
                       </p>
                     </div>
@@ -481,17 +491,17 @@ export const GuidancePage: React.FC = () => {
               {(selectedTopic.dos || selectedTopic.donts) && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                   {selectedTopic.dos && (
-                    <div className="p-4 rounded-xl bg-emerald-950/30 border border-emerald-800/40 space-y-2">
-                      <h5 className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 space-y-2">
+                      <h5 className="text-xs font-bold text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                         <span>Things to DO</span>
                       </h5>
                       <ul className="space-y-1.5">
                         {selectedTopic.dos.map((item, i) => (
-                          <li key={i} className="text-xs text-emerald-200/90 leading-relaxed flex items-start gap-1.5">
-                            <span className="text-emerald-400 font-bold">&bull;</span>
+                          <li key={i} className="text-xs text-emerald-900 leading-relaxed flex items-start gap-1.5">
+                            <span className="text-emerald-600 font-bold">&bull;</span>
                             <span>{item[currentLang] || item.en}</span>
                           </li>
                         ))}
@@ -500,17 +510,17 @@ export const GuidancePage: React.FC = () => {
                   )}
 
                   {selectedTopic.donts && (
-                    <div className="p-4 rounded-xl bg-rose-950/30 border border-rose-800/40 space-y-2">
-                      <h5 className="text-xs font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 space-y-2">
+                      <h5 className="text-xs font-bold text-rose-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <svg className="w-4 h-4 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                         <span>Things NOT to DO</span>
                       </h5>
                       <ul className="space-y-1.5">
                         {selectedTopic.donts.map((item, i) => (
-                          <li key={i} className="text-xs text-rose-200/90 leading-relaxed flex items-start gap-1.5">
-                            <span className="text-rose-400 font-bold">&bull;</span>
+                          <li key={i} className="text-xs text-rose-900 leading-relaxed flex items-start gap-1.5">
+                            <span className="text-rose-600 font-bold">&bull;</span>
                             <span>{item[currentLang] || item.en}</span>
                           </li>
                         ))}
@@ -524,7 +534,7 @@ export const GuidancePage: React.FC = () => {
               <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
                 <button
                   onClick={() => navigate('/consult/choose')}
-                  className="w-full sm:flex-1 min-h-[48px] py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-semibold text-sm text-white flex items-center justify-center gap-2 transition shadow-md"
+                  className="w-full sm:flex-1 min-h-[48px] py-3 px-4 rounded-xl bg-[#F47738] hover:bg-[#D95D24] font-semibold text-sm text-white flex items-center justify-center gap-2 transition shadow-md shadow-[#F47738]/25 cursor-pointer"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -534,7 +544,7 @@ export const GuidancePage: React.FC = () => {
 
                 <button
                   onClick={() => navigate('/facilities')}
-                  className="w-full sm:flex-1 min-h-[48px] py-3 px-4 rounded-xl bg-slate-700 hover:bg-slate-600 border border-slate-600 font-semibold text-sm text-slate-200 flex items-center justify-center gap-2 transition"
+                  className="w-full sm:flex-1 min-h-[48px] py-3 px-4 rounded-xl bg-white hover:bg-[#FFF0E6] border border-[#F0E2D8] font-semibold text-sm text-[#242424] hover:text-[#D95D24] flex items-center justify-center gap-2 transition cursor-pointer"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -550,32 +560,32 @@ export const GuidancePage: React.FC = () => {
                 <div
                   key={topic.id}
                   onClick={() => setSelectedTopic(topic)}
-                  className="bg-slate-800/80 hover:bg-slate-800 border border-slate-700 hover:border-indigo-500/50 rounded-2xl p-5 cursor-pointer transition shadow-md space-y-3 flex flex-col justify-between group"
+                  className="bg-white hover:border-[#F47738]/50 border border-[#F0E2D8] rounded-2xl p-5 cursor-pointer transition shadow-xs space-y-3 flex flex-col justify-between group"
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-indigo-500/20 text-indigo-300">
+                      <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-[#FFF0E6] text-[#D95D24]">
                         {topic.category.replace('_', ' ')}
                       </span>
                       {topic.emergencyWarning && (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/20 text-red-300 flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-700 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
                           <span>Emergency Protocol</span>
                         </span>
                       )}
                     </div>
 
-                    <h3 className="text-base font-bold text-white group-hover:text-indigo-300 transition">
+                    <h3 className="text-base font-bold text-[#242424] group-hover:text-[#D95D24] transition">
                       {topic.title[currentLang] || topic.title.en}
                     </h3>
 
-                    <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-[#6B7280] line-clamp-2 leading-relaxed">
                       {topic.summary[currentLang] || topic.summary.en}
                     </p>
                   </div>
 
-                  <div className="pt-2 border-t border-slate-700/60 flex items-center justify-between text-xs text-slate-400">
-                    <span className="font-medium text-indigo-400 flex items-center gap-1">
+                  <div className="pt-2 border-t border-[#F0E2D8] flex items-center justify-between text-xs text-[#6B7280]">
+                    <span className="font-semibold text-[#D95D24] flex items-center gap-1">
                       <span>View Protocol</span>
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -587,7 +597,7 @@ export const GuidancePage: React.FC = () => {
                         e.stopPropagation();
                         handleToggleSpeak(topic);
                       }}
-                      className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                      className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg hover:bg-[#FFF0E6] text-[#6B7280] hover:text-[#D95D24] transition-colors cursor-pointer"
                       title="Audio playback"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -602,8 +612,8 @@ export const GuidancePage: React.FC = () => {
         </div>
 
         {/* Statutory Medical Disclaimer per Section 11.6 */}
-        <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 text-xs space-y-1 leading-relaxed">
-          <p className="font-semibold text-slate-300 uppercase tracking-wider text-[11px]">
+        <div className="p-4 rounded-xl bg-white border border-[#F0E2D8] text-[#6B7280] text-xs space-y-1 leading-relaxed shadow-xs">
+          <p className="font-semibold text-[#242424] uppercase tracking-wider text-[11px]">
             Statutory Clinical & Public Health Disclaimer
           </p>
           <p>{GUIDANCE_DISCLAIMER}</p>

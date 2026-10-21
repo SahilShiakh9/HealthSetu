@@ -62,25 +62,25 @@ export const OnboardingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center px-4 py-8">
-      <div className="max-w-md w-full mx-auto bg-white rounded-3xl shadow-sm border border-slate-200 p-6 space-y-6">
+    <div className="min-h-screen bg-[#FFF9F5] flex flex-col justify-center px-4 py-8">
+      <div className="max-w-md w-full mx-auto bg-white rounded-3xl shadow-xs border border-[#F0E2D8] p-6 space-y-6">
         {/* Brand header */}
         <div className="text-center space-y-2">
-          <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-2xl mx-auto flex items-center justify-center shadow-xs">
+          <div className="w-16 h-16 bg-[#FFF0E6] text-[#D95D24] rounded-2xl mx-auto flex items-center justify-center shadow-xs">
             <HeartPulse className="w-9 h-9" />
           </div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight">{t('app.name')}</h1>
-          <p className="text-xs text-slate-500 font-medium">{t('app.subtitle')}</p>
+          <h1 className="text-2xl font-black text-[#242424] tracking-tight">{t('app.name')}</h1>
+          <p className="text-xs text-[#6B7280] font-medium">{t('app.subtitle')}</p>
         </div>
 
         {step === 'language' && (
           <div className="space-y-5 animate-in fade-in">
             <div className="text-center space-y-1">
-              <h2 className="text-lg font-bold text-slate-800 flex items-center justify-center gap-1.5">
-                <Globe className="w-5 h-5 text-emerald-600" />
+              <h2 className="text-lg font-bold text-[#242424] flex items-center justify-center gap-1.5">
+                <Globe className="w-5 h-5 text-[#F47738]" />
                 <span>{t('onboarding.choose_language')}</span>
               </h2>
-              <p className="text-xs text-slate-500">{t('onboarding.select_language_sub')}</p>
+              <p className="text-xs text-[#6B7280]">{t('onboarding.select_language_sub')}</p>
             </div>
 
             {/* Language Selection Buttons - Labelled by script */}
@@ -91,18 +91,18 @@ export const OnboardingPage: React.FC = () => {
                   <button
                     key={lang.code}
                     onClick={() => handleSelectLanguage(lang.code)}
-                    className={`w-full min-h-[56px] px-5 py-3.5 rounded-2xl flex items-center justify-between border-2 transition-all text-left ${
+                    className={`w-full min-h-[56px] px-5 py-3.5 rounded-2xl flex items-center justify-between border-2 transition-all text-left cursor-pointer ${
                       isSelected
-                        ? 'border-emerald-600 bg-emerald-50/70 text-emerald-950 font-bold shadow-xs'
-                        : 'border-slate-200 hover:border-slate-300 bg-white text-slate-800'
+                        ? 'border-[#F47738] bg-[#FFF0E6] text-[#D95D24] font-bold shadow-xs'
+                        : 'border-[#F0E2D8] hover:border-[#F47738]/50 bg-white text-[#242424]'
                     }`}
                   >
                     <div>
                       <span className="text-lg block leading-snug">{lang.scriptLabel}</span>
-                      <span className="text-xs text-slate-500 font-normal">{lang.label}</span>
+                      <span className="text-xs text-[#6B7280] font-normal">{lang.label}</span>
                     </div>
                     {isSelected && (
-                      <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+                      <div className="w-6 h-6 rounded-full bg-[#F47738] text-white flex items-center justify-center">
                         <Check className="w-4 h-4 stroke-[3]" />
                       </div>
                     )}
@@ -113,7 +113,7 @@ export const OnboardingPage: React.FC = () => {
 
             <button
               onClick={() => setStep('consent')}
-              className="w-full min-h-[52px] bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-sm transition-all"
+              className="w-full min-h-[52px] bg-[#F47738] hover:bg-[#D95D24] active:scale-[0.98] text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
             >
               <span>{t('onboarding.get_started')}</span>
               <ArrowRight className="w-5 h-5" />
@@ -124,33 +124,33 @@ export const OnboardingPage: React.FC = () => {
         {step === 'consent' && (
           <div className="space-y-5 animate-in fade-in">
             <div className="text-center space-y-1">
-              <h2 className="text-lg font-bold text-slate-800 flex items-center justify-center gap-1.5">
-                <ShieldCheck className="w-5 h-5 text-emerald-600" />
+              <h2 className="text-lg font-bold text-[#242424] flex items-center justify-center gap-1.5">
+                <ShieldCheck className="w-5 h-5 text-[#F47738]" />
                 <span>{t('onboarding.consent_title')}</span>
               </h2>
-              <p className="text-xs text-slate-600 leading-relaxed text-left p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <p className="text-xs text-[#6B7280] leading-relaxed text-left p-3.5 bg-[#FFF9F5] rounded-xl border border-[#F0E2D8]">
                 {t('onboarding.consent_desc')}
               </p>
             </div>
 
             {/* Consent Checkboxes */}
-            <div className="space-y-3.5 text-xs text-slate-700">
-              <label className="flex items-start gap-3 p-3 rounded-xl border border-slate-200 cursor-pointer bg-white">
+            <div className="space-y-3.5 text-xs text-[#242424]">
+              <label className="flex items-start gap-3 p-3.5 rounded-xl border border-[#F0E2D8] cursor-pointer bg-white hover:bg-[#FFF9F5] transition-colors">
                 <input
                   type="checkbox"
                   checked={agreeStorage}
                   onChange={(e) => setAgreeStorage(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                  className="mt-0.5 w-4 h-4 rounded text-[#F47738] focus:ring-[#F47738]"
                 />
                 <span className="leading-snug">{t('onboarding.consent_storage')}</span>
               </label>
 
-              <label className="flex items-start gap-3 p-3 rounded-xl border border-slate-200 cursor-pointer bg-white">
+              <label className="flex items-start gap-3 p-3.5 rounded-xl border border-[#F0E2D8] cursor-pointer bg-white hover:bg-[#FFF9F5] transition-colors">
                 <input
                   type="checkbox"
                   checked={agreeAnalytics}
                   onChange={(e) => setAgreeAnalytics(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                  className="mt-0.5 w-4 h-4 rounded text-[#F47738] focus:ring-[#F47738]"
                 />
                 <span className="leading-snug">{t('onboarding.consent_analytics')}</span>
               </label>
@@ -159,10 +159,10 @@ export const OnboardingPage: React.FC = () => {
             <button
               disabled={!agreeStorage}
               onClick={handleCompleteOnboarding}
-              className={`w-full min-h-[52px] font-bold rounded-2xl flex items-center justify-center gap-2 shadow-sm transition-all ${
+              className={`w-full min-h-[52px] font-bold rounded-2xl flex items-center justify-center gap-2 shadow-xs transition-all ${
                 agreeStorage
-                  ? 'bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white'
-                  : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                  ? 'bg-[#F47738] hover:bg-[#D95D24] active:scale-[0.98] text-white cursor-pointer'
+                  : 'bg-[#F0E2D8] text-[#6B7280] cursor-not-allowed'
               }`}
             >
               <span>{t('onboarding.agree_continue')}</span>

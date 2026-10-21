@@ -232,24 +232,24 @@ export const ReportDetailPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600" />
+      <div className="min-h-screen bg-[#FFF9F5] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#F47738]" />
       </div>
     );
   }
 
   if (!encounter) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex items-center justify-center p-4">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-sm w-full text-center space-y-3">
+      <div className="min-h-screen bg-[#FFF9F5] text-[#242424] flex items-center justify-center p-4">
+        <div className="bg-white border border-[#F0E2D8] rounded-3xl p-8 max-w-sm w-full text-center space-y-3 shadow-xs">
           <AlertCircle className="w-10 h-10 text-amber-500 mx-auto" />
-          <h2 className="font-bold text-base text-slate-900 dark:text-white">{t('reports.record_not_found', 'Record Not Found')}</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="font-bold text-base text-[#242424]">{t('reports.record_not_found', 'Record Not Found')}</h2>
+          <p className="text-xs text-[#6B7280]">
             {t('reports.record_not_found_desc', 'This medical report is unavailable or you do not have permission to view it.')}
           </p>
           <button
             onClick={() => navigate('/reports')}
-            className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition-colors"
+            className="w-full py-2.5 px-4 bg-[#F47738] hover:bg-[#D95D24] text-white rounded-xl text-xs font-semibold transition-colors cursor-pointer"
           >
             {t('reports.back_to_reports', 'Back to Medical Records')}
           </button>
@@ -259,31 +259,31 @@ export const ReportDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pb-16">
+    <div className="min-h-screen bg-[#FFF9F5] text-[#242424] pb-16">
       {/* Top Header */}
-      <header className="sticky top-0 z-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3 print:hidden">
+      <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-[#F0E2D8] px-4 py-3 shadow-xs print:hidden">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <button
             onClick={() => navigate('/reports')}
-            className="p-2 -ml-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center cursor-pointer"
+            className="p-2 -ml-2 rounded-xl text-[#6B7280] hover:text-[#242424] hover:bg-[#FFF0E6] transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center cursor-pointer"
             aria-label="Back to Medical Records"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+          <h1 className="text-sm sm:text-base font-bold text-[#242424]">
             {t('reports.slip_title', 'Medical Prescription Slip')}
           </h1>
           <div className="flex items-center space-x-1">
             <button
               onClick={handleDownloadPdf}
-              className="p-2 rounded-xl text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950 transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center cursor-pointer"
+              className="p-2 rounded-xl text-[#D95D24] hover:bg-[#FFF0E6] transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center cursor-pointer"
               title={t('reports.download_pdf', 'Download Official PDF')}
             >
               <Download className="w-5 h-5" />
             </button>
             <button
               onClick={handlePrint}
-              className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center cursor-pointer"
+              className="p-2 rounded-xl text-[#6B7280] hover:text-[#242424] hover:bg-[#FFF0E6] transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center cursor-pointer"
               title={t('reports.print', 'Print Prescription Slip')}
             >
               <Printer className="w-5 h-5" />
@@ -294,38 +294,38 @@ export const ReportDetailPage: React.FC = () => {
 
       {/* Printable Prescription Card */}
       <main className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
-        <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-8 shadow-sm space-y-5 print:shadow-none print:border-black">
+        <div className="bg-white border-2 border-[#F0E2D8] rounded-3xl p-5 sm:p-8 shadow-xs space-y-5 print:shadow-none print:border-black">
           {/* Header with Emblems & PHC Banner */}
-          <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+          <div className="border-b border-[#F0E2D8] pb-4">
             <div className="flex items-start justify-between">
               <div>
-                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block">
+                <span className="text-[10px] font-bold text-[#D95D24] uppercase tracking-wider block">
                   {t('reports.mohfw_banner', 'MoHFW Telemedicine Record')}
                 </span>
-                <h2 className="text-base font-extrabold text-slate-900 dark:text-white">
+                <h2 className="text-base font-extrabold text-[#242424]">
                   {encounter.facilityName}
                 </h2>
-                <p className="text-xs text-slate-500">{encounter.doctorName}</p>
-                <p className="text-[11px] text-slate-400">{encounter.doctorQualification}</p>
+                <p className="text-xs text-[#6B7280]">{encounter.doctorName}</p>
+                <p className="text-[11px] text-[#6B7280]">{encounter.doctorQualification}</p>
                 {encounter.isMock && (
-                  <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300">
+                  <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FFF0E6] text-[#D95D24] border border-[#F0E2D8]">
                     Demo Record / Synthetic Data
                   </span>
                 )}
               </div>
 
-              <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 rounded-2xl text-emerald-600 shrink-0">
+              <div className="p-2.5 bg-[#FFF0E6] rounded-2xl text-[#D95D24] shrink-0">
                 <Stethoscope className="w-6 h-6" />
               </div>
             </div>
 
-            <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] bg-slate-50 dark:bg-slate-850 p-2.5 rounded-xl text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-800">
+            <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] bg-[#FFF9F5] p-2.5 rounded-xl text-[#242424] border border-[#F0E2D8]">
               <div>
-                <span className="text-slate-400 block text-[10px]">{t('reports.patient_name', 'Patient Name')}</span>
-                <strong className="text-slate-800 dark:text-slate-200">{encounter.patientName}</strong>
+                <span className="text-[#6B7280] block text-[10px]">{t('reports.patient_name', 'Patient Name')}</span>
+                <strong className="text-[#242424]">{encounter.patientName}</strong>
               </div>
               <div className="text-right">
-                <span className="text-slate-400 block text-[10px]">{t('reports.date', 'Date Issued')}</span>
+                <span className="text-[#6B7280] block text-[10px]">{t('reports.date', 'Date Issued')}</span>
                 <strong>{encounter.date}</strong>
               </div>
             </div>
@@ -333,14 +333,14 @@ export const ReportDetailPage: React.FC = () => {
 
           {/* Clinical Diagnosis Section */}
           <div className="space-y-1.5">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#6B7280]">
               {t('reports.diagnosis', 'Primary Diagnosis')}
             </span>
-            <div className="p-3 bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-500/20 rounded-2xl">
-              <h3 className="font-bold text-sm text-emerald-900 dark:text-emerald-200">
+            <div className="p-3 bg-[#FFF0E6]/50 border border-[#F47738]/20 rounded-2xl">
+              <h3 className="font-bold text-sm text-[#D95D24]">
                 {encounter.diagnosis}
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+              <p className="text-xs text-[#242424] mt-1">
                 {encounter.assessment}
               </p>
             </div>
@@ -348,15 +348,15 @@ export const ReportDetailPage: React.FC = () => {
 
           {/* Prescriptions with Visual Dosage Indicators */}
           <div className="space-y-2.5">
-            <div className="flex items-center space-x-1.5 text-slate-800 dark:text-slate-200">
-              <Pill className="w-4 h-4 text-emerald-600" />
+            <div className="flex items-center space-x-1.5 text-[#242424]">
+              <Pill className="w-4 h-4 text-[#F47738]" />
               <h4 className="text-xs font-bold uppercase tracking-wider">
                 {t('reports.medications', 'Prescription (औषधे)')}
               </h4>
             </div>
 
             {encounter.medications.length === 0 ? (
-              <p className="text-xs text-slate-500 italic p-3 bg-slate-50 dark:bg-slate-850 rounded-xl">
+              <p className="text-xs text-[#6B7280] italic p-3 bg-[#FFF9F5] rounded-xl border border-[#F0E2D8]">
                 No medications prescribed. General clinical advice given.
               </p>
             ) : (
@@ -364,26 +364,26 @@ export const ReportDetailPage: React.FC = () => {
                 {encounter.medications.map((med, idx) => (
                 <div
                   key={idx}
-                  className="bg-slate-50 dark:bg-slate-850 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-1.5"
+                  className="bg-[#FFF9F5] p-3 rounded-2xl border border-[#F0E2D8] space-y-1.5"
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <h5 className="font-bold text-xs text-slate-900 dark:text-white">
+                      <h5 className="font-bold text-xs text-[#242424]">
                         {idx + 1}. {med.name}
                       </h5>
-                      <p className="text-[11px] text-slate-500">
+                      <p className="text-[11px] text-[#6B7280]">
                         {med.dosage} • {med.frequency} • {med.durationDays} {t('reports.days', 'Days')}
                       </p>
                     </div>
                   </div>
 
                   {/* Visual Timing Badges for Rural Literacy */}
-                  <div className="flex items-center space-x-2 pt-1 border-t border-slate-200/50 dark:border-slate-800/50">
+                  <div className="flex items-center space-x-2 pt-1 border-t border-[#F0E2D8]">
                     <span
                       className={`flex items-center space-x-1 px-2 py-0.5 rounded-lg text-[10px] font-semibold ${
                         med.timing?.morning
-                          ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
-                          : 'bg-slate-200/60 text-slate-400 line-through'
+                          ? 'bg-amber-100 text-amber-800'
+                          : 'bg-slate-100 text-slate-400 line-through'
                       }`}
                     >
                       <Sun className="w-3 h-3" />
@@ -393,8 +393,8 @@ export const ReportDetailPage: React.FC = () => {
                     <span
                       className={`flex items-center space-x-1 px-2 py-0.5 rounded-lg text-[10px] font-semibold ${
                         med.timing?.afternoon
-                          ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300'
-                          : 'bg-slate-200/60 text-slate-400 line-through'
+                          ? 'bg-orange-100 text-orange-800'
+                          : 'bg-slate-100 text-slate-400 line-through'
                       }`}
                     >
                       <CloudSun className="w-3 h-3" />
@@ -404,8 +404,8 @@ export const ReportDetailPage: React.FC = () => {
                     <span
                       className={`flex items-center space-x-1 px-2 py-0.5 rounded-lg text-[10px] font-semibold ${
                         med.timing?.night
-                          ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300'
-                          : 'bg-slate-200/60 text-slate-400 line-through'
+                          ? 'bg-indigo-100 text-indigo-800'
+                          : 'bg-slate-100 text-slate-400 line-through'
                       }`}
                     >
                       <Moon className="w-3 h-3" />
@@ -414,7 +414,7 @@ export const ReportDetailPage: React.FC = () => {
                   </div>
 
                   {med.instructions && (
-                    <p className="text-[10px] text-slate-500 italic pt-0.5">
+                    <p className="text-[10px] text-[#6B7280] italic pt-0.5">
                       Note: {med.instructions}
                     </p>
                   )}
@@ -425,27 +425,27 @@ export const ReportDetailPage: React.FC = () => {
           </div>
 
           {/* Advice & Follow-Up */}
-          <div className="border-t border-slate-200 dark:border-slate-800 pt-3 space-y-2 text-xs">
+          <div className="border-t border-[#F0E2D8] pt-3 space-y-2 text-xs">
             {encounter.notes && (
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase">{t('reports.clinical_notes', 'Advice:')}</span>
-                <p className="text-slate-700 dark:text-slate-300 mt-0.5">{encounter.notes}</p>
+                <span className="text-[10px] font-bold text-[#6B7280] uppercase">{t('reports.clinical_notes', 'Advice:')}</span>
+                <p className="text-[#242424] mt-0.5">{encounter.notes}</p>
               </div>
             )}
 
-            <div className="flex items-center justify-between bg-emerald-50/50 dark:bg-emerald-950/30 p-2.5 rounded-xl border border-emerald-500/10">
-              <span className="text-[11px] font-medium text-emerald-800 dark:text-emerald-300">
+            <div className="flex items-center justify-between bg-[#FFF0E6] p-2.5 rounded-xl border border-[#F0E2D8]">
+              <span className="text-[11px] font-medium text-[#D95D24]">
                 {t('reports.follow_up', 'Recommended Follow-up:')}
               </span>
-              <strong className="text-xs text-emerald-900 dark:text-emerald-200">
+              <strong className="text-xs text-[#D95D24]">
                 {encounter.followUpDate}
               </strong>
             </div>
           </div>
 
           {/* Section 11.6 Statutory Clinical Disclaimer */}
-          <div className="border-t-2 border-dashed border-slate-200 dark:border-slate-800 pt-3 space-y-1.5">
-            <div className="flex items-start space-x-2 text-[10px] text-slate-400 dark:text-slate-500 leading-tight">
+          <div className="border-t-2 border-dashed border-[#F0E2D8] pt-3 space-y-1.5">
+            <div className="flex items-start space-x-2 text-[10px] text-[#6B7280] leading-tight">
               <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
               <p>
                 <strong>Statutory Notice:</strong> This digital record is issued under MoHFW Telemedicine Practice Guidelines (2020). For sudden chest pain, severe breathlessness or loss of consciousness, seek immediate emergency care at the nearest hospital or call <strong>108</strong>.
@@ -458,21 +458,21 @@ export const ReportDetailPage: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 print:hidden">
           <button
             onClick={handleDownloadPdf}
-            className="w-full min-h-[48px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/20 flex items-center justify-center space-x-2 transition-all cursor-pointer"
+            className="w-full min-h-[48px] bg-[#F47738] hover:bg-[#D95D24] text-white font-bold rounded-2xl shadow-md shadow-[#F47738]/20 flex items-center justify-center space-x-2 transition-all cursor-pointer"
           >
             <Download className="w-4 h-4" />
             <span>{t('reports.download_pdf', 'Download PDF')}</span>
           </button>
           <button
             onClick={handlePrint}
-            className="w-full min-h-[48px] bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold rounded-2xl flex items-center justify-center space-x-2 transition-all cursor-pointer"
+            className="w-full min-h-[48px] bg-white hover:bg-[#FFF0E6] text-[#242424] border border-[#F0E2D8] font-bold rounded-2xl flex items-center justify-center space-x-2 transition-all cursor-pointer"
           >
-            <Printer className="w-4 h-4" />
+            <Printer className="w-4 h-4 text-[#6B7280]" />
             <span>{t('reports.print', 'Print Prescription')}</span>
           </button>
           <button
             onClick={() => navigate('/home')}
-            className="w-full min-h-[48px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-2xl flex items-center justify-center transition-all cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-850"
+            className="w-full min-h-[48px] bg-white border border-[#F0E2D8] text-[#242424] font-bold rounded-2xl flex items-center justify-center transition-all cursor-pointer hover:bg-[#FFF0E6]"
           >
             {t('common.returnHome', 'Return to Home')}
           </button>

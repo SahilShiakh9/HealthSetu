@@ -10,7 +10,6 @@ import {
   List,
   Map as MapIcon,
   Crosshair,
-  Building2,
   AlertTriangle,
   ChevronDown,
   ChevronUp,
@@ -25,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useFacilities, type LocationPreset } from './useFacilities.js';
 import { FacilityMap } from './FacilityMap.js';
+import { HealthcareImage } from '../../components/HealthcareImage.js';
 import type { RankedFacility } from '@healthsetu/contracts';
 
 export const FacilityListPage: React.FC = () => {
@@ -169,7 +169,7 @@ export const FacilityListPage: React.FC = () => {
     }
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0">
-        HealthSetu DB
+        SwasthSetu DB
       </span>
     );
   };
@@ -199,33 +199,33 @@ export const FacilityListPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans antialiased">
+    <div className="min-h-screen bg-[#FFF9F5] text-[#242424] flex flex-col font-sans antialiased">
       {/* Mobile-First Header */}
-      <header className="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-3 sm:px-4 py-2.5 shadow-xs">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#F0E2D8] px-3 sm:px-4 py-2.5 shadow-xs">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           {/* Left: Back Arrow + HealthSetu Brand + Title */}
           <div className="flex items-center gap-2 min-w-0">
             <button
               type="button"
               onClick={() => navigate('/home')}
-              className="p-2 -ml-1 rounded-2xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="p-2 -ml-1 rounded-2xl text-[#6B7280] hover:bg-[#FFF0E6] hover:text-[#D95D24] transition-colors cursor-pointer shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Back to Home"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-black bg-emerald-600 text-white tracking-wider uppercase shrink-0">
-                  HealthSetu
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-black bg-[#F47738] text-white tracking-wider uppercase shrink-0">
+                  SwasthSetu
                 </span>
-                <h1 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-1.5 truncate">
+                <h1 className="text-sm sm:text-base font-bold text-[#242424] flex items-center gap-1.5 truncate">
                   {t('facilities.title', 'Nearby Facilities')}
                   {isRefreshing && (
-                    <RefreshCw className="w-3.5 h-3.5 text-emerald-600 animate-spin shrink-0" />
+                    <RefreshCw className="w-3.5 h-3.5 text-[#F47738] animate-spin shrink-0" />
                   )}
                 </h1>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate hidden sm:block">
+              <p className="text-[11px] text-[#6B7280] truncate hidden sm:block">
                 Rural Healthcare Discovery &bull; Geoapify &bull; DB &bull; OpenStreetMap
               </p>
             </div>
@@ -234,21 +234,21 @@ export const FacilityListPage: React.FC = () => {
           {/* Right Header Navigation: Mobile List/Map Segmented Switch + Refresh + Desktop View */}
           <div className="flex items-center gap-1.5 shrink-0">
             {/* Mobile Segmented Toggle [ List | Map ] */}
-            <div className="lg:hidden flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-200 dark:border-slate-700">
+            <div className="lg:hidden flex bg-[#FFF0E6] p-0.5 rounded-xl border border-[#F0E2D8]">
               <button
                 type="button"
                 onClick={() => setMobileTab('list')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer min-h-[38px] ${
                   mobileTab === 'list'
-                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-white text-[#D95D24] shadow-xs'
+                    : 'text-[#6B7280] hover:text-[#242424]'
                 }`}
                 aria-label="Show Facility List"
               >
                 <List className="w-3.5 h-3.5" />
                 <span>List</span>
                 {facilities.length > 0 && (
-                  <span className="text-[10px] px-1.5 py-0.2 bg-slate-200 dark:bg-slate-700 rounded-full font-bold">
+                  <span className="text-[10px] px-1.5 py-0.2 bg-[#FFF0E6] text-[#D95D24] rounded-full font-bold">
                     {facilities.length}
                   </span>
                 )}
@@ -258,8 +258,8 @@ export const FacilityListPage: React.FC = () => {
                 onClick={() => setMobileTab('map')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer min-h-[38px] ${
                   mobileTab === 'map'
-                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-white text-[#D95D24] shadow-xs'
+                    : 'text-[#6B7280] hover:text-[#242424]'
                 }`}
                 aria-label="Show Interactive Map"
               >
@@ -269,14 +269,14 @@ export const FacilityListPage: React.FC = () => {
             </div>
 
             {/* Desktop View Selector (Split / Map / List) */}
-            <div className="hidden lg:flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-200 dark:border-slate-700">
+            <div className="hidden lg:flex bg-[#FFF0E6] p-0.5 rounded-xl border border-[#F0E2D8]">
               <button
                 type="button"
                 onClick={() => setDesktopView('split')}
                 className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                   desktopView === 'split'
-                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-white text-[#D95D24] shadow-xs'
+                    : 'text-[#6B7280] hover:text-[#242424]'
                 }`}
                 title="Split Map & List View"
               >
@@ -288,8 +288,8 @@ export const FacilityListPage: React.FC = () => {
                 onClick={() => setDesktopView('map')}
                 className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
                   desktopView === 'map'
-                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-white text-[#D95D24] shadow-xs'
+                    : 'text-[#6B7280] hover:text-[#242424]'
                 }`}
                 title="Full Screen Map"
               >
@@ -301,8 +301,8 @@ export const FacilityListPage: React.FC = () => {
                 onClick={() => setDesktopView('list')}
                 className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
                   desktopView === 'list'
-                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-white text-[#D95D24] shadow-xs'
+                    : 'text-[#6B7280] hover:text-[#242424]'
                 }`}
                 title="Full Width List"
               >
@@ -316,11 +316,11 @@ export const FacilityListPage: React.FC = () => {
               type="button"
               onClick={refresh}
               disabled={isRefreshing || loading}
-              className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="p-2 rounded-xl text-[#6B7280] hover:bg-[#FFF0E6] hover:text-[#D95D24] disabled:opacity-50 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
               title="Refresh Discovery Data"
               aria-label="Refresh Discovery Data"
             >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-emerald-600' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-[#F47738]' : ''}`} />
             </button>
           </div>
         </div>
@@ -330,7 +330,7 @@ export const FacilityListPage: React.FC = () => {
       <main className="flex-1 max-w-7xl w-full mx-auto p-2.5 sm:p-4 md:p-6 space-y-3">
         {/* Offline Banner */}
         {isOfflineMode && (
-          <div className="flex items-center justify-between p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-200 text-xs shadow-xs">
+          <div className="flex items-center justify-between p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-900 text-xs shadow-xs">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
               <span>
@@ -341,7 +341,7 @@ export const FacilityListPage: React.FC = () => {
             <button
               type="button"
               onClick={refresh}
-              className="font-bold underline text-amber-900 dark:text-amber-100 hover:opacity-80 shrink-0 ml-2 cursor-pointer min-h-[44px] flex items-center"
+              className="font-bold underline text-amber-900 hover:opacity-80 shrink-0 ml-2 cursor-pointer min-h-[44px] flex items-center"
             >
               Retry Sync
             </button>
@@ -349,7 +349,7 @@ export const FacilityListPage: React.FC = () => {
         )}
 
         {/* Emergency Medical Guidance (Accessible 24/7 Dials) */}
-        <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 flex items-center justify-between text-xs text-rose-900 dark:text-rose-200 shadow-xs">
+        <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-between text-xs text-rose-900 shadow-xs">
           <div className="flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
             <span className="font-medium hidden sm:inline">
@@ -375,14 +375,14 @@ export const FacilityListPage: React.FC = () => {
         </div>
 
         {/* Restrained Healthcare Discovery Status Strip */}
-        <div className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs text-slate-600 dark:text-slate-300 shadow-xs">
+        <div className="bg-white border border-[#F0E2D8] rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs text-[#6B7280] shadow-xs">
           <div className="flex items-center gap-2 min-w-0">
             {isSearching ? (
-              <RefreshCw className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 animate-spin shrink-0" />
+              <RefreshCw className="w-3.5 h-3.5 text-[#F47738] animate-spin shrink-0" />
             ) : (
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
             )}
-            <span className="font-medium text-slate-700 dark:text-slate-200 truncate">
+            <span className="font-medium text-[#242424] truncate">
               {statusMessage}
             </span>
           </div>
@@ -390,18 +390,18 @@ export const FacilityListPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setShowSourcesSheet(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[11px] font-semibold shrink-0 cursor-pointer transition-colors min-h-[36px]"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#FFF9F5] hover:bg-[#FFF0E6] text-[#242424] border border-[#F0E2D8] text-[11px] font-semibold shrink-0 cursor-pointer transition-colors min-h-[36px]"
           >
-            <Layers className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+            <Layers className="w-3 h-3 text-[#F47738]" />
             <span className="hidden sm:inline">Discovery Sources:</span>
-            <span className="font-bold">
+            <span className="font-bold text-[#D95D24]">
               {providerProgress.geoapify.count + providerProgress.mongodb.count + providerProgress.overpass.count} found
             </span>
           </button>
         </div>
 
         {/* Location & Radius Control Card */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-3 sm:p-4 shadow-xs space-y-2.5">
+        <div className="bg-white border border-[#F0E2D8] rounded-3xl p-3 sm:p-4 shadow-xs space-y-2.5">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
             {/* Primary Action: Use My Current Location */}
             <button
@@ -410,8 +410,8 @@ export const FacilityListPage: React.FC = () => {
               disabled={isLocating}
               className={`min-h-[46px] px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer ${
                 isGpsActive
-                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white ring-2 ring-emerald-500/30'
-                  : 'bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white'
+                  ? 'bg-[#F47738] hover:bg-[#D95D24] text-white ring-2 ring-[#FFF0E6]'
+                  : 'bg-[#F47738] hover:bg-[#D95D24] active:scale-[0.98] text-white'
               }`}
             >
               <Crosshair className={`w-4 h-4 shrink-0 ${isLocating ? 'animate-spin' : ''}`} />
@@ -423,27 +423,27 @@ export const FacilityListPage: React.FC = () => {
                   : 'Use My Current Location'}
               </span>
               {isGpsActive && (
-                <span className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
               )}
             </button>
 
             {/* Current Region Display & Modal Trigger */}
             <div className="flex items-center justify-between sm:justify-end gap-2 text-xs">
               <div className="text-left sm:text-right min-w-0 flex-1 sm:flex-initial">
-                <div className="flex items-center sm:justify-end gap-1.5 font-bold text-slate-800 dark:text-slate-100">
-                  <MapPin className={`w-3.5 h-3.5 shrink-0 ${isGpsActive ? 'text-emerald-500' : 'text-amber-500'}`} />
+                <div className="flex items-center sm:justify-end gap-1.5 font-bold text-[#242424]">
+                  <MapPin className={`w-3.5 h-3.5 shrink-0 ${isGpsActive ? 'text-emerald-500' : 'text-[#F47738]'}`} />
                   <span className="truncate max-w-[190px] sm:max-w-[260px]">
                     {locationLabel}
                   </span>
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-md font-semibold shrink-0 ${
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-semibold shrink-0 ${
                     isGpsActive
-                      ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
-                      : 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800'
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      : 'bg-[#FFF0E6] text-[#D95D24] border border-[#F0E2D8]'
                   }`}>
                     {isGpsActive ? 'GPS' : 'Manual'}
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400 font-mono">
+                <p className="text-[11px] text-[#6B7280] font-mono">
                   {userCoords.lat.toFixed(4)}° N, {userCoords.lng.toFixed(4)}° E
                   {isGpsActive && coordsAccuracyM ? ` (±${coordsAccuracyM}m)` : ''}
                 </p>
@@ -452,31 +452,31 @@ export const FacilityListPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowLocationModal(true)}
-                className="min-h-[44px] px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-xs flex items-center gap-1 transition-colors cursor-pointer shrink-0"
+                className="min-h-[44px] px-3 py-2 rounded-xl bg-[#FFF9F5] hover:bg-[#FFF0E6] text-[#242424] font-semibold text-xs flex items-center gap-1 border border-[#F0E2D8] transition-colors cursor-pointer shrink-0"
               >
                 <span>Change Area</span>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                <ChevronDown className="w-3.5 h-3.5 text-[#6B7280]" />
               </button>
             </div>
           </div>
 
           {/* Location Alerts */}
           {locationError && (
-            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800 text-xs">
+            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 text-xs">
               <Info className="w-4 h-4 shrink-0 text-amber-600 mt-0.5" />
               <span>{locationError}</span>
             </div>
           )}
 
           {isPoorAccuracy && !locationError && (
-            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800 text-xs">
+            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 text-xs">
               <AlertTriangle className="w-4 h-4 shrink-0 text-amber-600 mt-0.5" />
               <span>GPS accuracy is approximate (±{coordsAccuracyM}m). Move outdoors for clearer satellite lock.</span>
             </div>
           )}
 
           {/* Search Controls: Category Quick Chips & Radius Button */}
-          <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+          <div className="pt-2.5 border-t border-[#F0E2D8] flex items-center justify-between gap-2">
             {/* Horizontal Scrollable Category Chips */}
             <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 min-w-0">
               {[
@@ -495,8 +495,8 @@ export const FacilityListPage: React.FC = () => {
                     onClick={() => setFilterType(chip.id)}
                     className={`min-h-[38px] px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer border shrink-0 ${
                       isSelected
-                        ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-xs'
-                        : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                        ? 'bg-[#F47738] text-white border-[#F47738] shadow-xs'
+                        : 'bg-white text-[#242424] border-[#F0E2D8] hover:bg-[#FFF0E6] hover:border-[#F47738]/40'
                     }`}
                   >
                     {chip.label}
@@ -509,16 +509,16 @@ export const FacilityListPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowFilterSheet(true)}
-              className="lg:hidden min-h-[38px] px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold flex items-center gap-1.5 shrink-0 border border-slate-200 dark:border-slate-700"
+              className="lg:hidden min-h-[38px] px-3 py-1.5 rounded-xl bg-[#FFF9F5] hover:bg-[#FFF0E6] text-[#242424] text-xs font-bold flex items-center gap-1.5 shrink-0 border border-[#F0E2D8]"
               aria-label="Filter Options and Radius"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-[#F47738]" />
               <span>{searchRadiusKm} km</span>
             </button>
 
             {/* Desktop / Tablet Inline Radius Selector */}
-            <div className="hidden lg:flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs shrink-0">
-              <span className="text-[11px] font-medium text-slate-500 px-1">Radius:</span>
+            <div className="hidden lg:flex items-center gap-1 bg-[#FFF9F5] border border-[#F0E2D8] p-1 rounded-xl text-xs shrink-0">
+              <span className="text-[11px] font-medium text-[#6B7280] px-1">Radius:</span>
               {[5, 10, 25, 50].map((radius) => (
                 <button
                   key={radius}
@@ -526,8 +526,8 @@ export const FacilityListPage: React.FC = () => {
                   onClick={() => setSearchRadiusKm(radius)}
                   className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     searchRadiusKm === radius
-                      ? 'bg-emerald-600 text-white shadow-xs'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-[#F47738] text-white shadow-xs'
+                      : 'text-[#6B7280] hover:text-[#242424]'
                   }`}
                 >
                   {radius} km
@@ -538,10 +538,10 @@ export const FacilityListPage: React.FC = () => {
         </div>
 
         {/* Discovery Summary Header */}
-        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
+        <div className="flex items-center justify-between text-xs text-[#6B7280] px-1">
           <div>
-            Showing <strong className="text-slate-900 dark:text-white">{facilities.length}</strong> matching facilities within{' '}
-            <strong className="text-slate-900 dark:text-white">{searchRadiusKm} km</strong>
+            Showing <strong className="text-[#242424]">{facilities.length}</strong> matching facilities within{' '}
+            <strong className="text-[#242424]">{searchRadiusKm} km</strong>
             {allCount > facilities.length && ` (filtered from ${allCount})`}
           </div>
 
@@ -560,12 +560,12 @@ export const FacilityListPage: React.FC = () => {
         {/* Initial Loading Spinner */}
         {loading && facilities.length === 0 && (
           <div className="py-16 flex flex-col items-center justify-center text-center space-y-3">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600" />
-            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#F47738]" />
+            <p className="text-sm font-semibold text-[#242424]">
               Discovering healthcare facilities nearby...
             </p>
-            <p className="text-xs text-slate-400">
-              Querying Geoapify Places, HealthSetu database & OpenStreetMap...
+            <p className="text-xs text-[#6B7280]">
+              Querying Geoapify Places, SwasthSetu database & OpenStreetMap...
             </p>
           </div>
         )}
@@ -595,7 +595,7 @@ export const FacilityListPage: React.FC = () => {
 
               {/* Mobile Selected Facility Bottom Sheet (Over Map View) */}
               {selectedFacilityItem && (
-                <div className="lg:hidden absolute bottom-3 left-2.5 right-2.5 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl space-y-3 animate-in slide-in-from-bottom duration-200">
+                <div className="lg:hidden absolute bottom-3 left-2.5 right-2.5 z-40 bg-white/95 backdrop-blur-md p-4 rounded-3xl border border-[#F0E2D8] shadow-2xl space-y-3 animate-in slide-in-from-bottom duration-200">
                   <div className="flex items-start justify-between gap-2">
                     <div className="space-y-1 min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 flex-wrap">
@@ -607,23 +607,23 @@ export const FacilityListPage: React.FC = () => {
                           {selectedFacilityItem.facility.type}
                         </span>
                         {selectedFacilityItem.facility.open24x7 && (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                             24x7 Open
                           </span>
                         )}
                         {selectedFacilityItem.facility.emergencyCapable && (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 flex items-center gap-1">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 flex items-center gap-1">
                             <ShieldAlert className="w-3 h-3" />
                             Emergency Ready
                           </span>
                         )}
                       </div>
-                      <h3 className="text-base font-bold text-slate-900 dark:text-white truncate">
+                      <h3 className="text-base font-bold text-[#242424] truncate">
                         {selectedFacilityItem.facility.name}
                       </h3>
                       {selectedFacilityItem.facility.address && (
-                        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 flex items-center gap-1">
-                          <MapPin className="w-3 h-3 shrink-0 text-slate-400" />
+                        <p className="text-xs text-[#6B7280] line-clamp-1 flex items-center gap-1">
+                          <MapPin className="w-3 h-3 shrink-0 text-[#6B7280]" />
                           <span className="truncate">{selectedFacilityItem.facility.address}</span>
                         </p>
                       )}
@@ -633,16 +633,16 @@ export const FacilityListPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setSelectedFacilityId(null)}
-                        className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer"
+                        className="p-1 rounded-full text-[#6B7280] hover:text-[#242424] hover:bg-[#FFF0E6] min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer"
                         aria-label="Close bottom sheet"
                       >
                         <X className="w-4 h-4" />
                       </button>
-                      <div className="text-right bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-lg border border-emerald-200/60 dark:border-emerald-800/60">
-                        <p className="text-xs font-black text-emerald-800 dark:text-emerald-200">
+                      <div className="text-right bg-[#FFF0E6] px-2 py-0.5 rounded-lg border border-[#F0E2D8]">
+                        <p className="text-xs font-black text-[#D95D24]">
                           {selectedFacilityItem.distanceKm} km
                         </p>
-                        <p className="text-[9px] text-emerald-600 dark:text-emerald-400">
+                        <p className="text-[9px] text-[#D95D24]/80">
                           ~{selectedFacilityItem.approxTravelTimeMinutes} mins
                         </p>
                       </div>
@@ -650,11 +650,11 @@ export const FacilityListPage: React.FC = () => {
                   </div>
 
                   {/* Actions for Mobile Bottom Sheet (min-h-[44px] touch target) */}
-                  <div className="grid grid-cols-3 gap-2 pt-1 border-t border-slate-100 dark:border-slate-800">
+                  <div className="grid grid-cols-3 gap-2 pt-1 border-t border-[#F0E2D8]">
                     {selectedFacilityItem.facility.phone ? (
                       <a
                         href={`tel:${selectedFacilityItem.facility.phone}`}
-                        className="min-h-[44px] px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs"
+                        className="min-h-[44px] px-3 py-2 rounded-xl bg-[#F47738] hover:bg-[#D95D24] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-colors"
                       >
                         <Phone className="w-3.5 h-3.5" />
                         <span>Call</span>
@@ -662,7 +662,7 @@ export const FacilityListPage: React.FC = () => {
                     ) : (
                       <button
                         disabled
-                        className="min-h-[44px] px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-400 font-medium text-xs flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-700 cursor-not-allowed"
+                        className="min-h-[44px] px-3 py-2 rounded-xl bg-[#FFF9F5] text-[#6B7280] font-medium text-xs flex items-center justify-center gap-1.5 border border-[#F0E2D8] cursor-not-allowed"
                       >
                         <Phone className="w-3.5 h-3.5" />
                         <span>Unlisted</span>
@@ -673,9 +673,9 @@ export const FacilityListPage: React.FC = () => {
                       href={`https://www.google.com/maps/dir/?api=1&destination=${selectedFacilityItem.facility.location.coordinates[1]},${selectedFacilityItem.facility.location.coordinates[0]}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="min-h-[44px] px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-700"
+                      className="min-h-[44px] px-3 py-2 rounded-xl bg-[#FFF9F5] hover:bg-[#FFF0E6] text-[#242424] font-bold text-xs flex items-center justify-center gap-1.5 border border-[#F0E2D8] transition-colors"
                     >
-                      <Navigation className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                      <Navigation className="w-3.5 h-3.5 text-[#F47738]" />
                       <span>Directions</span>
                     </a>
 
@@ -688,9 +688,9 @@ export const FacilityListPage: React.FC = () => {
                           if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }, 100);
                       }}
-                      className="min-h-[44px] px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-700 cursor-pointer"
+                      className="min-h-[44px] px-3 py-2 rounded-xl bg-[#FFF9F5] hover:bg-[#FFF0E6] text-[#242424] font-bold text-xs flex items-center justify-center gap-1.5 border border-[#F0E2D8] cursor-pointer transition-colors"
                     >
-                      <List className="w-3.5 h-3.5 text-slate-600 dark:text-slate-300" />
+                      <List className="w-3.5 h-3.5 text-[#6B7280]" />
                       <span>In List</span>
                     </button>
                   </div>
@@ -710,12 +710,17 @@ export const FacilityListPage: React.FC = () => {
             >
               {/* Empty Results State */}
               {facilities.length === 0 && !isSearching ? (
-                <div className="py-12 px-5 text-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
-                  <Building2 className="w-12 h-12 mx-auto text-slate-300 dark:text-slate-600" />
-                  <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                <div className="py-8 px-5 text-center rounded-3xl bg-white border border-[#F0E2D8] space-y-3 shadow-xs">
+                  <HealthcareImage
+                    src="/images/rural_health_facility.jpg"
+                    alt="Rural Primary Health Centre"
+                    aspectRatio="16/9"
+                    className="max-w-[220px] mx-auto rounded-2xl mb-1 shadow-xs border border-[#F0E2D8]"
+                  />
+                  <h3 className="text-sm font-bold text-[#242424]">
                     No facilities found within {searchRadiusKm} km
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-[#6B7280] max-w-xs mx-auto">
                     No healthcare facilities matched your category filter within {searchRadiusKm} km of this location.
                   </p>
                   <div className="pt-2 flex flex-col gap-2">
@@ -725,7 +730,7 @@ export const FacilityListPage: React.FC = () => {
                         setFilterType('ALL');
                         setSearchRadiusKm(50);
                       }}
-                      className="w-full min-h-[44px] py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-colors cursor-pointer"
+                      className="w-full min-h-[44px] py-2 px-3 rounded-xl bg-[#F47738] hover:bg-[#D95D24] text-white font-semibold text-xs transition-colors cursor-pointer"
                     >
                       Expand Search (50 km, All Tiers)
                     </button>
@@ -750,10 +755,10 @@ export const FacilityListPage: React.FC = () => {
                       key={facility.id}
                       id={`facility-card-${facility.id}`}
                       onClick={() => setSelectedFacilityId(facility.id)}
-                      className={`bg-white dark:bg-slate-900 border rounded-3xl p-3.5 sm:p-4 shadow-xs space-y-3 transition-all cursor-pointer ${
+                      className={`bg-white border rounded-3xl p-3.5 sm:p-4 shadow-xs space-y-3 transition-all cursor-pointer ${
                         isSelected
-                          ? 'border-emerald-500 ring-2 ring-emerald-500/25 dark:border-emerald-400'
-                          : 'border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                          ? 'border-[#F47738] ring-2 ring-[#FFF0E6]'
+                          : 'border-[#F0E2D8] hover:border-[#F47738]/50'
                       }`}
                     >
                       {/* Card Header: Type Badge, Verification, Name & Distance */}
@@ -768,41 +773,41 @@ export const FacilityListPage: React.FC = () => {
                               {facility.type}
                             </span>
                             {facility.open24x7 && (
-                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                 24x7 Open
                               </span>
                             )}
                             {facility.emergencyCapable ? (
-                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 flex items-center gap-1">
                                 <ShieldAlert className="w-3 h-3" />
                                 Emergency Ready
                               </span>
                             ) : (
-                              <span className="px-2 py-0.5 rounded-full text-[10px] text-slate-500 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                              <span className="px-2 py-0.5 rounded-full text-[10px] text-[#6B7280] bg-[#FFF9F5] border border-[#F0E2D8]">
                                 Outpatient
                               </span>
                             )}
                             {renderVerificationBadge(facility)}
                           </div>
 
-                          <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug">
+                          <h3 className="text-sm sm:text-base font-bold text-[#242424] leading-snug">
                             {facility.name}
                           </h3>
 
                           {facility.address && (
-                            <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 flex items-center gap-1">
-                              <MapPin className="w-3 h-3 shrink-0 text-slate-400" />
+                            <p className="text-xs text-[#6B7280] line-clamp-1 flex items-center gap-1">
+                              <MapPin className="w-3 h-3 shrink-0 text-[#6B7280]" />
                               <span className="truncate">{facility.address}</span>
                             </p>
                           )}
                         </div>
 
                         {/* Distance Badge */}
-                        <div className="text-right shrink-0 bg-slate-50 dark:bg-slate-800/80 px-2.5 py-1.5 rounded-2xl border border-slate-100 dark:border-slate-700/60">
-                          <p className="text-sm font-black text-slate-900 dark:text-white">
+                        <div className="text-right shrink-0 bg-[#FFF9F5] px-2.5 py-1.5 rounded-2xl border border-[#F0E2D8]">
+                          <p className="text-sm font-black text-[#D95D24]">
                             {distanceKm} km
                           </p>
-                          <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                          <p className="text-[10px] text-[#6B7280]">
                             ~{approxTravelTimeMinutes} mins
                           </p>
                         </div>
@@ -814,13 +819,13 @@ export const FacilityListPage: React.FC = () => {
                           {facility.services.slice(0, 3).map((svc, sIdx) => (
                             <span
                               key={sIdx}
-                              className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] rounded-md font-medium"
+                              className="px-2 py-0.5 bg-[#FFF0E6] text-[#D95D24] text-[10px] rounded-md font-medium"
                             >
                               {svc}
                             </span>
                           ))}
                           {facility.services.length > 3 && (
-                            <span className="px-1.5 py-0.5 text-slate-400 text-[10px] self-center">
+                            <span className="px-1.5 py-0.5 text-[#6B7280] text-[10px] self-center">
                               +{facility.services.length - 3} more
                             </span>
                           )}
@@ -828,57 +833,57 @@ export const FacilityListPage: React.FC = () => {
                       )}
 
                       {/* Operating Hours & Clinical Suitability */}
-                      <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-800/80">
+                      <div className="flex items-center justify-between text-xs text-[#6B7280] pt-1 border-t border-[#F0E2D8]">
                         <div className="flex items-center gap-1.5">
-                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <Clock className="w-3.5 h-3.5 text-[#6B7280]" />
                           <span className="truncate max-w-[140px]">{facility.openHours || 'Regular hours'}</span>
                         </div>
                         {notes && (
-                          <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium truncate max-w-[150px]">
+                          <span className="text-[11px] text-[#D95D24] font-medium truncate max-w-[150px]">
                             {notes}
                           </span>
                         )}
                       </div>
 
                       {/* Explainable Rank Score Breakdown Accordion */}
-                      <div className="pt-1 border-t border-slate-100 dark:border-slate-800/80">
+                      <div className="pt-1 border-t border-[#F0E2D8]">
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             setExpandedCardId(isExpanded ? null : facility.id);
                           }}
-                          className="w-full flex items-center justify-between text-[11px] font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors py-0.5 cursor-pointer"
+                          className="w-full flex items-center justify-between text-[11px] font-semibold text-[#6B7280] hover:text-[#242424] transition-colors py-0.5 cursor-pointer"
                         >
                           <span className="flex items-center gap-1.5">
                             <span>
-                              Match Score: <strong className="text-slate-900 dark:text-white">{item.score}/100</strong>
+                              Match Score: <strong className="text-[#D95D24]">{item.score}/100</strong>
                             </span>
                           </span>
                           {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                         </button>
 
                         {isExpanded && breakdown && (
-                          <div className="mt-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 text-[11px] space-y-1.5 text-slate-600 dark:text-slate-300 animate-in fade-in duration-150">
-                            <p className="font-semibold text-slate-700 dark:text-slate-200">
+                          <div className="mt-2 p-2.5 rounded-xl bg-[#FFF9F5] border border-[#F0E2D8] text-[11px] space-y-1.5 text-[#242424] animate-in fade-in duration-150">
+                            <p className="font-semibold text-[#242424]">
                               Weights: 0.40 Proximity + 0.25 Tier + 0.20 Load + 0.15 Services
                             </p>
-                            <div className="grid grid-cols-2 gap-2 text-[10px]">
+                            <div className="grid grid-cols-2 gap-2 text-[10px] text-[#6B7280]">
                               <div>
-                                Proximity: <span className="font-bold text-slate-900 dark:text-white">{breakdown.proximity}%</span>
+                                Proximity: <span className="font-bold text-[#242424]">{breakdown.proximity}%</span>
                               </div>
                               <div>
-                                Tier Fit: <span className="font-bold text-slate-900 dark:text-white">{breakdown.tierFit}%</span>
+                                Tier Fit: <span className="font-bold text-[#242424]">{breakdown.tierFit}%</span>
                               </div>
                               <div>
-                                Load Factor: <span className="font-bold text-slate-900 dark:text-white">{breakdown.load}%</span>
+                                Load Factor: <span className="font-bold text-[#242424]">{breakdown.load}%</span>
                               </div>
                               <div>
-                                Service Match: <span className="font-bold text-slate-900 dark:text-white">{breakdown.serviceFit}%</span>
+                                Service Match: <span className="font-bold text-[#242424]">{breakdown.serviceFit}%</span>
                               </div>
                             </div>
                             {facility.sourceAttribution && (
-                              <p className="text-[10px] text-slate-400 pt-1 border-t border-slate-200/50 dark:border-slate-700/50">
+                              <p className="text-[10px] text-[#6B7280] pt-1 border-t border-[#F0E2D8]">
                                 Source: {facility.sourceAttribution}
                               </p>
                             )}
@@ -892,7 +897,7 @@ export const FacilityListPage: React.FC = () => {
                           <a
                             href={`tel:${facility.phone}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="min-h-[44px] px-3.5 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-all"
+                            className="min-h-[44px] px-3.5 py-2 rounded-2xl bg-[#F47738] hover:bg-[#D95D24] active:scale-[0.98] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-all"
                           >
                             <Phone className="w-3.5 h-3.5" />
                             <span>Call Facility</span>
@@ -901,9 +906,9 @@ export const FacilityListPage: React.FC = () => {
                           <button
                             disabled
                             onClick={(e) => e.stopPropagation()}
-                            className="min-h-[44px] px-3.5 py-2 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 font-medium text-xs flex items-center justify-center gap-1.5 cursor-not-allowed border border-slate-200 dark:border-slate-700"
+                            className="min-h-[44px] px-3.5 py-2 rounded-2xl bg-[#FFF9F5] text-[#6B7280] font-medium text-xs flex items-center justify-center gap-1.5 cursor-not-allowed border border-[#F0E2D8]"
                           >
-                            <Phone className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
+                            <Phone className="w-3.5 h-3.5 text-[#6B7280]" />
                             <span>Phone unlisted</span>
                           </button>
                         )}
@@ -913,9 +918,9 @@ export const FacilityListPage: React.FC = () => {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="min-h-[44px] px-3.5 py-2 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-[0.98] text-slate-800 dark:text-slate-100 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-700 transition-all"
+                          className="min-h-[44px] px-3.5 py-2 rounded-2xl bg-[#FFF9F5] hover:bg-[#FFF0E6] active:scale-[0.98] text-[#242424] font-bold text-xs flex items-center justify-center gap-1.5 border border-[#F0E2D8] transition-all"
                         >
-                          <Navigation className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                          <Navigation className="w-3.5 h-3.5 text-[#F47738]" />
                           <span>Directions</span>
                         </a>
 
@@ -926,9 +931,9 @@ export const FacilityListPage: React.FC = () => {
                             setSelectedFacilityId(facility.id);
                             setMobileTab('map');
                           }}
-                          className="col-span-2 sm:col-span-1 min-h-[44px] px-3.5 py-2 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 active:scale-[0.98] text-emerald-700 dark:text-emerald-300 font-bold text-xs flex items-center justify-center gap-1.5 border border-emerald-200 dark:border-emerald-800 transition-all cursor-pointer"
+                          className="col-span-2 sm:col-span-1 min-h-[44px] px-3.5 py-2 rounded-2xl bg-[#FFF0E6] hover:bg-[#FFE4D3] active:scale-[0.98] text-[#D95D24] font-bold text-xs flex items-center justify-center gap-1.5 border border-[#F0E2D8] transition-all cursor-pointer"
                         >
-                          <MapIcon className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                          <MapIcon className="w-3.5 h-3.5 text-[#F47738]" />
                           <span>View on Map</span>
                         </button>
                       </div>
@@ -947,18 +952,18 @@ export const FacilityListPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setMobileTab('map')}
-            className="pointer-events-auto min-h-[44px] px-5 py-2.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold text-xs shadow-xl flex items-center gap-2 border border-slate-700/30 active:scale-95 transition-all cursor-pointer"
+            className="pointer-events-auto min-h-[44px] px-5 py-2.5 rounded-full bg-[#242424] text-white font-bold text-xs shadow-xl flex items-center gap-2 border border-[#F0E2D8]/40 active:scale-95 transition-all cursor-pointer"
           >
-            <MapIcon className="w-4 h-4 text-emerald-400" />
+            <MapIcon className="w-4 h-4 text-[#F47738]" />
             <span>View Map ({facilities.length})</span>
           </button>
         ) : !selectedFacilityItem ? (
           <button
             type="button"
             onClick={() => setMobileTab('list')}
-            className="pointer-events-auto min-h-[44px] px-5 py-2.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold text-xs shadow-xl flex items-center gap-2 border border-slate-700/30 active:scale-95 transition-all cursor-pointer"
+            className="pointer-events-auto min-h-[44px] px-5 py-2.5 rounded-full bg-[#242424] text-white font-bold text-xs shadow-xl flex items-center gap-2 border border-[#F0E2D8]/40 active:scale-95 transition-all cursor-pointer"
           >
-            <List className="w-4 h-4 text-emerald-400" />
+            <List className="w-4 h-4 text-[#F47738]" />
             <span>View List ({facilities.length})</span>
           </button>
         ) : null}
@@ -967,20 +972,20 @@ export const FacilityListPage: React.FC = () => {
       {/* Expandable Filter & Radius Bottom Sheet */}
       {showFilterSheet && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-5 space-y-4 shadow-xl max-h-[85vh] overflow-y-auto">
+          <div className="bg-white border border-[#F0E2D8] rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-5 space-y-4 shadow-xl max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-[#242424]">
                   Filters & Search Radius
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#6B7280]">
                   Refine healthcare search distance and category
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowFilterSheet(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-1.5 rounded-xl text-[#6B7280] hover:text-[#242424] hover:bg-[#FFF0E6] cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
                 aria-label="Close filters"
               >
                 <X className="w-5 h-5" />
@@ -989,7 +994,7 @@ export const FacilityListPage: React.FC = () => {
 
             {/* Radius Selector */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-200">
+              <label className="text-xs font-bold text-[#242424]">
                 Search Radius (Kilometers):
               </label>
               <div className="grid grid-cols-4 gap-2">
@@ -1000,8 +1005,8 @@ export const FacilityListPage: React.FC = () => {
                     onClick={() => setSearchRadiusKm(radius)}
                     className={`min-h-[44px] py-2 px-3 rounded-2xl text-xs font-bold transition-all cursor-pointer border ${
                       searchRadiusKm === radius
-                        ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
-                        : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                        ? 'bg-[#F47738] text-white border-[#F47738] shadow-xs'
+                        : 'bg-[#FFF9F5] text-[#242424] border-[#F0E2D8] hover:bg-[#FFF0E6]'
                     }`}
                   >
                     {radius} km
@@ -1012,7 +1017,7 @@ export const FacilityListPage: React.FC = () => {
 
             {/* Facility Category Selector */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-200">
+              <label className="text-xs font-bold text-[#242424]">
                 Facility Tier / Category:
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -1032,8 +1037,8 @@ export const FacilityListPage: React.FC = () => {
                       onClick={() => setFilterType(chip.id)}
                       className={`min-h-[44px] px-3.5 py-2 rounded-2xl text-xs font-semibold text-left transition-all cursor-pointer border ${
                         isSelected
-                          ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-xs'
-                          : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                          ? 'bg-[#F47738] text-white border-[#F47738] shadow-xs'
+                          : 'bg-[#FFF9F5] text-[#242424] border-[#F0E2D8] hover:bg-[#FFF0E6]'
                       }`}
                     >
                       {chip.label}
@@ -1047,7 +1052,7 @@ export const FacilityListPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowFilterSheet(false)}
-              className="w-full min-h-[46px] rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
+              className="w-full min-h-[46px] rounded-2xl bg-[#F47738] hover:bg-[#D95D24] text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
             >
               Apply Filters ({facilities.length} matching)
             </button>
@@ -1058,20 +1063,20 @@ export const FacilityListPage: React.FC = () => {
       {/* Discovery Sources & Provenance Sheet */}
       {showSourcesSheet && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-5 space-y-4 shadow-xl max-h-[85vh] overflow-y-auto">
+          <div className="bg-white border border-[#F0E2D8] rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-5 space-y-4 shadow-xl max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-[#242424]">
                   Healthcare Discovery Providers
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#6B7280]">
                   Multi-provider live aggregation & offline caching
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowSourcesSheet(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-1.5 rounded-xl text-[#6B7280] hover:text-[#242424] hover:bg-[#FFF0E6] cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
                 aria-label="Close sources sheet"
               >
                 <X className="w-5 h-5" />
@@ -1081,27 +1086,27 @@ export const FacilityListPage: React.FC = () => {
             {/* Provider Cards */}
             <div className="space-y-2.5 text-xs">
               {/* Geoapify */}
-              <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 flex items-center justify-between">
+              <div className="p-3 rounded-2xl bg-[#FFF0E6] border border-[#F0E2D8] flex items-center justify-between">
                 <div>
-                  <p className="font-bold text-indigo-900 dark:text-indigo-200">
+                  <p className="font-bold text-[#D95D24]">
                     Geoapify Places API (Live Priority)
                   </p>
-                  <p className="text-[11px] text-indigo-700 dark:text-indigo-400">
+                  <p className="text-[11px] text-[#6B7280]">
                     Fast live geospatial discovery within {searchRadiusKm} km
                   </p>
                 </div>
-                <span className="px-2.5 py-1 rounded-xl bg-indigo-600 text-white font-bold">
+                <span className="px-2.5 py-1 rounded-xl bg-[#F47738] text-white font-bold">
                   {providerProgress.geoapify.count} found
                 </span>
               </div>
 
               {/* HealthSetu DB */}
-              <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex items-center justify-between">
+              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between">
                 <div>
-                  <p className="font-bold text-emerald-900 dark:text-emerald-200">
-                    HealthSetu Verified Database
+                  <p className="font-bold text-emerald-900">
+                    SwasthSetu Verified Database
                   </p>
-                  <p className="text-[11px] text-emerald-700 dark:text-emerald-400">
+                  <p className="text-[11px] text-emerald-700">
                     ABDM HFR and official government verified facilities
                   </p>
                 </div>
@@ -1111,16 +1116,16 @@ export const FacilityListPage: React.FC = () => {
               </div>
 
               {/* OpenStreetMap */}
-              <div className="p-3 rounded-2xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 flex items-center justify-between">
+              <div className="p-3 rounded-2xl bg-[#FFF9F5] border border-[#F0E2D8] flex items-center justify-between">
                 <div>
-                  <p className="font-bold text-teal-900 dark:text-teal-200">
+                  <p className="font-bold text-[#242424]">
                     OpenStreetMap Healthcare
                   </p>
-                  <p className="text-[11px] text-teal-700 dark:text-teal-400">
+                  <p className="text-[11px] text-[#6B7280]">
                     Community mapped clinics and primary health centres
                   </p>
                 </div>
-                <span className="px-2.5 py-1 rounded-xl bg-teal-600 text-white font-bold">
+                <span className="px-2.5 py-1 rounded-xl bg-[#D95D24] text-white font-bold">
                   {providerProgress.overpass.status === 'timeout'
                     ? 'Timed out'
                     : `${providerProgress.overpass.count} found`}
@@ -1131,7 +1136,7 @@ export const FacilityListPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowSourcesSheet(false)}
-              className="w-full min-h-[46px] rounded-2xl bg-slate-900 dark:bg-slate-800 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
+              className="w-full min-h-[46px] rounded-2xl bg-[#F47738] hover:bg-[#D95D24] text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
             >
               Done
             </button>
@@ -1142,20 +1147,20 @@ export const FacilityListPage: React.FC = () => {
       {/* Location Picker Modal */}
       {showLocationModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-5 space-y-4 shadow-xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white border border-[#F0E2D8] rounded-3xl max-w-lg w-full p-5 space-y-4 shadow-xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-[#242424]">
                   Change Discovery Location
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#6B7280]">
                   Select an Indian district or enter custom coordinates
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowLocationModal(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-1.5 rounded-xl text-[#6B7280] hover:text-[#242424] hover:bg-[#FFF0E6] cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
                 aria-label="Close"
               >
                 <X className="w-5 h-5" />
@@ -1164,13 +1169,13 @@ export const FacilityListPage: React.FC = () => {
 
             {/* Region Search Input */}
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
+              <Search className="w-4 h-4 text-[#6B7280] absolute left-3 top-3.5" />
               <input
                 type="text"
                 placeholder="Search city, district, e.g. Shikrapur, Pune, Nashik..."
                 value={presetSearch}
                 onChange={(e) => setPresetSearch(e.target.value)}
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-hidden focus:ring-1 focus:ring-emerald-500 min-h-[44px]"
+                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-[#F0E2D8] bg-[#FFF9F5] text-xs text-[#242424] placeholder-[#6B7280] focus:outline-hidden focus:ring-1 focus:ring-[#F47738] min-h-[44px]"
               />
             </div>
 
@@ -1197,17 +1202,17 @@ export const FacilityListPage: React.FC = () => {
                       }}
                       className={`w-full text-left px-3.5 py-2.5 rounded-2xl text-xs font-medium flex items-center justify-between transition-colors cursor-pointer min-h-[44px] ${
                         isSelected
-                          ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700'
-                          : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                          ? 'bg-[#FFF0E6] text-[#D95D24] border border-[#F47738]'
+                          : 'bg-[#FFF9F5] text-[#242424] hover:bg-[#FFF0E6] border border-transparent'
                       }`}
                     >
                       <div>
-                        <p className="font-bold text-slate-900 dark:text-white">{preset.name}</p>
-                        <p className="text-[10px] text-slate-400">
+                        <p className="font-bold text-[#242424]">{preset.name}</p>
+                        <p className="text-[10px] text-[#6B7280]">
                           {preset.district}, {preset.state}
                         </p>
                       </div>
-                      <span className="text-[10px] font-mono text-slate-400">
+                      <span className="text-[10px] font-mono text-[#6B7280]">
                         {preset.lat.toFixed(2)}°, {preset.lng.toFixed(2)}°
                       </span>
                     </button>
@@ -1218,9 +1223,9 @@ export const FacilityListPage: React.FC = () => {
             {/* Manual Coordinates Form */}
             <form
               onSubmit={handleCustomCoordinatesSubmit}
-              className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2.5 text-xs"
+              className="p-3.5 rounded-2xl bg-[#FFF9F5] border border-[#F0E2D8] space-y-2.5 text-xs"
             >
-              <p className="font-bold text-slate-800 dark:text-slate-200">
+              <p className="font-bold text-[#242424]">
                 Or Enter Custom India Coordinates:
               </p>
               {customCoordError && (
@@ -1233,7 +1238,7 @@ export const FacilityListPage: React.FC = () => {
                   placeholder="Latitude (e.g. 18.7842)"
                   value={customLat}
                   onChange={(e) => setCustomLat(e.target.value)}
-                  className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs min-h-[44px]"
+                  className="px-3 py-2 rounded-xl border border-[#F0E2D8] bg-white text-xs text-[#242424] focus:ring-1 focus:ring-[#F47738] min-h-[44px]"
                   required
                 />
                 <input
@@ -1242,13 +1247,13 @@ export const FacilityListPage: React.FC = () => {
                   placeholder="Longitude (e.g. 74.1205)"
                   value={customLng}
                   onChange={(e) => setCustomLng(e.target.value)}
-                  className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs min-h-[44px]"
+                  className="px-3 py-2 rounded-xl border border-[#F0E2D8] bg-white text-xs text-[#242424] focus:ring-1 focus:ring-[#F47738] min-h-[44px]"
                   required
                 />
               </div>
               <button
                 type="submit"
-                className="w-full min-h-[44px] py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
+                className="w-full min-h-[44px] py-2.5 rounded-xl bg-[#F47738] hover:bg-[#D95D24] text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
               >
                 Set Location Coordinates
               </button>

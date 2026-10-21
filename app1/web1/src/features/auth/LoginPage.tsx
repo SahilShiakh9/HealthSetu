@@ -73,28 +73,28 @@ export const LoginPage: React.FC = () => {
 
   if (isLoading || (isAuthenticated && user)) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FFF9F5] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 rounded-full border-3 border-emerald-500 border-t-transparent animate-spin" />
-          <span className="text-xs font-semibold text-slate-500">Redirecting to workspace...</span>
+          <div className="w-8 h-8 rounded-full border-3 border-[#F47738] border-t-transparent animate-spin" />
+          <span className="text-xs font-semibold text-[#6B7280]">Redirecting to workspace...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-[#FFF9F5] flex flex-col">
       <Header />
 
       <main className="flex-1 max-w-md w-full mx-auto p-4 flex flex-col justify-center">
-        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 space-y-5">
+        <div className="bg-white rounded-3xl p-6 shadow-xs border border-[#F0E2D8] space-y-5">
           {/* Header */}
           <div className="text-center space-y-1">
-            <div className="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl mx-auto flex items-center justify-center mb-2 shadow-xs">
+            <div className="w-12 h-12 bg-[#FFF0E6] text-[#D95D24] rounded-2xl mx-auto flex items-center justify-center mb-2 shadow-xs">
               <User className="w-6 h-6" />
             </div>
-            <h1 className="text-xl font-black text-slate-900">{t('auth.login_title', 'Login / Register')}</h1>
-            <p className="text-xs text-slate-500">
+            <h1 className="text-xl font-black text-[#242424]">{t('auth.login_title', 'Login / Register')}</h1>
+            <p className="text-xs text-[#6B7280]">
               Sign in with phone number and password
             </p>
           </div>
@@ -111,40 +111,40 @@ export const LoginPage: React.FC = () => {
           {/* Patient Login Form */}
           <form onSubmit={handlePatientPasswordLogin} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 block">
+              <label className="text-xs font-bold text-[#242424] block">
                 {t('auth.phone_label', 'Mobile Number')}
               </label>
               <div className="relative">
-                <Phone className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Phone className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
                   placeholder={t('auth.phone_placeholder', '10-digit mobile number')}
-                  className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 bg-white"
+                  className="w-full min-h-[48px] pl-11 pr-4 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-hidden focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 block">
+              <label className="text-xs font-bold text-[#242424] block">
                 {t('auth.password', 'Password')}
               </label>
               <div className="relative">
-                <Lock className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-5 h-5 text-[#6B7280] absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type={showPatientPassword ? 'text' : 'password'}
                   value={patientPassword}
                   onChange={(e) => setPatientPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full min-h-[48px] pl-11 pr-12 py-2 text-sm rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 bg-white"
+                  className="w-full min-h-[48px] pl-11 pr-12 py-2 text-sm rounded-xl border border-[#F0E2D8] focus:outline-hidden focus:ring-2 focus:ring-[#F47738] bg-white text-[#242424]"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPatientPassword(!showPatientPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#242424] p-1 cursor-pointer"
                   aria-label={showPatientPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPatientPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -155,7 +155,7 @@ export const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading || phone.length < 10 || !patientPassword}
-              className="w-full min-h-[48px] bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] disabled:bg-slate-300 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer disabled:cursor-not-allowed"
+              className="w-full min-h-[48px] bg-[#F47738] hover:bg-[#D95D24] active:scale-[0.98] disabled:bg-[#F0E2D8] disabled:text-[#6B7280] text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm shadow-xs transition-all cursor-pointer disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
@@ -171,12 +171,12 @@ export const LoginPage: React.FC = () => {
             </button>
 
             {/* Link to Register */}
-            <div className="pt-2 text-center border-t border-slate-100 space-y-1">
+            <div className="pt-2 text-center border-t border-[#F0E2D8] space-y-1">
               <div>
-                <span className="text-xs text-slate-500">Don&apos;t have an account? </span>
+                <span className="text-xs text-[#6B7280]">Don&apos;t have an account? </span>
                 <Link
                   to="/register"
-                  className="text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline"
+                  className="text-xs font-bold text-[#D95D24] hover:text-[#F47738] hover:underline"
                 >
                   {t('auth.need_account', 'New patient? Register here')}
                 </Link>
@@ -185,14 +185,14 @@ export const LoginPage: React.FC = () => {
           </form>
 
           {/* Continue as Citizen / Guest without login */}
-          <div className="pt-2 border-t border-slate-100 text-center">
+          <div className="pt-2 border-t border-[#F0E2D8] text-center">
             <button
               type="button"
               onClick={() => navigate('/home', { replace: true })}
-              className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-emerald-700 font-semibold transition-colors py-1 px-3 rounded-lg hover:bg-slate-50 cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs text-[#6B7280] hover:text-[#D95D24] font-semibold transition-colors py-1.5 px-3 rounded-lg hover:bg-[#FFF0E6] cursor-pointer"
             >
               <span>{t('auth.continue_as_guest', 'Continue as Citizen / Offline Screening')}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-emerald-600" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#F47738]" />
             </button>
           </div>
         </div>

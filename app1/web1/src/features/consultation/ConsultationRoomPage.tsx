@@ -586,7 +586,7 @@ export const ConsultationRoomPage: React.FC = () => {
           <button
             onClick={() => setActiveTab('CALL')}
             className={`px-3 py-1 rounded-lg transition-all ${
-              activeTab === 'CALL' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+              activeTab === 'CALL' ? 'bg-[#F47738] text-white shadow-sm' : 'text-slate-400 hover:text-white'
             }`}
           >
             {t('consult.tab_call', 'Call')}
@@ -594,7 +594,7 @@ export const ConsultationRoomPage: React.FC = () => {
           <button
             onClick={() => setActiveTab('CHAT')}
             className={`px-3 py-1 rounded-lg transition-all flex items-center space-x-1 ${
-              activeTab === 'CHAT' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+              activeTab === 'CHAT' ? 'bg-[#F47738] text-white shadow-sm' : 'text-slate-400 hover:text-white'
             }`}
           >
             <MessageSquare className="w-3.5 h-3.5" />
@@ -604,7 +604,7 @@ export const ConsultationRoomPage: React.FC = () => {
             <button
               onClick={() => setActiveTab('PRESCRIPTION')}
               className={`px-3 py-1 rounded-lg transition-all flex items-center space-x-1 ${
-                activeTab === 'PRESCRIPTION' ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                activeTab === 'PRESCRIPTION' ? 'bg-[#F47738] text-white shadow-sm' : 'text-slate-400 hover:text-white'
               }`}
             >
               <FileText className="w-3.5 h-3.5" />
@@ -760,7 +760,7 @@ export const ConsultationRoomPage: React.FC = () => {
                     <div
                       className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-xs leading-relaxed ${
                         isMe
-                          ? 'bg-emerald-600 text-white rounded-br-none'
+                          ? 'bg-[#F47738] text-white rounded-br-none'
                           : 'bg-slate-800 text-slate-200 rounded-bl-none border border-slate-700'
                       }`}
                     >
@@ -780,11 +780,11 @@ export const ConsultationRoomPage: React.FC = () => {
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 placeholder={t('consult.type_message_placeholder', 'Type message or clinical advice...')}
-                className="flex-1 bg-slate-900 border border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                className="flex-1 bg-slate-900 border border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#F47738]"
               />
               <button
                 type="submit"
-                className="p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl transition-all"
+                className="p-2.5 bg-[#F47738] hover:bg-[#D95D24] text-white rounded-2xl transition-all cursor-pointer"
               >
                 <Send className="w-4 h-4" />
               </button>
@@ -976,7 +976,7 @@ export const ConsultationRoomPage: React.FC = () => {
               type="button"
               onClick={handleFinalizeConsultation}
               disabled={concluding}
-              className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold text-xs flex items-center justify-center space-x-2 shadow-lg shadow-emerald-600/30 transition-all disabled:opacity-50"
+              className="w-full py-3 bg-[#F47738] hover:bg-[#D95D24] text-white rounded-2xl font-bold text-xs flex items-center justify-center space-x-2 shadow-lg shadow-[#F47738]/20 transition-all disabled:opacity-50 cursor-pointer"
             >
               <CheckCircle2 className="w-4 h-4" />
               <span>{concluding ? 'Finalizing Record...' : 'Finalise and Issue Prescription'}</span>

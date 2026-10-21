@@ -183,7 +183,7 @@ describe('Government IDSP Surveillance Workspace Redesign', () => {
     expect(screen.getByText(/Reporting Coverage/i)).toBeInTheDocument();
 
     // Verify Outbreak Alert Banner
-    expect(screen.getByText(/Critical Syndromic Outbreak Alerts/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Critical Syndromic Outbreak Alerts/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Kendur Village/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/Investigate & Assign/i)).toBeInTheDocument();
   });

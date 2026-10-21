@@ -36,7 +36,12 @@ const EnvSchema = z.object({
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
   OVERPASS_API_URL: z.string().default('https://overpass-api.de/api/interpreter'),
   OVERPASS_TIMEOUT_MS: z.coerce.number().default(8000),
+  GROK_API_KEY: z.string().optional(),
+  GROK_API_URL: z.string().default('https://api.x.ai/v1'),
+  GROK_MODEL: z.string().default('grok-2-mini'),
+  DIALOGUE_LLM_PROVIDER: z.enum(['auto', 'grok', 'groq', 'none']).default('auto'),
   GROQ_API_KEY: z.string().optional(),
+  GROQ_MODEL: z.string().default('qwen/qwen3.8-27b'),
   GEOAPIFY_API_KEY: z.string().optional(),
   GEOAPIFY_TIMEOUT_MS: z.coerce.number().default(8000),
   FACILITY_DISCOVERY_STRATEGY: z

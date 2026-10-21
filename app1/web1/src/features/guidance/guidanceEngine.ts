@@ -4,7 +4,7 @@ import { GUIDANCE_TOPICS } from './guidanceData';
 import { db } from '../../offline/db';
 
 export const GUIDANCE_DISCLAIMER =
-  'HealthSetu Health Guidance is educational and intended for rural health literacy and first-aid support. It is NOT an official medical prescription or clinical diagnosis. In case of acute illness or danger signs, dial 108 or visit the nearest Primary Health Centre (PHC) immediately.';
+  'SwasthSetu Health Guidance is educational and intended for rural health literacy and first-aid support. It is NOT an official medical prescription or clinical diagnosis. In case of acute illness or danger signs, dial 108 or visit the nearest Primary Health Centre (PHC) immediately.';
 
 export interface GuidanceSearchResult {
   topic: GuidanceTopic;

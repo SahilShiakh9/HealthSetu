@@ -142,18 +142,18 @@ export const DoctorVerificationPanel: React.FC<DoctorVerificationPanelProps> = (
   return (
     <div className="space-y-6">
       {/* Header & Stats Banner */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="bg-white rounded-3xl p-6 border border-[#F0E2D8] shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-2xl bg-[#FFF0E6] text-[#F47738] flex items-center justify-center">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-lg font-black text-slate-900 dark:text-white">
+                <h2 className="text-lg font-black text-[#242424]">
                   Medical Council Credential Verification
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-[#6B7280]">
                   {reviewerRole === 'GOVT_OFFICER'
                     ? 'State IDSP / Government Medical Reviewer Licensing Desk'
                     : reviewerRole === 'HOSPITAL_ADMIN'
@@ -168,7 +168,7 @@ export const DoctorVerificationPanel: React.FC<DoctorVerificationPanelProps> = (
             <button
               onClick={fetchDoctors}
               disabled={loading}
-              className="p-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 text-xs font-bold"
+              className="p-2.5 text-[#6B7280] hover:text-[#242424] hover:bg-[#FFF0E6] rounded-xl transition-all border border-[#F0E2D8] flex items-center gap-1.5 text-xs font-bold cursor-pointer"
               title="Refresh Registry"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -178,82 +178,82 @@ export const DoctorVerificationPanel: React.FC<DoctorVerificationPanelProps> = (
         </div>
 
         {/* Status Counters */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-5 border-t border-slate-100 dark:border-slate-800">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-5 border-t border-[#F0E2D8]">
           <button
             onClick={() => setFilterStatus('PENDING')}
-            className={`p-3 rounded-2xl text-left transition-all border ${
+            className={`p-3 rounded-2xl text-left transition-all border cursor-pointer ${
               filterStatus === 'PENDING'
-                ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200'
-                : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
+                ? 'bg-amber-50 border-amber-300 text-amber-900'
+                : 'bg-[#FFF9F5] border-[#F0E2D8] text-[#6B7280] hover:bg-[#FFF0E6]'
             }`}
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold">Pending Review</span>
-              <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              <Clock className="w-4 h-4 text-amber-600" />
             </div>
-            <div className="text-2xl font-black mt-1 text-amber-700 dark:text-amber-400">{pendingCount}</div>
+            <div className="text-2xl font-black mt-1 text-amber-700">{pendingCount}</div>
           </button>
 
           <button
             onClick={() => setFilterStatus('APPROVED')}
-            className={`p-3 rounded-2xl text-left transition-all border ${
+            className={`p-3 rounded-2xl text-left transition-all border cursor-pointer ${
               filterStatus === 'APPROVED'
-                ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200'
-                : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
+                ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
+                : 'bg-[#FFF9F5] border-[#F0E2D8] text-[#6B7280] hover:bg-[#FFF0E6]'
             }`}
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold">Approved Licenses</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             </div>
-            <div className="text-2xl font-black mt-1 text-emerald-700 dark:text-emerald-400">{approvedCount}</div>
+            <div className="text-2xl font-black mt-1 text-emerald-700">{approvedCount}</div>
           </button>
 
           <button
             onClick={() => setFilterStatus('REJECTED')}
-            className={`p-3 rounded-2xl text-left transition-all border ${
+            className={`p-3 rounded-2xl text-left transition-all border cursor-pointer ${
               filterStatus === 'REJECTED'
-                ? 'bg-rose-50 dark:bg-rose-950/30 border-rose-300 dark:border-rose-700 text-rose-900 dark:text-rose-200'
-                : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
+                ? 'bg-rose-50 border-rose-300 text-rose-900'
+                : 'bg-[#FFF9F5] border-[#F0E2D8] text-[#6B7280] hover:bg-[#FFF0E6]'
             }`}
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold">Rejected</span>
-              <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+              <XCircle className="w-4 h-4 text-rose-600" />
             </div>
-            <div className="text-2xl font-black mt-1 text-rose-700 dark:text-rose-400">
+            <div className="text-2xl font-black mt-1 text-rose-700">
               {doctors.filter((d) => d.verificationStatus === 'REJECTED').length}
             </div>
           </button>
 
           <button
             onClick={() => setFilterStatus('ALL')}
-            className={`p-3 rounded-2xl text-left transition-all border ${
+            className={`p-3 rounded-2xl text-left transition-all border cursor-pointer ${
               filterStatus === 'ALL'
-                ? 'bg-indigo-50 dark:bg-indigo-950/30 border-indigo-300 dark:border-indigo-700 text-indigo-900 dark:text-indigo-200'
-                : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
+                ? 'bg-[#FFF0E6] border-[#F47738] text-[#242424]'
+                : 'bg-[#FFF9F5] border-[#F0E2D8] text-[#6B7280] hover:bg-[#FFF0E6]'
             }`}
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold">Total Registered</span>
-              <FileBadge className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <FileBadge className="w-4 h-4 text-[#F47738]" />
             </div>
-            <div className="text-2xl font-black mt-1 text-indigo-700 dark:text-indigo-400">{doctors.length}</div>
+            <div className="text-2xl font-black mt-1 text-[#242424]">{doctors.length}</div>
           </button>
         </div>
       </div>
 
       {/* Notifications */}
       {actionSuccess && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-sm font-bold flex items-center gap-2 animate-in fade-in">
-          <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm font-bold flex items-center gap-2 animate-in fade-in shadow-xs">
+          <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
           <span>{actionSuccess}</span>
         </div>
       )}
 
       {error && (
-        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-800 dark:text-rose-300 text-sm font-bold flex items-center gap-2 animate-in fade-in">
-          <AlertTriangle className="w-5 h-5 shrink-0 text-rose-600 dark:text-rose-400" />
+        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-sm font-bold flex items-center gap-2 animate-in fade-in shadow-xs">
+          <AlertTriangle className="w-5 h-5 shrink-0 text-rose-600" />
           <span>{error}</span>
         </div>
       )}
@@ -261,20 +261,20 @@ export const DoctorVerificationPanel: React.FC<DoctorVerificationPanelProps> = (
       {/* Search & Filter Bar */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+          <Search className="w-4 h-4 text-[#6B7280] absolute left-3.5 top-3.5" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by Doctor Name, Reg No (e.g. MCI-464651), Council, Specialty..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-[#F0E2D8] bg-white text-[#242424] text-xs focus:outline-none focus:border-[#F47738] focus:ring-2 focus:ring-[#F47738]/20"
           />
         </div>
         <div className="flex items-center gap-2">
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value as any)}
-            className="px-3 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-bold"
+            className="px-3 py-2.5 rounded-2xl border border-[#F0E2D8] bg-white text-[#242424] text-xs font-bold focus:outline-none focus:border-[#F47738] focus:ring-2 focus:ring-[#F47738]/20"
           >
             <option value="PENDING">Pending Review ({pendingCount})</option>
             <option value="APPROVED">Approved ({approvedCount})</option>
